@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
-from deck import Deck, XLDeck
+from streamdeckx.deck import Deck, XLDeck
 
 
 class TestDeck(unittest.TestCase):

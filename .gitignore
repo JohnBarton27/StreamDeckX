@@ -1,5 +1,6 @@
 venv/
 .idea/
-tests/test-reports
+.cache/
+**/test-reports/*
 *.pyc
 *.iml
