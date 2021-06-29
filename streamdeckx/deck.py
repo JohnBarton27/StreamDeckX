@@ -1,7 +1,8 @@
+from abc import ABC
 from StreamDeck.DeviceManager import DeviceManager
 
 
-class Deck:
+class Deck(ABC):
     generic_name = None
     cols = None
     rows = None
