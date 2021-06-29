@@ -15,7 +15,6 @@ class Deck:
         deck_objs = []
 
         for deck in decks:
-            print(type(deck.deck_type()))
             if deck.deck_type() == 'Stream Deck XL':
                 deck_objs.append(XLDeck(deck.id))
             else:
