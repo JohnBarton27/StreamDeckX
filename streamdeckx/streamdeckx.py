@@ -1,11 +1,18 @@
 from flask import Flask
+from deck import Deck
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def hello():
-    return 'Hello, World!'
+    decks = Deck.get_connected()
+    html = ''
+
+    for deck in decks:
+        html += f'<p>{deck.__class__.generic_name}</p>'
+
+    return html
 
 
 if __name__ == '__main__':
