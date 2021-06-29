@@ -7,7 +7,7 @@ from streamdeckx.deck import Deck, XLDeck
 class TestDeck(unittest.TestCase):
 
     def setUp(self):
-        enumerate_patch = patch('StreamDeck.DeviceManager.DeviceManager.enumerate')
+        enumerate_patch = patch('streamdeckx.deck.DeviceManager.enumerate')
         self.m_enumerate = enumerate_patch.start()
         self.addCleanup(enumerate_patch.stop)
 
