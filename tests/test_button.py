@@ -36,6 +36,11 @@ class TestButton(unittest.TestCase):
         button = Button(12)
         self.assertEqual(hash(button), hash(12))
 
+    def test_html(self):
+        """Button.html"""
+        button = Button(12)
+        self.assertEqual(button.html, '<span id="12" class="btn"></div>')
+
 
 if __name__ == '__main__':
     unittest.main()

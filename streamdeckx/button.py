@@ -23,3 +23,14 @@ class Button:
 
     def __hash__(self):
         return hash(self.position)
+
+    @property
+    def html(self):
+        """
+        Generates the HTML for displaying this button on the page
+
+        Returns:
+            str: HTML representing this button
+        """
+        html = f'<span id="{self.position}" class="btn"></div>'
+        return html

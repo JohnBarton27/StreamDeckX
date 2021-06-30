@@ -10,3 +10,10 @@ body {
 h1 {
     font-weight: 700;
 }
+
+.btn {
+    height: 72px;
+    width: 72px;
+    border: 2px solid #FAFDED;
+    display: inline-block;
+}
