@@ -1,0 +1,11 @@
+<html>
+<body>
+<h1>Stream Deck X</h1>
+<hr>
+<span id="connected-streamdecks">
+    {%for deck in connected_decks%}
+        <p>{{deck.__class__.generic_name}}</p>
+    {%endfor%}
+</span>
+</body>
+</html>

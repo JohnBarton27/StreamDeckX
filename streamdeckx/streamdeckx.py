@@ -1,18 +1,15 @@
-from flask import Flask
+from flask import Flask, render_template
 from deck import Deck
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=os.path.abspath('static'))
 
 
 @app.route('/')
 def hello():
     decks = Deck.get_connected()
-    html = ''
 
-    for deck in decks:
-        html += f'<p>{deck.__class__.generic_name}</p>'
-
-    return html
+    return render_template('index.html', connected_decks=decks)
 
 
 if __name__ == '__main__':
