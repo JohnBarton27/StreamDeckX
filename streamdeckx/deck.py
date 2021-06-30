@@ -30,6 +30,18 @@ class Deck(ABC):
 
         return deck_objs
 
+    @property
+    def html(self):
+        html = ''
+        position = 0
+        for row in range(0, self.__class__.rows):
+            html += '<br/>'
+            for column in range(0, self.__class__.cols):
+                html += self.buttons[position].html
+                position += 1
+
+        return html
+
 
 class XLDeck(Deck):
     generic_name = 'Stream Deck XL'

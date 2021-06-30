@@ -12,6 +12,9 @@
         <option value="{{deck.id}}">{{deck.__class__.generic_name}}</option>
         {%endfor%}
     </select>
+    <div id="curr-deck">
+        {{curr_deck_html | safe}}
+    </div>
 </span>
 </body>
 </html>

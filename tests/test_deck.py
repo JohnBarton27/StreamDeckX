@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, PropertyMock
 
 from deck import Deck, XLDeck
 
@@ -63,6 +63,16 @@ class TestXLDeck(unittest.TestCase):
         self.assertEqual(deck.buttons[0].position, 0)
         self.assertEqual(deck.buttons[12].position, 12)
         self.assertEqual(deck.buttons[31].position, 31)
+
+    @patch('button.Button.html', new_callable=PropertyMock)
+    def test_html(self, m_button_html):
+        """XLDeck.html"""
+        deck = XLDeck('xl_id')
+        m_button_html.return_value = 'BUTTON_HTML'
+
+        row = "BUTTON_HTMLBUTTON_HTMLBUTTON_HTMLBUTTON_HTMLBUTTON_HTMLBUTTON_HTMLBUTTON_HTMLBUTTON_HTML"
+
+        self.assertEqual(deck.html, f"<br/>{row}<br/>{row}<br/>{row}<br/>{row}")
 
 
 if __name__ == '__main__':
