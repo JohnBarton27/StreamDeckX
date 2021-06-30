@@ -9,6 +9,7 @@ class Deck(ABC):
 
     def __init__(self, deck_id: str):
         self.id = deck_id
+        self.buttons = []
 
     @staticmethod
     def get_connected():

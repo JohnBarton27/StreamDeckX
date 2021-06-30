@@ -51,6 +51,7 @@ class TestXLDeck(unittest.TestCase):
         """XLDeck.__init__"""
         deck = XLDeck('xl_id')
         self.assertEqual(deck.id, 'xl_id')
+        self.assertEqual(deck.buttons, [])
 
 
 if __name__ == '__main__':
