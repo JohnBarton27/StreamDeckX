@@ -11,4 +11,4 @@ install:
 
 # command to run tests
 script:
-  - python -m unittest tests/*.py
+  - python tests/run_tests.py

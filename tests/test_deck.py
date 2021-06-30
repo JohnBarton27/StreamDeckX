@@ -1,13 +1,13 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
-from streamdeckx.deck import Deck, XLDeck
+from deck import Deck, XLDeck
 
 
 class TestDeck(unittest.TestCase):
 
     def setUp(self):
-        device_manager_patch = patch('streamdeckx.deck.DeviceManager')
+        device_manager_patch = patch('deck.DeviceManager')
         m_dev_manager = device_manager_patch.start()
         self.addCleanup(device_manager_patch.stop)
 
@@ -48,7 +48,7 @@ class TestDeck(unittest.TestCase):
 
 class TestXLDeck(unittest.TestCase):
 
-    @patch('streamdeckx.deck.Deck._generate_buttons')
+    @patch('deck.Deck._generate_buttons')
     def test_init(self, m_gen_buttons):
         """XLDeck.__init__"""
         deck = XLDeck('xl_id')

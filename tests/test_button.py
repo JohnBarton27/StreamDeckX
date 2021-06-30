@@ -1,6 +1,6 @@
 import unittest
 
-from streamdeckx.button import Button
+from button import Button
 
 
 class TestButton(unittest.TestCase):
