@@ -39,7 +39,7 @@ class TestButton(unittest.TestCase):
     def test_html(self):
         """Button.html"""
         button = Button(12)
-        self.assertEqual(button.html, '<span id="12" class="btn"></div>')
+        self.assertEqual(button.html, '<span id="12" class="btn"></span>')
 
 
 if __name__ == '__main__':

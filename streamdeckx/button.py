@@ -32,5 +32,5 @@ class Button:
         Returns:
             str: HTML representing this button
         """
-        html = f'<span id="{self.position}" class="btn"></div>'
+        html = f'<span id="{self.position}" class="btn"></span>'
         return html

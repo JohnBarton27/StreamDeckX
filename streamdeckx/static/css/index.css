@@ -16,4 +16,6 @@ h1 {
     width: 72px;
     border: 2px solid #FAFDED;
     display: inline-block;
+    margin-left: 10px;
+    margin-bottom: 10px;
 }
