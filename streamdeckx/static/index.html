@@ -1,6 +1,9 @@
 <html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
+</head>
 <body>
-<h1>Stream Deck X</h1>
+<h1>STREAM DECK X</h1>
 <hr>
 <span id="connected-streamdecks">
     {%for deck in connected_decks%}
