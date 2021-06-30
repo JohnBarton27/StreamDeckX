@@ -1,6 +1,8 @@
 from abc import ABC
 from StreamDeck.DeviceManager import DeviceManager
 
+from button import Button
+
 
 class Deck(ABC):
     generic_name = None
@@ -10,6 +12,11 @@ class Deck(ABC):
     def __init__(self, deck_id: str):
         self.id = deck_id
         self.buttons = []
+        self._generate_buttons()
+
+    def _generate_buttons(self):
+        for i in range(0, self.__class__.cols * self.__class__.rows):
+            self.buttons.append(Button(i))
 
     @staticmethod
     def get_connected():

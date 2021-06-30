@@ -47,11 +47,22 @@ class TestDeck(unittest.TestCase):
 
 
 class TestXLDeck(unittest.TestCase):
-    def test_init(self):
+
+    @patch('streamdeckx.deck.Deck._generate_buttons')
+    def test_init(self, m_gen_buttons):
         """XLDeck.__init__"""
         deck = XLDeck('xl_id')
         self.assertEqual(deck.id, 'xl_id')
         self.assertEqual(deck.buttons, [])
+        m_gen_buttons.assert_called()
+
+    def test_generate_buttons(self):
+        """XLDeck._generate_buttons"""
+        deck = XLDeck('xl_id')
+        self.assertEqual(len(deck.buttons), 32)
+        self.assertEqual(deck.buttons[0].position, 0)
+        self.assertEqual(deck.buttons[12].position, 12)
+        self.assertEqual(deck.buttons[31].position, 31)
 
 
 if __name__ == '__main__':
