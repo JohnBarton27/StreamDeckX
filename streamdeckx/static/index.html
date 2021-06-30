@@ -6,9 +6,12 @@
 <h1>STREAM DECK X</h1>
 <hr>
 <span id="connected-streamdecks">
-    {%for deck in connected_decks%}
-        <p>{{deck.__class__.generic_name}}</p>
-    {%endfor%}
+    <label>Selected Stream Deck:</label>
+    <select id="conn-sd-select">
+        {%for deck in connected_decks%}
+        <option value="{{deck.id}}">{{deck.__class__.generic_name}}</option>
+        {%endfor%}
+    </select>
 </span>
 </body>
 </html>
