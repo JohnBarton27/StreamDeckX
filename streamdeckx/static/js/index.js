@@ -12,3 +12,15 @@ $(document).ready(function() {
         });
     });
 });
+
+function openConfig(position) {
+    let buttonElem = $("#" + position);
+
+    if (buttonElem.hasClass('clicked')) {
+        // If we are un-clicking
+        buttonElem.removeClass('clicked');
+        return;
+    }
+    
+    buttonElem.addClass('clicked');
+}

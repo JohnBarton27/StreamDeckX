@@ -32,7 +32,7 @@ class Button:
         Returns:
             str: HTML representing this button
         """
-        html = f'<span id="{self.position}" class="btn"></span>'
+        html = f'<span id="{self.position}" onclick="openConfig({self.position})" class="btn"></span>'
         return html
 
 

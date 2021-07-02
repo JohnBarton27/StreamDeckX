@@ -24,3 +24,7 @@ h1 {
     margin-bottom: 10px;
     border-radius: 10px;
 }
+
+.clicked {
+    border-color: #8D99AE;
+}
