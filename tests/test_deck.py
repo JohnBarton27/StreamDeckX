@@ -18,7 +18,7 @@ class TestDeck(unittest.TestCase):
         """Deck.get_connected.single_xl"""
         xl_deck1 = MagicMock()
         xl_deck1.deck_type.return_value = 'Stream Deck XL'
-        xl_deck1.id = 'xl_deck1_id'
+        xl_deck1.id.return_value = 'xl_deck1_id'
         self.m_dev_manager.enumerate.return_value = [xl_deck1]
         
         decks = Deck.get_connected()
