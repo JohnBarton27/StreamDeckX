@@ -50,3 +50,15 @@ class XLDeck(Deck):
 
     def __init__(self, deck_id: str):
         super().__init__(deck_id)
+
+
+class OriginalDeck(Deck):
+    generic_name = 'Stream Deck (Original)'
+    cols = 5
+    rows = 3
+
+
+class MiniDeck(Deck):
+    generic_name = 'Stream Deck Mini'
+    cols = 3
+    rows = 2

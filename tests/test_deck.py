@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock, PropertyMock
 
-from deck import Deck, XLDeck
+from deck import Deck, MiniDeck, OriginalDeck, XLDeck
 
 
 class TestDeck(unittest.TestCase):
@@ -73,6 +73,62 @@ class TestXLDeck(unittest.TestCase):
         row = "BUTTON_HTMLBUTTON_HTMLBUTTON_HTMLBUTTON_HTMLBUTTON_HTMLBUTTON_HTMLBUTTON_HTMLBUTTON_HTML"
 
         self.assertEqual(deck.html, f"<br/>{row}<br/>{row}<br/>{row}<br/>{row}")
+
+
+class TestOriginalDeck(unittest.TestCase):
+
+    @patch('deck.Deck._generate_buttons')
+    def test_init(self, m_gen_buttons):
+        """OriginalDeck.__init__"""
+        deck = OriginalDeck('orig_id')
+        self.assertEqual(deck.id, 'orig_id')
+        self.assertEqual(deck.buttons, [])
+        m_gen_buttons.assert_called()
+
+    def test_generate_buttons(self):
+        """OriginalDeck._generate_buttons"""
+        deck = OriginalDeck('orig_id')
+        self.assertEqual(len(deck.buttons), 15)
+        self.assertEqual(deck.buttons[0].position, 0)
+        self.assertEqual(deck.buttons[12].position, 12)
+
+    @patch('button.Button.html', new_callable=PropertyMock)
+    def test_html(self, m_button_html):
+        """OriginalDeck.html"""
+        deck = OriginalDeck('orig_id')
+        m_button_html.return_value = '<BTN>'
+
+        row = "<BTN><BTN><BTN><BTN><BTN>"
+
+        self.assertEqual(deck.html, f"<br/>{row}<br/>{row}<br/>{row}")
+
+
+class TestMiniDeck(unittest.TestCase):
+
+    @patch('deck.Deck._generate_buttons')
+    def test_init(self, m_gen_buttons):
+        """MiniDeck.__init__"""
+        deck = MiniDeck('mini_id')
+        self.assertEqual(deck.id, 'mini_id')
+        self.assertEqual(deck.buttons, [])
+        m_gen_buttons.assert_called()
+
+    def test_generate_buttons(self):
+        """MiniDeck._generate_buttons"""
+        deck = MiniDeck('mini_id')
+        self.assertEqual(len(deck.buttons), 6)
+        self.assertEqual(deck.buttons[0].position, 0)
+        self.assertEqual(deck.buttons[5].position, 5)
+
+    @patch('button.Button.html', new_callable=PropertyMock)
+    def test_html(self, m_button_html):
+        """MiniDeck.html"""
+        deck = MiniDeck('mini_id')
+        m_button_html.return_value = '<BTN>'
+
+        row = "<BTN><BTN><BTN>"
+
+        self.assertEqual(deck.html, f"<br/>{row}<br/>{row}")
 
 
 if __name__ == '__main__':
