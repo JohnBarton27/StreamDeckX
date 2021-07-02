@@ -7,15 +7,15 @@ app = Flask(__name__, template_folder=os.path.abspath('static'))
 
 @app.route('/')
 def hello():
-    decks = Deck.get_connected()
-    curr_deck = decks[0]  # TODO handle selection of a different deck
+    decks = Deck.get_connected(add_testing=True)
+    curr_deck = decks[0]
 
     return render_template('index.html', connected_decks=decks, curr_deck_html=curr_deck.html)
 
 
 @app.route('/deckHtml')
 def get_deck_html():
-    decks = Deck.get_connected()
+    decks = Deck.get_connected(add_testing=True)
     deck_id = request.args.get('deckId')
     for deck in decks:
         if deck.id == deck_id:
