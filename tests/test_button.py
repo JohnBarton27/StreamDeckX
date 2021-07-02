@@ -1,6 +1,6 @@
 import unittest
 
-from button import Button
+from button import Button, EmptyButton, TextButton
 
 
 class TestButton(unittest.TestCase):
@@ -40,6 +40,21 @@ class TestButton(unittest.TestCase):
         """Button.html"""
         button = Button(12)
         self.assertEqual(button.html, '<span id="12" class="btn"></span>')
+
+
+class TestEmptyButton(unittest.TestCase):
+    def test_init(self):
+        """EmptyButton.__init__"""
+        button = EmptyButton(1)
+        self.assertEqual(button.position, 1)
+
+
+class TestTextButton(unittest.TestCase):
+    def test_init(self):
+        """TextButton.__init__"""
+        button = TextButton(2, 'username')
+        self.assertEqual(button.position, 2)
+        self.assertEqual(button.text, 'username')
 
 
 if __name__ == '__main__':

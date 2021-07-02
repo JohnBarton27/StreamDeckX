@@ -34,3 +34,19 @@ class Button:
         """
         html = f'<span id="{self.position}" class="btn"></span>'
         return html
+
+
+class EmptyButton(Button):
+    """
+    Class for a Button that has not been given any actions yet
+    """
+
+
+class TextButton(Button):
+    """
+    Class for a Button that, when pressed, types out a string of text.
+    """
+
+    def __init__(self, position: id, text: str):
+        super().__init__(position)
+        self.text = text
