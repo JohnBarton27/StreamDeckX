@@ -26,5 +26,22 @@ def get_deck_html():
     return 'Deck not found!'
 
 
+@app.route('/configHtml')
+def get_config_html():
+    deck_id = request.args.get('deckId')
+    button_position = int(request.args.get('button'))
+
+    decks = Deck.get_connected(add_testing=True)
+
+    for deck in decks:
+        if deck.id == deck_id:
+            # This is the deck we selected
+            button = deck.buttons[button_position]
+
+            return render_template('configuration.html', button=button.position)
+
+    # TODO add error
+    return 'Deck not found!'
+
 if __name__ == '__main__':
     app.run(port=5050)

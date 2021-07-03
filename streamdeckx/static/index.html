@@ -8,15 +8,18 @@
 <h1>STREAM DECK X</h1>
 <hr>
 <span id="connected-streamdecks">
-    <label>Selected Stream Deck:</label>
-    <select id="conn-sd-select">
-        {%for deck in connected_decks%}
-        <option value="{{deck.id}}">{{deck.__class__.generic_name}}</option>
-        {%endfor%}
-    </select>
-    <div id="curr-deck">
-        {{curr_deck_html | safe}}
+    <div>
+        <label>Selected Stream Deck:</label>
+        <select id="conn-sd-select">
+            {%for deck in connected_decks%}
+            <option value="{{deck.id}}">{{deck.__class__.generic_name}}</option>
+            {%endfor%}
+        </select>
     </div>
+    <span id="curr-deck" style="display:inline-block;">
+        {{curr_deck_html | safe}}
+    </span>
+    <span id="config" style="display:inline-block;"></span>
 </span>
 </body>
 </html>
