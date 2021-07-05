@@ -39,7 +39,7 @@ class TestButton(unittest.TestCase):
     def test_html(self):
         """Button.html"""
         button = Button(12)
-        self.assertEqual(button.html, '<span id="12" class="btn"></span>')
+        self.assertEqual(button.html, '<span id="12" class="btn" onclick="openConfig(12)"></span>')
 
 
 class TestEmptyButton(unittest.TestCase):
