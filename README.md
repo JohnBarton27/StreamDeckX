@@ -1,11 +1,19 @@
 # Stream Deck X
 **Stream Deck X** is a cross-platform application for using an Elgato Stream Deck.
 
-## Requirements
+## Setup
+### Requirements
 * Python 3.8+
 * A LibUSB HIDAPI Backend (required from Python StreamDeck library)
     * See [this page](https://python-elgato-streamdeck.readthedocs.io/en/stable/pages/backend_libusb_hidapi.html) for download/install instructions for your platform
   
+### Running
+1. Clone this repository.
+1. Run `pip install -r requirements.txt` from the root directory of the repository.
+   1. This only needs to be run the first time you are starting the application.
+1. Run `python streamdeckx/streamdeckx.py` from the root directory of the repository.
+    1. Stream Deck X will now be accessible in your browser of choice at `localhost:5050`
+
 ## Development
 This section of the README defines the development guidelines.
 
