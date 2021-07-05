@@ -25,6 +25,8 @@ class Deck(ABC):
         for deck in decks:
             if deck.deck_type() == 'Stream Deck XL':
                 deck_objs.append(XLDeck(deck.id()))
+            elif deck.deck_type() == 'Stream Deck Original':
+                deck_objs.append(OriginalDeck(deck.id()))
             else:
                 print(f'Unsupported deck type "{deck.deck_type()}"!')
 

@@ -29,6 +29,43 @@ class TestDeck(unittest.TestCase):
         self.assertEqual(type(decks[0]), XLDeck)
         self.assertEqual(decks[0].id, 'xl_deck1_id')
 
+    def test_get_connected_single_original(self):
+        """Deck.get_connected.single_original"""
+        orig_deck1 = MagicMock()
+        orig_deck1.deck_type.return_value = 'Stream Deck Original'
+        orig_deck1.id.return_value = 'orig_deck1_id'
+        self.m_dev_manager.enumerate.return_value = [orig_deck1]
+
+        decks = Deck.get_connected()
+
+        self.m_dev_manager.enumerate.assert_called()
+
+        self.assertEqual(len(decks), 1)
+        self.assertEqual(type(decks[0]), OriginalDeck)
+        self.assertEqual(decks[0].id, 'orig_deck1_id')
+
+    def test_get_connected_original_xl(self):
+        """Deck.get_connected.original_xl"""
+        orig_deck1 = MagicMock()
+        orig_deck1.deck_type.return_value = 'Stream Deck Original'
+        orig_deck1.id.return_value = 'orig_deck1_id'
+
+        xl_deck1 = MagicMock()
+        xl_deck1.deck_type.return_value = 'Stream Deck XL'
+        xl_deck1.id.return_value = 'xl_deck1_id'
+
+        self.m_dev_manager.enumerate.return_value = [orig_deck1, xl_deck1]
+
+        decks = Deck.get_connected()
+
+        self.m_dev_manager.enumerate.assert_called()
+
+        self.assertEqual(len(decks), 2)
+        self.assertEqual(type(decks[0]), OriginalDeck)
+        self.assertEqual(type(decks[1]), XLDeck)
+        self.assertEqual(decks[0].id, 'orig_deck1_id')
+        self.assertEqual(decks[1].id, 'xl_deck1_id')
+
     @patch('builtins.print')
     def test_get_connected_unknown(self, m_print):
         """Deck.get_connected.unknown"""
