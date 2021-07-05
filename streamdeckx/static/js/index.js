@@ -1,6 +1,7 @@
 let connSdSelect = null;
 let currDeck = null;
 let config = null;
+let currButton = null;
 
 $(document).ready(function() {
     connSdSelect = $("#conn-sd-select");
@@ -25,6 +26,12 @@ function openConfig(position) {
         return;
     }
 
+    // Remove from all other elements
+    $('.clicked').each(function(i, elem) {
+        $(elem).removeClass('clicked');
+    });
+
+    currButton = position;
     buttonElem.addClass('clicked');
 
     $.get('/configHtml', {'deckId': connSdSelect.val(), 'button': position}, function(data) {
