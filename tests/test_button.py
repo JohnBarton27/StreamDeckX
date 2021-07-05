@@ -41,6 +41,11 @@ class TestButton(unittest.TestCase):
         button = Button(12)
         self.assertEqual(button.html, '<span id="12" class="btn" onclick="openConfig(12)"></span>')
 
+    def test_serialize(self):
+        """Button.serialize"""
+        button = Button(10)
+        self.assertEqual(button.serialize(), {'position': 10})
+
 
 class TestEmptyButton(unittest.TestCase):
     def test_init(self):
@@ -55,6 +60,11 @@ class TestTextButton(unittest.TestCase):
         button = TextButton(2, 'username')
         self.assertEqual(button.position, 2)
         self.assertEqual(button.text, 'username')
+
+    def test_serialize(self):
+        """TextButton.serialize"""
+        button = TextButton(1, 'username')
+        self.assertEqual(button.serialize(), {'position': 1, 'text': 'username'})
 
 
 if __name__ == '__main__':

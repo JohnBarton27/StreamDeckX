@@ -35,6 +35,12 @@ class Button:
         html = f'<span id="{self.position}" class="btn" onclick="openConfig({self.position})"></span>'
         return html
 
+    def serialize(self):
+        """Converts this button into its JSON representation, suitable for returning from an API"""
+        return {
+            "position": self.position
+        }
+
 
 class EmptyButton(Button):
     """
@@ -50,3 +56,9 @@ class TextButton(Button):
     def __init__(self, position: id, text: str):
         super().__init__(position)
         self.text = text
+
+    def serialize(self):
+        """Converts this button into its JSON representation, suitable for returning from an API"""
+        json = super().serialize()
+        json['text'] = self.text
+        return json
