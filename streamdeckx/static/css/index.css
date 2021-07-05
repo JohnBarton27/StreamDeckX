@@ -28,3 +28,8 @@ h1 {
 .clicked {
     border-color: #8D99AE;
 }
+
+.main-area {
+    display: flex;
+    flex-direction: row;
+}
