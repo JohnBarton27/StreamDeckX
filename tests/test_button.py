@@ -1,6 +1,6 @@
 import unittest
 
-from button import Button, EmptyButton, TextButton
+from button import Button
 
 
 class TestButton(unittest.TestCase):
@@ -45,26 +45,6 @@ class TestButton(unittest.TestCase):
         """Button.serialize"""
         button = Button(10)
         self.assertEqual(button.serialize(), {'position': 10})
-
-
-class TestEmptyButton(unittest.TestCase):
-    def test_init(self):
-        """EmptyButton.__init__"""
-        button = EmptyButton(1)
-        self.assertEqual(button.position, 1)
-
-
-class TestTextButton(unittest.TestCase):
-    def test_init(self):
-        """TextButton.__init__"""
-        button = TextButton(2, 'username')
-        self.assertEqual(button.position, 2)
-        self.assertEqual(button.text, 'username')
-
-    def test_serialize(self):
-        """TextButton.serialize"""
-        button = TextButton(1, 'username')
-        self.assertEqual(button.serialize(), {'position': 1, 'text': 'username'})
 
 
 if __name__ == '__main__':

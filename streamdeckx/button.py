@@ -45,25 +45,3 @@ class Button:
         return {
             "position": self.position
         }
-
-
-class EmptyButton(Button):
-    """
-    Class for a Button that has not been given any actions yet
-    """
-
-
-class TextButton(Button):
-    """
-    Class for a Button that, when pressed, types out a string of text.
-    """
-
-    def __init__(self, position: id, text: str):
-        super().__init__(position)
-        self.text = text
-
-    def serialize(self):
-        """Converts this button into its JSON representation, suitable for returning from an API"""
-        json = super().serialize()
-        json['text'] = self.text
-        return json
