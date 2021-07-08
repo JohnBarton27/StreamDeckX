@@ -7,7 +7,7 @@ app = Flask(__name__, template_folder=os.path.abspath('static'))
 
 @app.route('/')
 def hello():
-    decks = Deck.get_connected(add_testing=True)
+    decks = Deck.get_connected()
     curr_deck = decks[0]
 
     return render_template('index.html', connected_decks=decks, curr_deck_html=curr_deck.html)
@@ -15,7 +15,7 @@ def hello():
 
 @app.route('/deckHtml')
 def get_deck_html():
-    decks = Deck.get_connected(add_testing=True)
+    decks = Deck.get_connected()
     deck_id = request.args.get('deckId')
     for deck in decks:
         if deck.id == deck_id:
@@ -31,7 +31,7 @@ def get_config_html():
     deck_id = request.args.get('deckId')
     button_position = int(request.args.get('button'))
 
-    decks = Deck.get_connected(add_testing=True)
+    decks = Deck.get_connected()
 
     for deck in decks:
         if deck.id == deck_id:
@@ -42,6 +42,7 @@ def get_config_html():
 
     # TODO add error
     return 'Deck not found!'
+
 
 if __name__ == '__main__':
     app.run(port=5050)

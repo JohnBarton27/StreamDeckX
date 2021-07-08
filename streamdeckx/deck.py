@@ -18,7 +18,7 @@ class Deck(ABC):
             self.buttons.append(Button(i))
 
     @staticmethod
-    def get_connected(add_testing=False):
+    def get_connected():
         decks = DeviceManager().enumerate()
         deck_objs = []
 
@@ -29,10 +29,6 @@ class Deck(ABC):
                 deck_objs.append(OriginalDeck(deck.id()))
             else:
                 print(f'Unsupported deck type "{deck.deck_type()}"!')
-
-        if add_testing:
-            deck_objs.append(OriginalDeck('abc123'))
-            deck_objs.append(MiniDeck('def456'))
 
         return deck_objs
 
