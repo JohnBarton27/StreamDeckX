@@ -2,6 +2,7 @@ let connSdSelect = null;
 let currDeck = null;
 let config = null;
 let currButton = null;
+let actionFieldsArea = null;
 
 $(document).ready(function() {
     connSdSelect = $("#conn-sd-select");
@@ -40,11 +41,40 @@ function openConfig(position) {
 }
 
 function openAddActionModal() {
+    actionFieldsArea = $("#actionFields");
+    actionFieldsArea.html('');
+
     let addActionModal = $("#addActionModal");
     addActionModal.css("display", "block");
+
+    // Add listeners
+    let actionTypeSelect = $("#actionTypeSelect");
+    actionTypeSelect.change(function() {
+        let selectedActionType = actionTypeSelect.val();
+        switch (selectedActionType) {
+            case "text":
+                showTextActionFields();
+                break;
+            default:
+                showDefaultActionFields();
+        }
+    });
 
     let closeActionModalButton = $("#closeActionModal");
     closeActionModalButton.click(function() {
         addActionModal.css("display", "none");
     });
+}
+
+function showTextActionFields() {
+    actionFieldsArea.html(`
+        <label for="textValue">Text: </label>
+        <input type="text" id="textValue" style="margin-top: 5px;"/>
+    `);
+}
+
+function showDefaultActionFields() {
+    actionFieldsArea.html(`
+        <p>Unknown action type!</p>
+    `);
 }
