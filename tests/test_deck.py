@@ -112,6 +112,11 @@ class TestXLDeck(unittest.TestCase):
         """XLDeck.__init__"""
         deck = XLDeck('\\hid%#W$AsadSfaefS^Fsef6{123-456-abcd}')
         self.assertEqual(deck.id, '123-456-abcd')
+
+    def test_init_id_in_bytes(self, m_gen_buttons):
+        """XLDeck.__init__.id_in_bytes"""
+        deck = XLDeck(b'xl_id')
+        self.assertEqual(deck.id, 'xl_id')
         self.assertEqual(deck.buttons, [])
         m_gen_buttons.assert_called()
 
@@ -140,6 +145,14 @@ class TestOriginalDeck(unittest.TestCase):
     def test_init(self, m_gen_buttons):
         """OriginalDeck.__init__"""
         deck = OriginalDeck('orig_id')
+        self.assertEqual(deck.id, 'orig_id')
+        self.assertEqual(deck.buttons, [])
+        m_gen_buttons.assert_called()
+
+    @patch('deck.Deck._generate_buttons')
+    def test_init_id_in_bytes(self, m_gen_buttons):
+        """OriginalDeck.__init__.id_in_bytes"""
+        deck = OriginalDeck(b'orig_id')
         self.assertEqual(deck.id, 'orig_id')
         self.assertEqual(deck.buttons, [])
         m_gen_buttons.assert_called()

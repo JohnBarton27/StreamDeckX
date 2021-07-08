@@ -22,6 +22,9 @@ class Deck(ABC):
     deck_dao = DeckDao()
 
     def __init__(self, deck_id: str, name: str=None):
+        if isinstance(deck_id, bytes):
+            deck_id = deck_id.decode('utf-8')
+
         # The 'deck_id' provided by the Stream Deck API can have a lot of extra pieces -
         # this strips it down to what we actually need
         self.id = Deck._strip_id(deck_id)
