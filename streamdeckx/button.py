@@ -11,6 +11,7 @@ class Button:
                 left-to-right, top-to-bottom.
         """
         self.position = position
+        self.actions = []
 
     def __repr__(self):
         return str(self.position)
@@ -34,6 +35,10 @@ class Button:
         """
         html = f'<span id="{self.position}" class="btn" onclick="openConfig({self.position})"></span>'
         return html
+
+    def add_action(self, action):
+        """Add an action to this Button"""
+        self.actions.append(action)
 
     def serialize(self):
         """Converts this button into its JSON representation, suitable for returning from an API"""
