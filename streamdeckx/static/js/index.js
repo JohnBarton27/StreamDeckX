@@ -39,10 +39,12 @@ function openConfig(position) {
     });
 }
 
-function saveButtonConfig() {
-    let buttonText = $("#buttonText").val();
-    $.post('/setButtonText', {'deckId': connSdSelect.val(), 'button': currButton}, function() {
-        alert('done');
+function openAddActionModal() {
+    let addActionModal = $("#addActionModal");
+    addActionModal.css("display", "block");
+
+    let closeActionModalButton = $("#closeActionModal");
+    closeActionModalButton.click(function() {
+        addActionModal.css("display", "none");
     });
-    $("#" + currButton).html(buttonText);
 }
