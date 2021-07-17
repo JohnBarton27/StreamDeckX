@@ -44,5 +44,11 @@ def get_config_html():
     return 'Deck not found!'
 
 
+@app.route('/setButtonText')
+def set_button_text():
+    deck_id = request.args.get('deckId')
+    button_num = request.args.get('button')
+
+
 if __name__ == '__main__':
     app.run(port=5050)

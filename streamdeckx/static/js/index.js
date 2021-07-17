@@ -38,3 +38,11 @@ function openConfig(position) {
         config.html(data);
     });
 }
+
+function saveButtonConfig() {
+    let buttonText = $("#buttonText").val();
+    $.post('/setButtonText', {'deckId': connSdSelect.val(), 'button': currButton}, function() {
+        alert('done');
+    });
+    $("#" + currButton).html(buttonText);
+}
