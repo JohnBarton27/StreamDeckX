@@ -14,6 +14,20 @@ class TestDeck(unittest.TestCase):
         self.m_dev_manager = MagicMock()
         m_dev_manager.return_value = self.m_dev_manager
 
+    def test_deck_interface(self):
+        """Deck.deck_interface"""
+        deck = XLDeck('abc123')
+
+        deck_interface1 = MagicMock()
+        deck_interface1.id.return_value = 'def456'
+
+        deck_interface2 = MagicMock()
+        deck_interface2.id.return_value = 'abc123'
+
+        self.m_dev_manager.enumerate.return_value = [deck_interface1, deck_interface2]
+
+        self.assertEqual(deck.deck_interface, deck_interface2)
+
     def test_get_connected_single_xl(self):
         """Deck.get_connected.single_xl"""
         xl_deck1 = MagicMock()

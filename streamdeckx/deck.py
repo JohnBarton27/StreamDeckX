@@ -12,6 +12,14 @@ class Deck(ABC):
         self.buttons = []
         self._generate_buttons()
 
+    @property
+    def deck_interface(self):
+        decks = DeviceManager().enumerate()
+
+        for deck in decks:
+            if deck.id() == self.id:
+                return deck
+
     def _generate_buttons(self):
         from button import Button
         for i in range(0, self.__class__.cols * self.__class__.rows):
