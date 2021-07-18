@@ -1,9 +1,6 @@
 from abc import ABC
-from PIL import Image, ImageDraw, ImageFont
-import io
 import functools
 import os
-import threading
 
 from PIL import Image, ImageDraw, ImageFont
 from StreamDeck.DeviceManager import DeviceManager

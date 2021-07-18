@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request
 from deck import Deck
 import os
-import threading
-from StreamDeck.DeviceManager import DeviceManager
 
 
 class StreamDeckX(Flask):
@@ -13,17 +11,11 @@ class StreamDeckX(Flask):
         super(StreamDeckX, self).run(host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)
 
 
-def sdx_startup():
-    print("HERE")
-    # for t in threading.enumerate():
-    #     if t is threading.currentThread():
-    #         continue
-    #
-    #     if t.is_alive():
-    #         t.join()
-
-
 app = StreamDeckX(__name__, template_folder=os.path.abspath('static'))
+
+
+def sdx_startup():
+    pass
 
 
 @app.route('/')
