@@ -20,8 +20,8 @@ class Deck(ABC):
         self._generate_buttons()
 
         self.deck_interface.open()
-        for key in range(self.deck_interface.key_count()):
-            self.update_key_image(key, False)
+        self.deck_interface.reset()
+        self.update_key_image(0, False)
 
     @functools.cached_property
     def deck_interface(self):
