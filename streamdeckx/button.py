@@ -1,3 +1,6 @@
+# from pillow import Image, ImageDraw, ImageFont
+# from StreamDeck.DeviceManager import DeviceManager
+# from StreamDeck.ImageHelpers import PILHelper
 
 
 class Button:
@@ -45,3 +48,12 @@ class Button:
         return {
             "position": self.position
         }
+
+    def display_text(self, text: str):
+        """
+        Displays the given text on this button.
+
+        Returns:
+            None
+        """
+        #img = Image.open('C:\Users\John\git\streamdeckx\streamdeckx\static\gradient_sq.png')
