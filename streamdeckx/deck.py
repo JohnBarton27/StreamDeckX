@@ -19,9 +19,9 @@ class Deck(ABC):
         self.buttons = []
         self._generate_buttons()
 
-        self.deck_interface.open()
-        self.deck_interface.reset()
-        self.update_key_image(0, False)
+        # self.deck_interface.open()
+        # self.deck_interface.reset()
+        # self.update_key_image(0, False)
 
     @functools.cached_property
     def deck_interface(self):
