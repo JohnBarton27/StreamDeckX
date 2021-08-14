@@ -1,5 +1,6 @@
 from abc import ABC
 import functools
+import re
 import os
 
 from PIL import Image, ImageDraw, ImageFont
@@ -17,7 +18,14 @@ class Deck(ABC):
     rows = None
 
     def __init__(self, deck_id: str):
-        self.id = deck_id
+        # The 'deck_id' provided by the Stream Deck API can have a lot of extra pieces -
+        # this strips it down to what we actually need
+        if deck_id.startswith('\\'):
+            p = re.compile('{(.*)}')
+            result = p.search(deck_id)
+            self.id = result.group(1)
+        else:
+            self.id = deck_id
         self.buttons = []
         self._generate_buttons()
 

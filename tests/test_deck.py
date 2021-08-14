@@ -107,6 +107,14 @@ class TestXLDeck(unittest.TestCase):
         self.assertEqual(deck.buttons, [])
         m_gen_buttons.assert_called()
 
+    @patch('deck.Deck._generate_buttons')
+    def test_init_strip_id(self, m_gen_buttons):
+        """XLDeck.__init__"""
+        deck = XLDeck('\\hid%#W$AsadSfaefS^Fsef6{123-456-abcd}')
+        self.assertEqual(deck.id, '123-456-abcd')
+        self.assertEqual(deck.buttons, [])
+        m_gen_buttons.assert_called()
+
     def test_generate_buttons(self):
         """XLDeck._generate_buttons"""
         deck = XLDeck('xl_id')
