@@ -4,3 +4,4 @@ venv/
 **/test-reports/*
 *.pyc
 *.iml
+**/sdx_db.db

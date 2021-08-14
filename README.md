@@ -19,3 +19,22 @@ This section of the README defines the development guidelines.
 
 ### Color Scheme
 See this [Coolors palette](https://coolors.co/2b2d42-8d99ae-fafded-152815-f18f01) for the standard colors used in Stream Deck X.
+
+### Database Schema
+StreamDeckX uses a local SQLite database for storing & saving configurations. The schema for each table is listed here.
+
+#### deck 
+Column | Type | Notes/Constraints
+--- | --- | ---
+id | text | Primary Key
+name | text | 
+
+#### button
+Column | Type | Notes/Constraints
+--- | --- | ---
+id | int | Primary Key, autoincrement
+deck_id | text | Foreign Key (deck.id)
+position | int | 
+icon | text |
+font | text |
+label | text |

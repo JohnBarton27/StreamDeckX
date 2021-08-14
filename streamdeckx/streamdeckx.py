@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 import logging
 import os
+import sqlite3 as sl
+from urllib.request import pathname2url
 
 
 class StreamDeckX(Flask):
@@ -66,9 +68,47 @@ def set_button_text():
     button_num = request.args.get('button')
 
 
+def connect_to_database():
+    db_name = 'sdx_db.db'
+    try:
+        dburi = 'file:{}?mode=rw'.format(pathname2url(db_name))
+        conn = sl.connect(dburi, uri=True)
+        logging.info('Found existing database.')
+    except sl.OperationalError:
+        # handle missing database case
+        logging.warning('Could not find database - will initialize an empty one!')
+        conn = sl.connect(db_name)
+
+        with conn:
+            conn.execute("""
+                CREATE TABLE deck (
+                    id TEXT NOT NULL PRIMARY KEY,
+                    name TEXT
+                );                
+            """)
+
+        with conn:
+            conn.execute("""
+                CREATE TABLE button (
+                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    deck_id TEXT NOT NULL REFERENCES deck(id) ON DELETE CASCADE,
+                    position INTEGER NOT NULL,
+                    icon TEXT,
+                    font TEXT,
+                    label TEXT
+                );
+            """)
+
+
 if __name__ == '__main__':
     # Setup Logging
     logging.basicConfig(format='%(levelname)s [%(asctime)s]: %(message)s', level=logging.INFO)
     logging.info('Starting StreamDeckX...')
+
+    # Connect to database
+    logging.info(os.getcwd())
+    logging.info('About to connect to database...')
+    connect_to_database()
+    logging.info('Successfully connected to database.')
 
     app.run(port=5050)
