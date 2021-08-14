@@ -50,18 +50,18 @@ class Deck(ABC):
 
     # Generates a custom tile with run-time generated text and custom image via the
     # PIL module.
-    def render_key_image(self, icon_filename, font_filename, label_text):
+    def render_key_image(self, key_style):
         # Resize the source image asset to best-fit the dimensions of a single key,
         # leaving a margin at the bottom so that we can draw the key title
         # afterwards.
-        icon = Image.open(icon_filename)
+        icon = Image.open(key_style.icon_path)
         image = PILHelper.create_scaled_image(self.deck_interface, icon, margins=[0, 0, 20, 0])
 
         # Load a custom TrueType font and use it to overlay the key index, draw key
         # label onto the image a few pixels from the bottom of the key.
         draw = ImageDraw.Draw(image)
-        font = ImageFont.truetype(font_filename, 14)
-        draw.text((image.width / 2, image.height - 5), text=label_text, font=font, anchor="ms", fill="white")
+        font = ImageFont.truetype(key_style.font_path, 14)
+        draw.text((image.width / 2, image.height - 5), text=key_style.label, font=font, anchor="ms", fill="white")
 
         return PILHelper.to_native_format(self.deck_interface, image)
 
@@ -70,7 +70,7 @@ class Deck(ABC):
         key_style = self.get_key_style(key, state)
 
         # Generate the custom key with the requested image and label.
-        image = self.render_key_image(key_style["icon"], key_style["font"], key_style["label"])
+        image = self.render_key_image(key_style)
 
         # Use a scoped-with on the deck to ensure we're the only thread using it
         # right now.
