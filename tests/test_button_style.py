@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from button_style import ButtonStyle
 
@@ -73,6 +74,28 @@ class TestButtonStyle(unittest.TestCase):
         bs = ButtonStyle('My Style', 'icon.png', 'Arial.ttf', 'Press Me!')
 
         self.assertEqual(hash(bs), hash('My Styleicon.pngArial.ttfPress Me!'))
+
+    @patch('os.path.join')
+    def test_icon_path(self, m_join):
+        """ButtonStyle.icon_path"""
+        bs = ButtonStyle('My Style', 'icon.png', 'Arial.ttf', 'Press Me!')
+
+        m_join.return_value = 'path/to/icon.png'
+        icon_path = bs.icon_path
+
+        m_join.assert_called_with(ButtonStyle.ASSETS_PATH, 'icon.png')
+        self.assertEqual(icon_path, 'path/to/icon.png')
+
+    @patch('os.path.join')
+    def test_font_path(self, m_join):
+        """ButtonStyle.font_path"""
+        bs = ButtonStyle('My Style', 'icon.png', 'Arial.ttf', 'Press Me!')
+
+        m_join.return_value = 'path/to/Arial.ttf'
+        font_path = bs.font_path
+
+        m_join.assert_called_with(ButtonStyle.ASSETS_PATH, 'Arial.ttf')
+        self.assertEqual(font_path, 'path/to/Arial.ttf')
 
 
 if __name__ == '__main__':
