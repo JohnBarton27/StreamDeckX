@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request
-from deck import Deck
 import os
 
 
@@ -20,6 +19,7 @@ def sdx_startup():
 
 @app.route('/')
 def hello():
+    from deck import Deck
     decks = Deck.get_connected()
     curr_deck = decks[0]
 
@@ -28,6 +28,7 @@ def hello():
 
 @app.route('/deckHtml')
 def get_deck_html():
+    from deck import Deck
     decks = Deck.get_connected()
     deck_id = request.args.get('deckId')
     for deck in decks:
@@ -41,6 +42,7 @@ def get_deck_html():
 
 @app.route('/configHtml')
 def get_config_html():
+    from deck import Deck
     deck_id = request.args.get('deckId')
     button_position = int(request.args.get('button'))
 

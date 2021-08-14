@@ -1,3 +1,9 @@
+import functools
+import os
+
+ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
+
+
 class ButtonStyle:
 
     def __init__(self, name: str, icon: str, font: str, label: str):
@@ -34,3 +40,11 @@ class ButtonStyle:
 
     def __hash__(self):
         return hash(f'{self.name}{self.icon}{self.font}{self.label}')
+
+    @functools.cached_property
+    def icon_asset(self):
+        return os.path.join(ASSETS_PATH, self.icon)
+
+    @functools.cached_property
+    def font_asset(self):
+        return os.path.join(ASSETS_PATH, self.font)

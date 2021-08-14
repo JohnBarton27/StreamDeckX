@@ -6,6 +6,8 @@ from PIL import Image, ImageDraw, ImageFont
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 
+from button_style import ButtonStyle
+
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
 
 
@@ -38,17 +40,13 @@ class Deck(ABC):
 
     # Returns styling information for a key based on its position and state.
     def get_key_style(self, key, state):
-        name = "emoji"
-        icon = "{}.png".format("Pressed" if state else "Released")
-        font = "Roboto-Regular.ttf"
-        label = "Pressed!" if state else "Key {}".format(key)
 
-        return {
-            "name": name,
-            "icon": os.path.join(ASSETS_PATH, icon),
-            "font": os.path.join(ASSETS_PATH, font),
-            "label": label
-        }
+        style = ButtonStyle('emoji',
+                            '{}.png'.format('Pressed' if state else 'Released'),
+                            'Roboto-Regular.ttf',
+                            'Pressed!' if state else 'Key {}'.format(key))
+
+        return style
 
     # Generates a custom tile with run-time generated text and custom image via the
     # PIL module.

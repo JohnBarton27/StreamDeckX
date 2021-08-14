@@ -68,6 +68,12 @@ class TestButtonStyle(unittest.TestCase):
 
         self.assertNotEqual(bs1, bs2)
 
+    def test_hash(self):
+        """ButtonStyle.__hash__"""
+        bs = ButtonStyle('My Style', 'icon.png', 'Arial.ttf', 'Press Me!')
+
+        self.assertEqual(hash(bs), hash('My Styleicon.pngArial.ttfPress Me!'))
+
 
 if __name__ == '__main__':
     unittest.main()
