@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+import logging
 import os
 
 
@@ -66,4 +67,8 @@ def set_button_text():
 
 
 if __name__ == '__main__':
+    # Setup Logging
+    logging.basicConfig(format='%(levelname)s [%(asctime)s]: %(message)s', level=logging.INFO)
+    logging.info('Starting StreamDeckX...')
+
     app.run(port=5050)
