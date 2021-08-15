@@ -14,6 +14,14 @@ class TestDeck(unittest.TestCase):
         self.m_dev_manager = MagicMock()
         m_dev_manager.return_value = self.m_dev_manager
 
+        deck_dao_by_id_patch = patch('deck.DeckDao.get_by_id')
+        self.m_deck_dao_by_id = deck_dao_by_id_patch.start()
+        self.addCleanup(deck_dao_by_id_patch.stop)
+
+        deck_dao_create_patch = patch('deck.DeckDao.create')
+        self.m_deck_dao_create = deck_dao_create_patch.start()
+        self.addCleanup(deck_dao_create_patch.stop)
+
     def test_deck_interface(self):
         """Deck.deck_interface"""
         deck = XLDeck('abc123')
@@ -34,7 +42,8 @@ class TestDeck(unittest.TestCase):
         xl_deck1.deck_type.return_value = 'Stream Deck XL'
         xl_deck1.id.return_value = 'xl_deck1_id'
         self.m_dev_manager.enumerate.return_value = [xl_deck1]
-        
+        self.m_deck_dao_by_id.return_value = None
+
         decks = Deck.get_connected()
 
         self.m_dev_manager.enumerate.assert_called()
@@ -42,6 +51,7 @@ class TestDeck(unittest.TestCase):
         self.assertEqual(len(decks), 1)
         self.assertEqual(type(decks[0]), XLDeck)
         self.assertEqual(decks[0].id, 'xl_deck1_id')
+        self.m_deck_dao_create.assert_called()
 
     def test_get_connected_single_original(self):
         """Deck.get_connected.single_original"""
@@ -49,6 +59,7 @@ class TestDeck(unittest.TestCase):
         orig_deck1.deck_type.return_value = 'Stream Deck Original'
         orig_deck1.id.return_value = 'orig_deck1_id'
         self.m_dev_manager.enumerate.return_value = [orig_deck1]
+        self.m_deck_dao_by_id.return_value = None
 
         decks = Deck.get_connected()
 
@@ -57,6 +68,7 @@ class TestDeck(unittest.TestCase):
         self.assertEqual(len(decks), 1)
         self.assertEqual(type(decks[0]), OriginalDeck)
         self.assertEqual(decks[0].id, 'orig_deck1_id')
+        self.m_deck_dao_create.assert_called()
 
     def test_get_connected_original_xl(self):
         """Deck.get_connected.original_xl"""
@@ -69,6 +81,7 @@ class TestDeck(unittest.TestCase):
         xl_deck1.id.return_value = 'xl_deck1_id'
 
         self.m_dev_manager.enumerate.return_value = [orig_deck1, xl_deck1]
+        self.m_deck_dao_by_id.return_value = None
 
         decks = Deck.get_connected()
 
@@ -79,15 +92,17 @@ class TestDeck(unittest.TestCase):
         self.assertEqual(type(decks[1]), XLDeck)
         self.assertEqual(decks[0].id, 'orig_deck1_id')
         self.assertEqual(decks[1].id, 'xl_deck1_id')
+        self.m_deck_dao_create.assert_called()
 
     @patch('builtins.print')
     def test_get_connected_unknown(self, m_print):
         """Deck.get_connected.unknown"""
         unknown_deck1 = MagicMock()
         unknown_deck1.deck_type.return_value = 'Stream Deck Unknown'
-        unknown_deck1.id = 'unknown_deck1_id'
+        unknown_deck1.id.return_value = 'unknown_deck1_id'
         dev_manager = MagicMock()
         self.m_dev_manager.enumerate.return_value = [unknown_deck1]
+        self.m_deck_dao_by_id.return_value = None
 
         decks = Deck.get_connected()
 
@@ -95,6 +110,7 @@ class TestDeck(unittest.TestCase):
 
         self.assertEqual(len(decks), 0)
         m_print.assert_called()
+        self.m_deck_dao_create.assert_not_called()
 
 
 class TestXLDeck(unittest.TestCase):
@@ -113,6 +129,7 @@ class TestXLDeck(unittest.TestCase):
         deck = XLDeck('\\hid%#W$AsadSfaefS^Fsef6{123-456-abcd}')
         self.assertEqual(deck.id, '123-456-abcd')
 
+    @patch('deck.Deck._generate_buttons')
     def test_init_id_in_bytes(self, m_gen_buttons):
         """XLDeck.__init__.id_in_bytes"""
         deck = XLDeck(b'xl_id')
