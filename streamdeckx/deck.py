@@ -10,6 +10,7 @@ from StreamDeck.ImageHelpers import PILHelper
 
 from button_style import ButtonStyle
 from dao.deck_dao import DeckDao
+from deck_types import DeckTypes
 
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
 
@@ -112,11 +113,11 @@ class Deck(ABC):
                 deck_objs.append(deck_from_db)
                 continue
 
-            if deck.deck_type() == 'Stream Deck XL':
+            if deck.deck_type() == DeckTypes.XL.value:
                 deck_obj = XLDeck(deck.id())
                 Deck.deck_dao.create(deck_obj)
                 deck_objs.append(deck_obj)
-            elif deck.deck_type() == 'Stream Deck Original':
+            elif deck.deck_type() == DeckTypes.ORIGINAL.value:
                 deck_obj = OriginalDeck(deck.id())
                 Deck.deck_dao.create(deck_obj)
                 deck_objs.append(deck_obj)
@@ -139,27 +140,27 @@ class Deck(ABC):
 
 
 class XLDeck(Deck):
-    generic_name = 'Stream Deck XL'
+    type = DeckTypes.XL
     cols = 8
     rows = 4
 
     def __init__(self, deck_id: str):
-        super().__init__(deck_id, name=self.__class__.generic_name)
+        super().__init__(deck_id, name=str(self.__class__.type.value))
 
 
 class OriginalDeck(Deck):
-    generic_name = 'Stream Deck Original'
+    type = DeckTypes.ORIGINAL
     cols = 5
     rows = 3
 
     def __init__(self, deck_id: str):
-        super().__init__(deck_id, name=self.__class__.generic_name)
+        super().__init__(deck_id, name=str(self.__class__.type.value))
 
 
 class MiniDeck(Deck):
-    generic_name = 'Stream Deck Mini'
+    type = DeckTypes.MINI
     cols = 3
     rows = 2
 
     def __init__(self, deck_id: str):
-        super().__init__(deck_id, name=self.__class__.generic_name)
+        super().__init__(deck_id, name=str(self.__class__.type.value))

@@ -28,6 +28,7 @@ Column | Type | Notes/Constraints
 --- | --- | ---
 id | text | Primary Key
 name | text | 
+type | text |
 
 #### button
 Column | Type | Notes/Constraints

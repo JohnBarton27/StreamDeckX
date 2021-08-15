@@ -83,7 +83,8 @@ def connect_to_database():
             conn.execute("""
                 CREATE TABLE deck (
                     id TEXT NOT NULL PRIMARY KEY,
-                    name TEXT
+                    name TEXT,
+                    type TEXT
                 );                
             """)
 

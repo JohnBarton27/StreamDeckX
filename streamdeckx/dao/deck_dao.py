@@ -2,6 +2,7 @@ import logging
 import sqlite3 as sl
 
 from dao.dao import Dao
+from deck_types import DeckTypes
 
 
 class DeckDao(Dao):
@@ -29,19 +30,20 @@ class DeckDao(Dao):
         with conn:
             cursor = conn.cursor()
             cursor.execute(f"""
-                INSERT INTO deck (id, name) VALUES (?, ?);
-            """, (obj.id, obj.name))
+                INSERT INTO deck (id, name, type) VALUES (?, ?, ?);
+            """, (obj.id, obj.name, obj.__class__.type.name))
             conn.commit()
 
     def get_obj_from_result(self, cursor):
         from deck import XLDeck, OriginalDeck
         deck_id = cursor['id']
-        name = cursor['name']
+        deck_type_name = cursor['type']
+        deck_type = DeckTypes.get_by_name(deck_type_name)
 
-        if name == 'Stream Deck XL':
+        if deck_type == DeckTypes.XL:
             return XLDeck(deck_id)
 
-        if name == 'Stream Deck (Original)':
+        if deck_type == DeckTypes.ORIGINAL:
             return OriginalDeck(deck_id)
 
-
+        # TODO add handling for mini
