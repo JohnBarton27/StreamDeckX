@@ -1,5 +1,6 @@
 from abc import ABC
 import functools
+import logging
 import re
 import os
 
@@ -8,6 +9,7 @@ from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 
 from button_style import ButtonStyle
+from dao.deck_dao import DeckDao
 
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
 
@@ -17,15 +19,13 @@ class Deck(ABC):
     cols = None
     rows = None
 
-    def __init__(self, deck_id: str):
+    deck_dao = DeckDao()
+
+    def __init__(self, deck_id: str, name: str=None):
         # The 'deck_id' provided by the Stream Deck API can have a lot of extra pieces -
         # this strips it down to what we actually need
-        if deck_id.startswith('\\'):
-            p = re.compile('{(.*)}')
-            result = p.search(deck_id)
-            self.id = result.group(1)
-        else:
-            self.id = deck_id
+        self.id = Deck._strip_id(deck_id)
+        self.name = name
         self.buttons = []
         self._generate_buttons()
 
@@ -45,6 +45,15 @@ class Deck(ABC):
         from button import Button
         for i in range(0, self.__class__.cols * self.__class__.rows):
             self.buttons.append(Button(i))
+
+    @staticmethod
+    def _strip_id(full_id):
+        if full_id.startswith('\\'):
+            p = re.compile('{(.*)}')
+            result = p.search(full_id)
+            return result.group(1)
+        else:
+            return full_id
 
     # Returns styling information for a key based on its position and state.
     def get_key_style(self, key, state):
@@ -92,10 +101,22 @@ class Deck(ABC):
         deck_objs = []
 
         for deck in decks:
+            deck_id = Deck._strip_id(deck.id())
+            deck_from_db = Deck.deck_dao.get_by_id(deck_id)
+            logging.info(f'Deck from DB: {deck_from_db}')
+
+            if deck_from_db:
+                deck_objs.append(deck_from_db)
+                continue
+
             if deck.deck_type() == 'Stream Deck XL':
-                deck_objs.append(XLDeck(deck.id()))
+                deck_obj = XLDeck(deck.id())
+                Deck.deck_dao.create(deck_obj)
+                deck_objs.append(deck_obj)
             elif deck.deck_type() == 'Stream Deck Original':
-                deck_objs.append(OriginalDeck(deck.id()))
+                deck_obj = OriginalDeck(deck.id())
+                Deck.deck_dao.create(deck_obj)
+                deck_objs.append(deck_obj)
             else:
                 print(f'Unsupported deck type "{deck.deck_type()}"!')
 
@@ -120,7 +141,7 @@ class XLDeck(Deck):
     rows = 4
 
     def __init__(self, deck_id: str):
-        super().__init__(deck_id)
+        super().__init__(deck_id, name=self.__class__.generic_name)
 
 
 class OriginalDeck(Deck):
@@ -128,8 +149,14 @@ class OriginalDeck(Deck):
     cols = 5
     rows = 3
 
+    def __init__(self, deck_id: str):
+        super().__init__(deck_id, name=self.__class__.generic_name)
+
 
 class MiniDeck(Deck):
     generic_name = 'Stream Deck Mini'
     cols = 3
     rows = 2
+
+    def __init__(self, deck_id: str):
+        super().__init__(deck_id, name=self.__class__.generic_name)
