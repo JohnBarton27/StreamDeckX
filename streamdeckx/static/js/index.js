@@ -64,6 +64,11 @@ function openAddActionModal() {
     closeActionModalButton.click(function() {
         addActionModal.css("display", "none");
     });
+
+    let addActionButton = $("#addActionButton");
+    addActionButton.click(function() {
+        // Submit creation of action
+    });
 }
 
 function showTextActionFields() {
