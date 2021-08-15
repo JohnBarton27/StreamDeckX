@@ -11,4 +11,6 @@ loader = unittest.TestLoader()
 suite = loader.discover(test_dir)
 
 runner = xmlrunner.XMLTestRunner("test-reports")
-runner.run(suite)
+results = runner.run(suite)
+if results.errors or results.failures:
+    raise Exception('Found unit test failures!')

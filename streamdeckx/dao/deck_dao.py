@@ -31,4 +31,5 @@ class DeckDao(Dao):
             conn.commit()
 
     def get_obj_from_result(self, result):
+        pass
 
