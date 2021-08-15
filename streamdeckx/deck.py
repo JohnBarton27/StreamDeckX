@@ -148,7 +148,7 @@ class XLDeck(Deck):
 
 
 class OriginalDeck(Deck):
-    generic_name = 'Stream Deck (Original)'
+    generic_name = 'Stream Deck Original'
     cols = 5
     rows = 3
 
