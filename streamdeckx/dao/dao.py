@@ -15,7 +15,7 @@ class Dao(ABC):
         pass
 
     @abstractmethod
-    def get_obj_from_result(self):
+    def get_obj_from_result(self, result):
         pass
 
     @staticmethod

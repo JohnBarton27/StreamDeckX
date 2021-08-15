@@ -7,14 +7,14 @@ from deck_types import DeckTypes
 
 class DeckDao(Dao):
 
-    def get_by_id(self, obj_id):
+    def get_by_id(self, deck_id):
         conn = DeckDao.get_db_conn()
 
         with conn:
             conn.row_factory = sl.Row
             cursor = conn.cursor()
             cursor.execute(f"""
-                SELECT * FROM deck WHERE id='{obj_id}';
+                SELECT * FROM deck WHERE id='{deck_id}';
             """)
 
             result = cursor.fetchall()
@@ -24,20 +24,20 @@ class DeckDao(Dao):
         deck = self.get_obj_from_result(dict(result[0]))
         return deck
 
-    def create(self, obj):
+    def create(self, deck):
         conn = DeckDao.get_db_conn()
 
         with conn:
             cursor = conn.cursor()
             cursor.execute(f"""
                 INSERT INTO deck (id, name, type) VALUES (?, ?, ?);
-            """, (obj.id, obj.name, obj.__class__.type.name))
+            """, (deck.id, deck.name, deck.__class__.type.name))
             conn.commit()
 
-    def get_obj_from_result(self, cursor):
+    def get_obj_from_result(self, result):
         from deck import XLDeck, OriginalDeck
-        deck_id = cursor['id']
-        deck_type_name = cursor['type']
+        deck_id = result['id']
+        deck_type_name = result['type']
         deck_type = DeckTypes.get_by_name(deck_type_name)
 
         if deck_type == DeckTypes.XL:
