@@ -8,6 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 
+from button import Button
 from button_style import ButtonStyle
 from dao.deck_dao import DeckDao
 from deck_types import DeckTypes
@@ -31,6 +32,10 @@ class Deck(ABC):
         self.id = Deck._strip_id(deck_id)
         self.name = name
         self.buttons = []
+
+        # Populate with the correct number of (empty) buttons
+        for i in range(0, self.__class__.get_num_buttons()):
+            self.buttons.append(Button(i, self))
 
         # self.deck_interface.open()
         # self.deck_interface.reset()

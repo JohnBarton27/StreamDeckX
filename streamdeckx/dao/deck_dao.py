@@ -38,10 +38,9 @@ class DeckDao(Dao):
             """, (deck.id, deck.name, deck.__class__.type.name))
             conn.commit()
 
-            for i in range(0, deck.__class__.get_num_buttons()):
-                button = Button(i, deck)
+            # Create all buttons
+            for button in deck.buttons:
                 DeckDao.button_dao.create(button)
-                deck.buttons.append(button)
 
     def get_obj_from_result(self, result):
         from deck import XLDeck, OriginalDeck

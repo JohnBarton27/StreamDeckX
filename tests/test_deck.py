@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock, PropertyMock
 
+from button import Button
 from deck import Deck, MiniDeck, OriginalDeck, XLDeck
 
 
@@ -115,35 +116,24 @@ class TestDeck(unittest.TestCase):
 
 class TestXLDeck(unittest.TestCase):
 
-    @patch('deck.Deck._generate_buttons')
-    def test_init(self, m_gen_buttons):
+    def test_init(self):
         """XLDeck.__init__"""
         deck = XLDeck('xl_id')
         self.assertEqual(deck.id, 'xl_id')
-        self.assertEqual(deck.buttons, [])
-        m_gen_buttons.assert_called()
+        self.assertEqual(len(deck.buttons), 32)
+        self.assertIsInstance(deck.buttons[4], Button)
 
-    @patch('deck.Deck._generate_buttons')
-    def test_init_strip_id(self, m_gen_buttons):
+    def test_init_strip_id(self):
         """XLDeck.__init__"""
         deck = XLDeck('\\hid%#W$AsadSfaefS^Fsef6{123-456-abcd}')
         self.assertEqual(deck.id, '123-456-abcd')
 
-    @patch('deck.Deck._generate_buttons')
-    def test_init_id_in_bytes(self, m_gen_buttons):
+    def test_init_id_in_bytes(self):
         """XLDeck.__init__.id_in_bytes"""
         deck = XLDeck(b'xl_id')
         self.assertEqual(deck.id, 'xl_id')
-        self.assertEqual(deck.buttons, [])
-        m_gen_buttons.assert_called()
-
-    def test_generate_buttons(self):
-        """XLDeck._generate_buttons"""
-        deck = XLDeck('xl_id')
         self.assertEqual(len(deck.buttons), 32)
-        self.assertEqual(deck.buttons[0].position, 0)
-        self.assertEqual(deck.buttons[12].position, 12)
-        self.assertEqual(deck.buttons[31].position, 31)
+        self.assertIsInstance(deck.buttons[12], Button)
 
     @patch('button.Button.html', new_callable=PropertyMock)
     def test_html(self, m_button_html):
@@ -158,28 +148,19 @@ class TestXLDeck(unittest.TestCase):
 
 class TestOriginalDeck(unittest.TestCase):
 
-    @patch('deck.Deck._generate_buttons')
-    def test_init(self, m_gen_buttons):
+    def test_init(self):
         """OriginalDeck.__init__"""
         deck = OriginalDeck('orig_id')
         self.assertEqual(deck.id, 'orig_id')
-        self.assertEqual(deck.buttons, [])
-        m_gen_buttons.assert_called()
+        self.assertEqual(len(deck.buttons), 15)
+        self.assertIsInstance(deck.buttons[4], Button)
 
-    @patch('deck.Deck._generate_buttons')
-    def test_init_id_in_bytes(self, m_gen_buttons):
+    def test_init_id_in_bytes(self):
         """OriginalDeck.__init__.id_in_bytes"""
         deck = OriginalDeck(b'orig_id')
         self.assertEqual(deck.id, 'orig_id')
-        self.assertEqual(deck.buttons, [])
-        m_gen_buttons.assert_called()
-
-    def test_generate_buttons(self):
-        """OriginalDeck._generate_buttons"""
-        deck = OriginalDeck('orig_id')
         self.assertEqual(len(deck.buttons), 15)
-        self.assertEqual(deck.buttons[0].position, 0)
-        self.assertEqual(deck.buttons[12].position, 12)
+        self.assertIsInstance(deck.buttons[0], Button)
 
     @patch('button.Button.html', new_callable=PropertyMock)
     def test_html(self, m_button_html):
@@ -194,20 +175,12 @@ class TestOriginalDeck(unittest.TestCase):
 
 class TestMiniDeck(unittest.TestCase):
 
-    @patch('deck.Deck._generate_buttons')
-    def test_init(self, m_gen_buttons):
+    def test_init(self):
         """MiniDeck.__init__"""
         deck = MiniDeck('mini_id')
         self.assertEqual(deck.id, 'mini_id')
-        self.assertEqual(deck.buttons, [])
-        m_gen_buttons.assert_called()
-
-    def test_generate_buttons(self):
-        """MiniDeck._generate_buttons"""
-        deck = MiniDeck('mini_id')
         self.assertEqual(len(deck.buttons), 6)
-        self.assertEqual(deck.buttons[0].position, 0)
-        self.assertEqual(deck.buttons[5].position, 5)
+        self.assertIsInstance(deck.buttons[4], Button)
 
     @patch('button.Button.html', new_callable=PropertyMock)
     def test_html(self, m_button_html):
