@@ -1,8 +1,3 @@
-# from pillow import Image, ImageDraw, ImageFont
-# from StreamDeck.DeviceManager import DeviceManager
-# from StreamDeck.ImageHelpers import PILHelper
-
-
 class Button:
 
     def __init__(self, position: int, deck, btn_id: int=None):
@@ -19,6 +14,7 @@ class Button:
         self.deck = deck
         self.id = btn_id
         self.actions = []
+        self.style = None
 
     def __repr__(self):
         return str(self.position)
@@ -52,12 +48,3 @@ class Button:
         return {
             "position": self.position
         }
-
-    def display_text(self, text: str):
-        """
-        Displays the given text on this button.
-
-        Returns:
-            None
-        """
-        #img = Image.open('C:\Users\John\git\streamdeckx\streamdeckx\static\gradient_sq.png')
