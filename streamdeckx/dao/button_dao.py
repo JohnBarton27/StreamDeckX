@@ -29,7 +29,8 @@ class ButtonDao(Dao):
             cursor = conn.cursor()
             cursor.execute(f"""
                 INSERT into button (deck_id, position) VALUES (?, ?);
-            """, button.deck.id, button.position)
+            """, (button.deck.id, button.position))
+            conn.commit()
 
     def get_obj_from_result(self, result):
         from button import Button

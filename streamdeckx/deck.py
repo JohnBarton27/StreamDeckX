@@ -31,7 +31,6 @@ class Deck(ABC):
         self.id = Deck._strip_id(deck_id)
         self.name = name
         self.buttons = []
-        self._generate_buttons()
 
         # self.deck_interface.open()
         # self.deck_interface.reset()
@@ -45,10 +44,9 @@ class Deck(ABC):
             if deck.id() == self.id:
                 return deck
 
-    def _generate_buttons(self):
-        from button import Button
-        for i in range(0, self.__class__.cols * self.__class__.rows):
-            self.buttons.append(Button(i))
+    @classmethod
+    def get_num_buttons(cls):
+        return cls.cols * cls.rows
 
     @staticmethod
     def _strip_id(full_id):

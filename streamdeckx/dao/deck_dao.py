@@ -1,11 +1,15 @@
 import logging
 import sqlite3 as sl
 
+from button import Button
+from dao.button_dao import ButtonDao
 from dao.dao import Dao
 from deck_types import DeckTypes
 
 
 class DeckDao(Dao):
+
+    button_dao = ButtonDao()
 
     def get_by_id(self, deck_id):
         conn = DeckDao.get_db_conn()
@@ -34,7 +38,10 @@ class DeckDao(Dao):
             """, (deck.id, deck.name, deck.__class__.type.name))
             conn.commit()
 
-            # TODO Insert buttons
+            for i in range(0, deck.__class__.get_num_buttons()):
+                button = Button(i, deck)
+                DeckDao.button_dao.create(button)
+                deck.buttons.append(button)
 
     def get_obj_from_result(self, result):
         from deck import XLDeck, OriginalDeck
