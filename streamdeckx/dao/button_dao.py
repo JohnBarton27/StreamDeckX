@@ -13,7 +13,7 @@ class ButtonDao(Dao):
             cursor = conn.cursor()
             cursor.execute("""
                 SELECT * FROM button WHERE id=?;
-            """, button_id)
+            """, str(button_id))
 
             result = cursor.fetchall()
             if not result:
@@ -37,6 +37,7 @@ class ButtonDao(Dao):
 
         position = result['position']
         btn_id = result['id']
+        deck_id = result['deck_id']
 
         # TODO add button styling to retrieval
 
