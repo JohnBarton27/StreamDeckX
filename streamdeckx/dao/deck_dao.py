@@ -34,6 +34,8 @@ class DeckDao(Dao):
             """, (deck.id, deck.name, deck.__class__.type.name))
             conn.commit()
 
+            # TODO Insert buttons
+
     def get_obj_from_result(self, result):
         from deck import XLDeck, OriginalDeck
         deck_id = result['id']

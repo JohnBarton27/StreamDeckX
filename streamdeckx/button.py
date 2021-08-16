@@ -5,15 +5,19 @@
 
 class Button:
 
-    def __init__(self, position: int):
+    def __init__(self, position: int, deck, btn_id: int=None):
         """
         Constructor for Button class.
 
         Args:
             position (int): Position of this button on its Stream Deck. Positions start at 0 and are assigned
                 left-to-right, top-to-bottom.
+            deck (Deck): Deck object that this Button belongs to
+            btn_id (int): Database ID of the button (default: None)
         """
         self.position = position
+        self.deck = deck
+        self.id = btn_id
         self.actions = []
 
     def __repr__(self):
