@@ -12,7 +12,7 @@
         <label>Selected Stream Deck:</label>
         <select id="conn-sd-select">
             {%for deck in connected_decks%}
-            <option value="{{deck.id}}">{{deck.__class__.generic_name}}</option>
+            <option value="{{deck.id}}">{{deck.name}}</option>
             {%endfor%}
         </select>
     </div>
