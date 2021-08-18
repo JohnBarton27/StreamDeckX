@@ -6,7 +6,7 @@ class ButtonStyle:
 
     ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
 
-    def __init__(self, name: str, icon: str, font: str, label: str):
+    def __init__(self, name: str, icon: str = 'blank.png', font: str = 'Roboto-Regular.ttf', label: str = ''):
         self.name = name
         self.icon = icon
         self.font = font
@@ -43,8 +43,14 @@ class ButtonStyle:
 
     @functools.cached_property
     def icon_path(self):
+        if not self.icon:
+            return None
+
         return os.path.join(ButtonStyle.ASSETS_PATH, self.icon)
 
     @functools.cached_property
     def font_path(self):
+        if not self.font:
+            return None
+
         return os.path.join(ButtonStyle.ASSETS_PATH, self.font)

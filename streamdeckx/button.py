@@ -21,7 +21,7 @@ class Button:
         self.deck = deck
         self.id = btn_id
         self.actions = []
-        self.style = style
+        self.style = style if style else ButtonStyle('text', font='Roboto-Regular.ttf', label=f'{self.position}')
 
         if self.style:
             self.update_key_image()
@@ -66,13 +66,14 @@ class Button:
         # leaving a margin at the bottom so that we can draw the key title
         # afterwards.
         icon = Image.open(self.style.icon_path)
-        image = PILHelper.create_scaled_image(self.deck.deck_interface, icon, margins=[0, 0, 30, 0])
+        image = PILHelper.create_scaled_image(self.deck.deck_interface, icon, margins=[0, 0, 0, 0])
 
         # Load a custom TrueType font and use it to overlay the key index, draw key
         # label onto the image a few pixels from the bottom of the key.
         draw = ImageDraw.Draw(image)
-        font = ImageFont.truetype(self.style.font_path, 14)
-        draw.text((0, image.height * 0.75), text=self.style.label, font=font, anchor="mm", align="center", fill="white")
+
+        font = ImageFont.truetype(self.style.font_path, 16)
+        draw.text((10, 52), text=self.style.label, font=font, align="center", fill="white")
 
         return PILHelper.to_native_format(self.deck.deck_interface, image)
 

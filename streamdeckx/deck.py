@@ -31,14 +31,14 @@ class Deck(ABC):
         self.name = name
         self.buttons = []
 
-        # Populate with the correct number of (empty) buttons
-        for i in range(0, self.__class__.get_num_buttons()):
-            self.buttons.append(Button(i, self))
-
         if self.deck_interface:
             self.deck_interface.open()
             self.deck_interface.reset()
             self.deck_interface.close()
+
+        # Populate with the correct number of (empty) buttons
+        for i in range(0, self.__class__.get_num_buttons()):
+            self.buttons.append(Button(i, self))
 
     def __str__(self):
         return f'{self.name}'
