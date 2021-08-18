@@ -38,6 +38,7 @@ class Deck(ABC):
         if self.deck_interface:
             self.deck_interface.open()
             self.deck_interface.reset()
+            self.deck_interface.close()
 
     @functools.cached_property
     def deck_interface(self):
