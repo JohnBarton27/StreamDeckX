@@ -162,6 +162,18 @@ class TestOriginalDeck(unittest.TestCase):
         self.assertEqual(len(deck.buttons), 15)
         self.assertIsInstance(deck.buttons[0], Button)
 
+    def test_str(self):
+        """OriginalDeck.__str__"""
+        deck = OriginalDeck('orig_id')
+
+        self.assertEqual(str(deck), 'Stream Deck Original')
+
+    def test_repr(self):
+        """OriginalDeck.__repr__"""
+        deck = OriginalDeck('orig_id')
+
+        self.assertEqual(repr(deck), 'Stream Deck Original (orig_id)')
+
     @patch('button.Button.html', new_callable=PropertyMock)
     def test_html(self, m_button_html):
         """OriginalDeck.html"""

@@ -40,6 +40,12 @@ class Deck(ABC):
             self.deck_interface.reset()
             self.deck_interface.close()
 
+    def __str__(self):
+        return f'{self.name}'
+
+    def __repr__(self):
+        return f'{self.name} ({self.id})'
+
     @functools.cached_property
     def deck_interface(self):
         decks = DeviceManager().enumerate()
