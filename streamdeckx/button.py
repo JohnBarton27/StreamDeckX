@@ -1,7 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont
 from StreamDeck.ImageHelpers import PILHelper
 
-
 from button_style import ButtonStyle
 
 
@@ -21,7 +20,7 @@ class Button:
         self.deck = deck
         self.id = btn_id
         self.actions = []
-        self.style = ButtonStyle('Test', 'Pressed.png', 'Roboto-Regular.ttf', 'Test Text')
+        self.style = ButtonStyle('Test', 'Pressed.png', 'Roboto-Regular.ttf', f'{self.position}')
         self.update_key_image()
 
     def __repr__(self):
@@ -64,13 +63,13 @@ class Button:
         # leaving a margin at the bottom so that we can draw the key title
         # afterwards.
         icon = Image.open(self.style.icon_path)
-        image = PILHelper.create_scaled_image(self.deck.deck_interface, icon, margins=[0, 0, 20, 0])
+        image = PILHelper.create_scaled_image(self.deck.deck_interface, icon, margins=[0, 0, 30, 0])
 
         # Load a custom TrueType font and use it to overlay the key index, draw key
         # label onto the image a few pixels from the bottom of the key.
         draw = ImageDraw.Draw(image)
         font = ImageFont.truetype(self.style.font_path, 14)
-        draw.text((image.width / 2, image.height - 5), text=self.style.label, font=font, anchor="ms", fill="white")
+        draw.text((0, image.height * 0.75), text=self.style.label, font=font, anchor="mm", align="center", fill="white")
 
         return PILHelper.to_native_format(self.deck.deck_interface, image)
 
@@ -78,8 +77,8 @@ class Button:
         # Generate the custom key with the requested image and label.
         image = self.render_key_image()
 
-        # Use a scoped-with on the deck to ensure we're the only thread using it
-        # right now.
-        with self.deck.deck_interface:
-            # Update requested key with the generated image.
-            self.deck.deck_interface.set_key_image(self.position, image)
+        self.deck.deck_interface.open()
+
+        # Update requested key with the generated image.
+        self.deck.deck_interface.set_key_image(self.position, image)
+        self.deck.deck_interface.close()
