@@ -35,9 +35,9 @@ class Deck(ABC):
         for i in range(0, self.__class__.get_num_buttons()):
             self.buttons.append(Button(i, self))
 
-        # self.deck_interface.open()
-        # self.deck_interface.reset()
-        # self.update_key_image(0, False)
+        if self.deck_interface:
+            self.deck_interface.open()
+            self.deck_interface.reset()
 
     @functools.cached_property
     def deck_interface(self):

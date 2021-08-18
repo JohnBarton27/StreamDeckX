@@ -25,8 +25,6 @@ class TestDeck(unittest.TestCase):
 
     def test_deck_interface(self):
         """Deck.deck_interface"""
-        deck = XLDeck('abc123')
-
         deck_interface1 = MagicMock()
         deck_interface1.id.return_value = 'def456'
 
@@ -34,6 +32,8 @@ class TestDeck(unittest.TestCase):
         deck_interface2.id.return_value = 'abc123'
 
         self.m_dev_manager.enumerate.return_value = [deck_interface1, deck_interface2]
+
+        deck = XLDeck('abc123')
 
         self.assertEqual(deck.deck_interface, deck_interface2)
 

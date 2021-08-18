@@ -6,7 +6,7 @@ from button_style import ButtonStyle
 
 class Button:
 
-    def __init__(self, position: int, deck, btn_id: int=None):
+    def __init__(self, position: int, deck, btn_id: int = None, style: ButtonStyle = None):
         """
         Constructor for Button class.
 
@@ -15,13 +15,16 @@ class Button:
                 left-to-right, top-to-bottom.
             deck (Deck): Deck object that this Button belongs to
             btn_id (int): Database ID of the button (default: None)
+            style (ButtonStyle): Style of the Button (text/image/font/etc.)
         """
         self.position = position
         self.deck = deck
         self.id = btn_id
         self.actions = []
-        self.style = ButtonStyle('Test', 'Pressed.png', 'Roboto-Regular.ttf', f'{self.position}')
-        self.update_key_image()
+        self.style = style
+
+        if self.style:
+            self.update_key_image()
 
     def __repr__(self):
         return str(self.position)
