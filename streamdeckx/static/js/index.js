@@ -1,17 +1,21 @@
 let connSdSelect = null;
 let currDeck = null;
+let currDeckId = null;
 let config = null;
 let currButton = null;
 let actionFieldsArea = null;
+let buttonTextField = null;
 
 $(document).ready(function() {
     connSdSelect = $("#conn-sd-select");
     currDeck = $("#curr-deck");
     config = $("#config");
+    currDeckId = connSdSelect.val();
 
     // Set listener on dropdown
     connSdSelect.on('change', function () {
-        $.get('/deckHtml', {'deckId': connSdSelect.val()}, function(data) {
+        currDeckId = connSdSelect.val();
+        $.get('/deckHtml', {'deckId': currDeckId}, function(data) {
             currDeck.html(data);
         });
     });
@@ -35,8 +39,9 @@ function openConfig(position) {
     currButton = position;
     buttonElem.addClass('clicked');
 
-    $.get('/configHtml', {'deckId': connSdSelect.val(), 'button': position}, function(data) {
+    $.get('/configHtml', {'deckId': currDeckId, 'button': position}, function(data) {
         config.html(data);
+        buttonTextField = $("#buttonText")
     });
 }
 
@@ -82,4 +87,12 @@ function showDefaultActionFields() {
     actionFieldsArea.html(`
         <p>Unknown action type!</p>
     `);
+}
+
+function submit() {
+    let buttonText = buttonTextField.val()
+
+    $.post('/setButtonConfig', {'deckId': currDeckId, 'button': currButton, 'buttonText': buttonText}, function(data) {
+        // pass
+    }, 'json');
 }

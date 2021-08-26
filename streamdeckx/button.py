@@ -49,6 +49,16 @@ class Button:
         html = f'<span id="{self.position}" class="btn" onclick="openConfig({self.position})"></span>'
         return html
 
+    def set_text(self, text: str):
+        """
+        Sets the text of this Button.
+
+        Args:
+            text (str): Text to apply to this Button
+        """
+        self.style.label = text
+        self.update_key_image()
+
     def add_action(self, action):
         """Add an action to this Button"""
         self.actions.append(action)

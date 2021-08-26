@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import logging
 import os
 import sqlite3 as sl
+from urllib import parse
 from urllib.request import pathname2url
 
 
@@ -62,10 +63,25 @@ def get_config_html():
     return 'Deck not found!'
 
 
-@app.route('/setButtonText')
+@app.route('/setButtonConfig', methods=['POST'])
 def set_button_text():
-    deck_id = request.args.get('deckId')
-    button_num = request.args.get('button')
+    from deck import Deck
+
+    deck_id = request.form['deckId']
+    button_position = int(request.form['button'])
+    button_text = request.form['buttonText']
+
+    logging.info(f'Setting {button_position} on {deck_id} to {button_text}')
+
+    decks = Deck.get_connected()
+
+    for deck in decks:
+        if deck.id == deck_id:
+            # This is the deck we selected
+            button = deck.buttons[button_position]
+            button.set_text(button_text)
+
+    return 'Success!'
 
 
 def connect_to_database():
