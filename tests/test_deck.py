@@ -8,6 +8,10 @@ from deck import Deck, MiniDeck, OriginalDeck, XLDeck
 class TestDeck(unittest.TestCase):
 
     def setUp(self):
+        patch_render_button = patch('button.Button.update_key_image')
+        self.m_render_button = patch_render_button.start()
+        self.addCleanup(patch_render_button.stop)
+
         device_manager_patch = patch('deck.DeviceManager')
         m_dev_manager = device_manager_patch.start()
         self.addCleanup(device_manager_patch.stop)
@@ -37,13 +41,15 @@ class TestDeck(unittest.TestCase):
 
         self.assertEqual(deck.deck_interface, deck_interface2)
 
-    def test_get_connected_single_xl(self):
+    @patch('deck.Deck._get_instantiated_deck_by_id')
+    def test_get_connected_single_xl(self, m_inst_by_id):
         """Deck.get_connected.single_xl"""
         xl_deck1 = MagicMock()
         xl_deck1.deck_type.return_value = 'Stream Deck XL'
         xl_deck1.id.return_value = 'xl_deck1_id'
         self.m_dev_manager.enumerate.return_value = [xl_deck1]
         self.m_deck_dao_by_id.return_value = None
+        m_inst_by_id.return_value = None
 
         decks = Deck.get_connected()
 
@@ -54,13 +60,15 @@ class TestDeck(unittest.TestCase):
         self.assertEqual(decks[0].id, 'xl_deck1_id')
         self.m_deck_dao_create.assert_called()
 
-    def test_get_connected_single_original(self):
+    @patch('deck.Deck._get_instantiated_deck_by_id')
+    def test_get_connected_single_original(self, m_inst_by_id):
         """Deck.get_connected.single_original"""
         orig_deck1 = MagicMock()
         orig_deck1.deck_type.return_value = 'Stream Deck Original'
         orig_deck1.id.return_value = 'orig_deck1_id'
         self.m_dev_manager.enumerate.return_value = [orig_deck1]
         self.m_deck_dao_by_id.return_value = None
+        m_inst_by_id.return_value = None
 
         decks = Deck.get_connected()
 
@@ -71,7 +79,8 @@ class TestDeck(unittest.TestCase):
         self.assertEqual(decks[0].id, 'orig_deck1_id')
         self.m_deck_dao_create.assert_called()
 
-    def test_get_connected_original_xl(self):
+    @patch('deck.Deck._get_instantiated_deck_by_id')
+    def test_get_connected_original_xl(self, m_inst_by_id):
         """Deck.get_connected.original_xl"""
         orig_deck1 = MagicMock()
         orig_deck1.deck_type.return_value = 'Stream Deck Original'
@@ -83,6 +92,7 @@ class TestDeck(unittest.TestCase):
 
         self.m_dev_manager.enumerate.return_value = [orig_deck1, xl_deck1]
         self.m_deck_dao_by_id.return_value = None
+        m_inst_by_id.return_value = None
 
         decks = Deck.get_connected()
 
@@ -95,8 +105,9 @@ class TestDeck(unittest.TestCase):
         self.assertEqual(decks[1].id, 'xl_deck1_id')
         self.m_deck_dao_create.assert_called()
 
+    @patch('deck.Deck._get_instantiated_deck_by_id')
     @patch('builtins.print')
-    def test_get_connected_unknown(self, m_print):
+    def test_get_connected_unknown(self, m_print, m_inst_by_id):
         """Deck.get_connected.unknown"""
         unknown_deck1 = MagicMock()
         unknown_deck1.deck_type.return_value = 'Stream Deck Unknown'
@@ -104,6 +115,7 @@ class TestDeck(unittest.TestCase):
         dev_manager = MagicMock()
         self.m_dev_manager.enumerate.return_value = [unknown_deck1]
         self.m_deck_dao_by_id.return_value = None
+        m_inst_by_id.return_value = None
 
         decks = Deck.get_connected()
 
@@ -126,12 +138,16 @@ class TestDeck(unittest.TestCase):
 
 class TestXLDeck(unittest.TestCase):
 
+    def setUp(self) -> None:
+        patch_render_button = patch('button.Button.update_key_image')
+        self.m_render_button = patch_render_button.start()
+        self.addCleanup(patch_render_button.stop)
+
     def test_init(self):
         """XLDeck.__init__"""
         deck = XLDeck('xl_id')
         self.assertEqual(deck.id, 'xl_id')
         self.assertEqual(len(deck.buttons), 32)
-        self.assertIsInstance(deck.buttons[4], Button)
 
     def test_init_strip_id(self):
         """XLDeck.__init__"""
@@ -143,7 +159,6 @@ class TestXLDeck(unittest.TestCase):
         deck = XLDeck(b'xl_id')
         self.assertEqual(deck.id, 'xl_id')
         self.assertEqual(len(deck.buttons), 32)
-        self.assertIsInstance(deck.buttons[12], Button)
 
     @patch('button.Button.html', new_callable=PropertyMock)
     def test_html(self, m_button_html):
@@ -158,19 +173,22 @@ class TestXLDeck(unittest.TestCase):
 
 class TestOriginalDeck(unittest.TestCase):
 
+    def setUp(self) -> None:
+        patch_render_button = patch('button.Button.update_key_image')
+        self.m_render_button = patch_render_button.start()
+        self.addCleanup(patch_render_button.stop)
+
     def test_init(self):
         """OriginalDeck.__init__"""
         deck = OriginalDeck('orig_id')
         self.assertEqual(deck.id, 'orig_id')
         self.assertEqual(len(deck.buttons), 15)
-        self.assertIsInstance(deck.buttons[4], Button)
 
     def test_init_id_in_bytes(self):
         """OriginalDeck.__init__.id_in_bytes"""
         deck = OriginalDeck(b'orig_id')
         self.assertEqual(deck.id, 'orig_id')
         self.assertEqual(len(deck.buttons), 15)
-        self.assertIsInstance(deck.buttons[0], Button)
 
     def test_str(self):
         """OriginalDeck.__str__"""
@@ -197,12 +215,16 @@ class TestOriginalDeck(unittest.TestCase):
 
 class TestMiniDeck(unittest.TestCase):
 
+    def setUp(self) -> None:
+        patch_render_button = patch('button.Button.update_key_image')
+        self.m_render_button = patch_render_button.start()
+        self.addCleanup(patch_render_button.stop)
+
     def test_init(self):
         """MiniDeck.__init__"""
         deck = MiniDeck('mini_id')
         self.assertEqual(deck.id, 'mini_id')
         self.assertEqual(len(deck.buttons), 6)
-        self.assertIsInstance(deck.buttons[4], Button)
 
     @patch('button.Button.html', new_callable=PropertyMock)
     def test_html(self, m_button_html):

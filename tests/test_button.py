@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from button import Button
 from deck import OriginalDeck
@@ -7,6 +8,10 @@ from deck import OriginalDeck
 class TestButton(unittest.TestCase):
 
     def setUp(self) -> None:
+        patch_render_button = patch('button.Button.update_key_image')
+        self.m_render_button = patch_render_button.start()
+        self.addCleanup(patch_render_button.stop)
+
         self.deck1 = OriginalDeck('deck123')
 
     def test_init(self):

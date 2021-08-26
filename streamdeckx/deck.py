@@ -40,7 +40,7 @@ class Deck(ABC):
 
         # Populate with the correct number of (empty) buttons
         for i in range(0, self.__class__.get_num_buttons()):
-            self.buttons.append(Button(i, self))
+            self.add_button(i)
 
         Deck.instantiated_decks.append(self)
 
@@ -49,6 +49,9 @@ class Deck(ABC):
 
     def __repr__(self):
         return f'{self.name} ({self.id})'
+
+    def add_button(self, index):
+        self.buttons.append(Button(index, self))
 
     @functools.cached_property
     def deck_interface(self):
