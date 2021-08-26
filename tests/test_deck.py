@@ -113,6 +113,16 @@ class TestDeck(unittest.TestCase):
         m_print.assert_called()
         self.m_deck_dao_create.assert_not_called()
 
+    def test_get_instantiated_deck_by_id(self):
+        """Deck.get_instantiated_deck_by_id"""
+        deck1 = XLDeck('xl_id')
+        deck2 = OriginalDeck('orig_id1')
+        deck3 = OriginalDeck('orig_id2')
+
+        deck2_from_inst = Deck._get_instantiated_deck_by_id('orig_id1')
+
+        self.assertEqual(deck2_from_inst, deck2)
+
 
 class TestXLDeck(unittest.TestCase):
 

@@ -21,6 +21,8 @@ class Deck(ABC):
 
     deck_dao = DeckDao()
 
+    instantiated_decks = []
+
     def __init__(self, deck_id: str, name: str=None):
         if isinstance(deck_id, bytes):
             deck_id = deck_id.decode('utf-8')
@@ -39,6 +41,8 @@ class Deck(ABC):
         # Populate with the correct number of (empty) buttons
         for i in range(0, self.__class__.get_num_buttons()):
             self.buttons.append(Button(i, self))
+
+        Deck.instantiated_decks.append(self)
 
     def __str__(self):
         return f'{self.name}'
@@ -68,17 +72,28 @@ class Deck(ABC):
             return full_id
 
     @staticmethod
+    def _get_instantiated_deck_by_id(deck_id):
+        for deck in Deck.instantiated_decks:
+            if deck.id == deck_id:
+                return deck
+
+    @staticmethod
     def get_connected():
         decks = DeviceManager().enumerate()
         deck_objs = []
 
         for deck in decks:
             deck_id = Deck._strip_id(deck.id())
-            deck_from_db = Deck.deck_dao.get_by_id(deck_id)
-            logging.info(f'Deck from DB: {deck_from_db}')
 
-            if deck_from_db:
-                deck_objs.append(deck_from_db)
+            # Check to see if we have already instantiated this deck
+            instantiated_deck = Deck._get_instantiated_deck_by_id(deck.id())
+
+            # If we haven't already instantiated it, we need to get it from the database
+            if not instantiated_deck:
+                instantiated_deck = Deck.deck_dao.get_by_id(deck_id)
+
+            if instantiated_deck:
+                deck_objs.append(instantiated_deck)
                 continue
 
             if deck.deck_type() == DeckTypes.XL.value:
