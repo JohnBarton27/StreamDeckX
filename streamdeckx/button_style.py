@@ -54,3 +54,8 @@ class ButtonStyle:
             return None
 
         return os.path.join(ButtonStyle.ASSETS_PATH, self.font)
+
+    def serialize(self):
+        return {
+            'label': self.label
+        }

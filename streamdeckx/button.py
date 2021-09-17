@@ -67,6 +67,7 @@ class Button:
     def serialize(self):
         """Converts this button into its JSON representation, suitable for returning from an API"""
         return {
+            "style": self.style.serialize(),
             "position": self.position
         }
 
