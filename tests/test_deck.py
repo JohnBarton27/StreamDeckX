@@ -41,6 +41,104 @@ class TestDeck(unittest.TestCase):
 
         self.assertEqual(deck.deck_interface, deck_interface2)
 
+    def test_open_from_closed(self):
+        """Deck.open.from_closed"""
+        deck_interface = MagicMock()
+        deck_interface.id.return_value = 'abc123'
+
+        self.m_dev_manager.enumerate.return_value = [deck_interface]
+
+        deck = XLDeck('abc123')
+        deck._is_open = False
+        deck_interface.open.reset_mock()
+
+        deck.open()
+
+        self.assertEqual(deck_interface.open.call_count, 1)
+
+    def test_open_from_open(self):
+        """Deck.open.from_open"""
+        deck_interface = MagicMock()
+        deck_interface.id.return_value = 'abc123'
+
+        self.m_dev_manager.enumerate.return_value = [deck_interface]
+
+        deck = XLDeck('abc123')
+        deck._is_open = True
+        deck_interface.open.reset_mock()
+
+        deck.open()
+
+        self.assertEqual(deck_interface.open.call_count, 0)
+
+    def test_close_from_closed(self):
+        """Deck.close.from_closed"""
+        deck_interface = MagicMock()
+        deck_interface.id.return_value = 'abc123'
+
+        self.m_dev_manager.enumerate.return_value = [deck_interface]
+
+        deck = XLDeck('abc123')
+        deck._is_open = False
+        deck_interface.close.reset_mock()
+
+        deck.close()
+
+        self.assertEqual(deck_interface.close.call_count, 0)
+
+    def test_close_from_open(self):
+        """Deck.close.from_open"""
+        deck_interface = MagicMock()
+        deck_interface.id.return_value = 'abc123'
+
+        self.m_dev_manager.enumerate.return_value = [deck_interface]
+
+        deck = XLDeck('abc123')
+        deck._is_open = True
+        deck_interface.close.reset_mock()
+
+        deck.close()
+
+        self.assertEqual(deck_interface.close.call_count, 1)
+
+    def test_reset_from_closed(self):
+        """Deck.reset.from_closed"""
+        deck_interface = MagicMock()
+        deck_interface.id.return_value = 'abc123'
+
+        self.m_dev_manager.enumerate.return_value = [deck_interface]
+
+        deck = XLDeck('abc123')
+        deck._is_open = False
+        deck_interface.open.reset_mock()
+        deck_interface.reset.reset_mock()
+        deck_interface.close.reset_mock()
+
+        deck.reset()
+
+        self.assertEqual(deck_interface.open.call_count, 1)
+        self.assertEqual(deck_interface.close.call_count, 1)
+        self.assertEqual(deck_interface.reset.call_count, 1)
+
+    def test_reset_from_open(self):
+        """Deck.reset.from_open"""
+        deck_interface = MagicMock()
+        deck_interface.id.return_value = 'abc123'
+
+        self.m_dev_manager.enumerate.return_value = [deck_interface]
+
+        deck = XLDeck('abc123')
+        deck._is_open = True
+        deck_interface.open.reset_mock()
+        deck_interface.reset.reset_mock()
+        deck_interface.close.reset_mock()
+
+        deck.reset()
+
+        self.assertEqual(deck_interface.open.call_count, 0)
+        self.assertEqual(deck_interface.close.call_count, 1)
+        self.assertEqual(deck_interface.reset.call_count, 1)
+
     @patch('deck.Deck._get_instantiated_deck_by_id')
     def test_get_connected_single_xl(self, m_inst_by_id):
         """Deck.get_connected.single_xl"""

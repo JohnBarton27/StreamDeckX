@@ -92,8 +92,6 @@ class Button:
         # Generate the custom key with the requested image and label.
         image = self.render_key_image()
 
-        self.deck.deck_interface.open()
 
         # Update requested key with the generated image.
         self.deck.deck_interface.set_key_image(self.position, image)
-        self.deck.deck_interface.close()

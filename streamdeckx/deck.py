@@ -32,15 +32,16 @@ class Deck(ABC):
         self.id = Deck._strip_id(deck_id)
         self.name = name
         self.buttons = []
+        self._is_open = False
 
         if self.deck_interface:
-            self.deck_interface.open()
-            self.deck_interface.reset()
-            self.deck_interface.close()
+            self.reset()
 
         # Populate with the correct number of (empty) buttons
+        self.open()
         for i in range(0, self.__class__.get_num_buttons()):
             self.add_button(i)
+        self.close()
 
         Deck.instantiated_decks.append(self)
 
@@ -60,6 +61,24 @@ class Deck(ABC):
         for deck in decks:
             if Deck._strip_id(deck.id()) == self.id:
                 return deck
+
+    def open(self):
+        if not self._is_open and self.deck_interface:
+            self.deck_interface.open()
+            self._is_open = True
+
+    def close(self):
+        if self._is_open and self.deck_interface:
+            self.deck_interface.close()
+            self._is_open = False
+
+    def reset(self):
+        if not self.deck_interface:
+            return
+
+        self.open()
+        self.deck_interface.reset()
+        self.close()
 
     @classmethod
     def get_num_buttons(cls):
