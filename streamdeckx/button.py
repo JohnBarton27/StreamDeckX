@@ -1,3 +1,4 @@
+import logging
 from PIL import Image, ImageDraw, ImageFont
 from StreamDeck.ImageHelpers import PILHelper
 
