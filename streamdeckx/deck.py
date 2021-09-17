@@ -58,7 +58,7 @@ class Deck(ABC):
         decks = DeviceManager().enumerate()
 
         for deck in decks:
-            if deck.id() == self.id:
+            if Deck._strip_id(deck.id()) == self.id:
                 return deck
 
     @classmethod
