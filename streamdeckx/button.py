@@ -3,6 +3,7 @@ from PIL import Image, ImageDraw, ImageFont
 from StreamDeck.ImageHelpers import PILHelper
 
 from button_style import ButtonStyle
+import imgkit
 
 
 class Button:
@@ -47,8 +48,28 @@ class Button:
         Returns:
             str: HTML representing this button
         """
-        html = f'<span id="{self.position}" class="btn" onclick="openConfig({self.position})"></span>'
+        html = f'<span id="{self.position}" class="btn" onclick="openConfig({self.position})">' \
+               f'{self.style.label}' \
+               f'</span>'
         return html
+
+    @property
+    def image(self):
+        # Resize the source image asset to best-fit the dimensions of a single key,
+        # leaving a margin at the bottom so that we can draw the key title
+        # afterwards.
+        icon = Image.open(self.style.icon_path)
+
+        image = PILHelper.create_scaled_image(self.deck.deck_interface, icon, margins=[0, 0, 0, 0])
+
+        # Load a custom TrueType font and use it to overlay the key index, draw key
+        # label onto the image a few pixels from the bottom of the key.
+        draw = ImageDraw.Draw(image)
+
+        font = ImageFont.truetype(self.style.font_path, 16)
+        draw.text((10, 52), text=self.style.label, font=font, align="center", fill="white")
+
+        return image
 
     def set_text(self, text: str):
         """
@@ -58,7 +79,9 @@ class Button:
             text (str): Text to apply to this Button
         """
         self.style.label = text
+        self.deck.open()
         self.update_key_image()
+        self.deck.close()
 
     def add_action(self, action):
         """Add an action to this Button"""
@@ -74,25 +97,11 @@ class Button:
     # Generates a custom tile with run-time generated text and custom image via the
     # PIL module.
     def render_key_image(self):
-        # Resize the source image asset to best-fit the dimensions of a single key,
-        # leaving a margin at the bottom so that we can draw the key title
-        # afterwards.
-        icon = Image.open(self.style.icon_path)
-        image = PILHelper.create_scaled_image(self.deck.deck_interface, icon, margins=[0, 0, 0, 0])
-
-        # Load a custom TrueType font and use it to overlay the key index, draw key
-        # label onto the image a few pixels from the bottom of the key.
-        draw = ImageDraw.Draw(image)
-
-        font = ImageFont.truetype(self.style.font_path, 16)
-        draw.text((10, 52), text=self.style.label, font=font, align="center", fill="white")
-
-        return PILHelper.to_native_format(self.deck.deck_interface, image)
+        return PILHelper.to_native_format(self.deck.deck_interface, self.image)
 
     def update_key_image(self):
         # Generate the custom key with the requested image and label.
         image = self.render_key_image()
-
 
         # Update requested key with the generated image.
         self.deck.deck_interface.set_key_image(self.position, image)
