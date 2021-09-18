@@ -50,7 +50,7 @@ class Button:
             str: HTML representing this button
         """
         html = f'<span id="{self.position}" class="btn" onclick="openConfig({self.position})">' \
-               f'<img height="72" width="72" src="data:image/PNG;base64, {self.image_bytes.decode("utf-8")}">' \
+               f'<img id="{self.position}-img" height="72" width="72" src="data:image/PNG;base64, {self.image_bytes.decode("utf-8")}">' \
                f'</span>'
         return html
 

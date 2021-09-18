@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch, PropertyMock
 
 from button import Button
 from deck import OriginalDeck
@@ -46,10 +46,16 @@ class TestButton(unittest.TestCase):
         button = Button(12, self.deck1)
         self.assertEqual(hash(button), hash(12))
 
-    def test_html(self):
+    @patch('button.Button.image_bytes', new_callable=PropertyMock)
+    def test_html(self, m_image_bytes):
         """Button.html"""
+        img_bytes = MagicMock()
+        img_bytes.decode.return_value = '123456'
+        m_image_bytes.return_value = img_bytes
+
         button = Button(12, self.deck1)
-        self.assertEqual(button.html, '<span id="12" class="btn" onclick="openConfig(12)">12</span>')
+        self.assertEqual(button.html, '<span id="12" class="btn" onclick="openConfig(12)"><img id="12-img" height="72" width="72" src="data:image/PNG;base64, 123456"></span>')
+        img_bytes.decode.assert_called()
 
     @patch('button_style.ButtonStyle.serialize')
     def test_serialize(self, m_bs_serialize):
