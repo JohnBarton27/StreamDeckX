@@ -1,13 +1,14 @@
 import logging
 from PIL import Image, ImageDraw, ImageFont
 from StreamDeck.ImageHelpers import PILHelper
-
-from button_style import ButtonStyle
-import imgkit
 import io
 
+from button_style import ButtonStyle
+from dao.button_dao import ButtonDao
 
 class Button:
+
+    button_dao = ButtonDao()
 
     def __init__(self, position: int, deck, btn_id: int = None, style: ButtonStyle = None):
         """
@@ -98,6 +99,9 @@ class Button:
         self.deck.open()
         self.update_key_image()
         self.deck.close()
+
+        # Update in database
+        Button.button_dao.update(self)
 
     def add_action(self, action):
         """Add an action to this Button"""

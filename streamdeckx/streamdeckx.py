@@ -80,6 +80,7 @@ def set_button_text():
             # This is the deck we selected
             button = deck.buttons[button_position]
             button.set_text(button_text)
+
             return button.image_bytes.decode("utf-8")
 
     return 'Failed to find deck!'

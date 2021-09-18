@@ -21,11 +21,11 @@ class DeckDao(Dao):
                 SELECT * FROM deck WHERE id='{deck_id}';
             """)
 
-            result = cursor.fetchall()
-            if not result:
+            results = cursor.fetchall()
+            if not results:
                 return None
 
-        deck = self.get_obj_from_result(dict(result[0]))
+        deck = self.get_obj_from_result(results)
         return deck
 
     def create(self, deck):
@@ -42,16 +42,25 @@ class DeckDao(Dao):
             for button in deck.buttons:
                 DeckDao.button_dao.create(button)
 
-    def get_obj_from_result(self, result):
+    def get_obj_from_result(self, results):
         from deck import XLDeck, OriginalDeck
-        deck_id = result['id']
-        deck_type_name = result['type']
+        first_row = dict(results[0])
+
+        deck_id = first_row['id']
+        deck_type_name = first_row['type']
         deck_type = DeckTypes.get_by_name(deck_type_name)
 
+        deck = None
         if deck_type == DeckTypes.XL:
-            return XLDeck(deck_id)
+            deck = XLDeck(deck_id)
 
         if deck_type == DeckTypes.ORIGINAL:
-            return OriginalDeck(deck_id)
+            deck = OriginalDeck(deck_id)
 
         # TODO add handling for mini
+
+        # Get buttons
+        button_dao = ButtonDao()
+        deck.buttons = button_dao.get_for_deck(deck)
+
+        return deck

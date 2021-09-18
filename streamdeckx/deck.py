@@ -23,7 +23,7 @@ class Deck(ABC):
 
     instantiated_decks = []
 
-    def __init__(self, deck_id: str, name: str=None):
+    def __init__(self, deck_id: str, name: str = None, buttons: list = None):
         if isinstance(deck_id, bytes):
             deck_id = deck_id.decode('utf-8')
 
@@ -31,17 +31,18 @@ class Deck(ABC):
         # this strips it down to what we actually need
         self.id = Deck._strip_id(deck_id)
         self.name = name
-        self.buttons = []
+        self.buttons = buttons if buttons else []
         self._is_open = False
 
         if self.deck_interface:
             self.reset()
 
-        # Populate with the correct number of (empty) buttons
-        self.open()
-        for i in range(0, self.__class__.get_num_buttons()):
-            self.add_button(i)
-        self.close()
+        if not self.buttons:
+            # Populate with the correct number of (empty) buttons
+            self.open()
+            for i in range(0, self.__class__.get_num_buttons()):
+                self.add_button(i)
+            self.close()
 
         Deck.instantiated_decks.append(self)
 
@@ -149,8 +150,8 @@ class XLDeck(Deck):
     cols = 8
     rows = 4
 
-    def __init__(self, deck_id: str):
-        super().__init__(deck_id, name=str(self.__class__.type.value))
+    def __init__(self, deck_id: str, buttons: list = None):
+        super().__init__(deck_id, name=str(self.__class__.type.value), buttons=buttons)
 
 
 class OriginalDeck(Deck):
@@ -158,8 +159,8 @@ class OriginalDeck(Deck):
     cols = 5
     rows = 3
 
-    def __init__(self, deck_id: str):
-        super().__init__(deck_id, name=str(self.__class__.type.value))
+    def __init__(self, deck_id: str, buttons: list = None):
+        super().__init__(deck_id, name=str(self.__class__.type.value), buttons=buttons)
 
 
 class MiniDeck(Deck):
@@ -167,5 +168,5 @@ class MiniDeck(Deck):
     cols = 3
     rows = 2
 
-    def __init__(self, deck_id: str):
-        super().__init__(deck_id, name=str(self.__class__.type.value))
+    def __init__(self, deck_id: str, buttons: list = None):
+        super().__init__(deck_id, name=str(self.__class__.type.value), buttons=buttons)
