@@ -92,7 +92,9 @@ function showDefaultActionFields() {
 function submit() {
     let buttonText = buttonTextField.val()
 
-    $.post('/setButtonConfig', {'deckId': currDeckId, 'button': currButton, 'buttonText': buttonText}, function(data) {
-        // pass
-    }, 'json');
+    $.post('/setButtonConfig', {'deckId': currDeckId, 'button': currButton, 'buttonText': buttonText}, 'json').done(
+        function(data) {
+            $('#' + currButton + '-img').attr('src', 'data:image/PNG;base64, ' + data);
+        }
+    );
 }
