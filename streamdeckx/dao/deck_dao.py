@@ -11,7 +11,7 @@ class DeckDao(Dao):
 
     button_dao = ButtonDao()
 
-    def get_by_id(self, deck_id):
+    def get_by_id(self, deck_id, include_buttons=True):
         conn = DeckDao.get_db_conn()
 
         with conn:
@@ -25,7 +25,7 @@ class DeckDao(Dao):
             if not results:
                 return None
 
-        deck = self.get_obj_from_result(results)
+        deck = self.get_obj_from_result(results, include_buttons=include_buttons)
         return deck
 
     def create(self, deck):
@@ -42,7 +42,7 @@ class DeckDao(Dao):
             for button in deck.buttons:
                 DeckDao.button_dao.create(button)
 
-    def get_obj_from_result(self, results):
+    def get_obj_from_result(self, results, include_buttons=True):
         from deck import XLDeck, OriginalDeck
         first_row = dict(results[0])
 
@@ -60,7 +60,8 @@ class DeckDao(Dao):
         # TODO add handling for mini
 
         # Get buttons
-        button_dao = ButtonDao()
-        deck.buttons = button_dao.get_for_deck(deck)
+        if include_buttons:
+            button_dao = ButtonDao()
+            deck.buttons = button_dao.get_for_deck(deck)
 
         return deck

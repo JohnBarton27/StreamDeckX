@@ -8,6 +8,15 @@ from button_style import ButtonStyle
 class ButtonDao(Dao):
 
     def get_by_id(self, button_id):
+        """
+        Given a button ID, returns that button object
+
+        Args:
+            button_id (int): Database ID of the button
+
+        Returns:
+            Button: button object
+        """
         conn = ButtonDao.get_db_conn()
 
         with conn:
@@ -63,14 +72,20 @@ class ButtonDao(Dao):
             conn.commit()
 
     @staticmethod
-    def get_obj_from_result(result, deck):
+    def get_obj_from_result(result, deck=None):
         from button import Button
 
         position = result['position']
         btn_id = result['id']
+        deck_id = result['deck_id']
         icon = result['icon']
         font = result['font']
         label = result['label']
+
+        if not deck:
+            from dao.deck_dao import DeckDao
+            deck_dao - DeckDao()
+            deck = deck_dao.get_by_id(deck_id, include_buttons=False)
 
         if icon or font or label:
             bs = ButtonStyle('style', icon, font, label)
