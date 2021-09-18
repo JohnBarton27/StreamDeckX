@@ -6,6 +6,7 @@ import io
 from button_style import ButtonStyle
 from dao.button_dao import ButtonDao
 
+
 class Button:
 
     button_dao = ButtonDao()
@@ -26,9 +27,6 @@ class Button:
         self.id = btn_id
         self.actions = []
         self.style = style if style else ButtonStyle('text', font='Roboto-Regular.ttf', label=f'{self.position}')
-
-        if self.style:
-            self.update_key_image()
 
     def __repr__(self):
         return str(self.position)

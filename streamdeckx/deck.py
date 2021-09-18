@@ -81,6 +81,14 @@ class Deck(ABC):
         self.deck_interface.reset()
         self.close()
 
+    def update(self):
+        self.open()
+
+        for button in self.buttons:
+            button.update_key_image()
+
+        self.close()
+
     @classmethod
     def get_num_buttons(cls):
         return cls.cols * cls.rows
@@ -117,16 +125,19 @@ class Deck(ABC):
 
             if instantiated_deck:
                 deck_objs.append(instantiated_deck)
+                instantiated_deck.update()
                 continue
 
             if deck.deck_type() == DeckTypes.XL.value:
                 deck_obj = XLDeck(deck.id())
                 Deck.deck_dao.create(deck_obj)
                 deck_objs.append(deck_obj)
+                deck_obj.update()
             elif deck.deck_type() == DeckTypes.ORIGINAL.value:
                 deck_obj = OriginalDeck(deck.id())
                 Deck.deck_dao.create(deck_obj)
                 deck_objs.append(deck_obj)
+                deck_obj.update()
             else:
                 print(f'Unsupported deck type "{deck.deck_type()}"!')
 
