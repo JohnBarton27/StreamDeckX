@@ -33,6 +33,7 @@ button {
     margin-bottom: 10px;
     border-radius: 10px;
     vertical-align: top;
+    overflow: hidden;
 }
 
 .clicked {

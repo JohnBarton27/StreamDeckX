@@ -4,6 +4,7 @@ from StreamDeck.ImageHelpers import PILHelper
 
 from button_style import ButtonStyle
 import imgkit
+import io
 
 
 class Button:
@@ -49,7 +50,7 @@ class Button:
             str: HTML representing this button
         """
         html = f'<span id="{self.position}" class="btn" onclick="openConfig({self.position})">' \
-               f'{self.style.label}' \
+               f'<img height="72" width="72" src="data:image/PNG;base64, {self.image_bytes.decode("utf-8")}">' \
                f'</span>'
         return html
 
@@ -70,6 +71,21 @@ class Button:
         draw.text((10, 52), text=self.style.label, font=font, align="center", fill="white")
 
         return image
+
+    @property
+    def image_bytes(self):
+        """
+        Returns the image in its 64-bit encoded bytes format.
+
+        Returns:
+            bytes: Image
+        """
+        import base64
+        image = self.image
+
+        img_byte_arr = io.BytesIO()
+        image.save(img_byte_arr, format='PNG')
+        return base64.b64encode(img_byte_arr.getvalue())
 
     def set_text(self, text: str):
         """
