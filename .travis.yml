@@ -3,18 +3,19 @@ language: python
 python:
   - "3.8"
 
+before_install:
+  - nvm install node
+
 # command to install dependencies
 install:
   - pip install -r requirements.txt
-
-# command to run tests
-script:
-  - python tests/run_tests.py
 
 # SonarQube Analysis
 addons:
   sonarcloud:
     organization: "johnbarton27" # the key of the org you chose at step #3
+
 script:
-  # other script steps might be done before running the actual analysis
+  - coverage run --source=streamdeckx tests/run_tests.py
+  - coverage xml
   - sonar-scanner

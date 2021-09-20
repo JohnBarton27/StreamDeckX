@@ -5,3 +5,5 @@ venv/
 *.pyc
 *.iml
 **/sdx_db.db
+.coverage
+coverage.xml
