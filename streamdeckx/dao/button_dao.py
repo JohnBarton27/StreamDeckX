@@ -147,13 +147,16 @@ class ButtonDao(Dao):
         """
         buttons = []
 
-        if not deck:
-            from dao.deck_dao import DeckDao
-            deck_dao = DeckDao()
-            deck = deck_dao.get_by_id(deck_id, include_buttons=False)
-
         deck.open()
         for result in results:
+
+            if not deck:
+                # Setup 'deck' once
+                from dao.deck_dao import DeckDao
+                deck_id = result['deck_id']
+                deck_dao = DeckDao()
+                deck = deck_dao.get_by_id(deck_id, include_buttons=False)
+
             buttons.append(ButtonDao.get_obj_from_result(dict(result), deck=deck))
         deck.close()
 
