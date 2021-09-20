@@ -1,13 +1,11 @@
-from abc import ABC
 import functools
-import logging
-import re
 import os
+import re
+from abc import ABC
 
 from StreamDeck.DeviceManager import DeviceManager
 
 from button import Button
-from button_style import ButtonStyle
 from dao.deck_dao import DeckDao
 from deck_types import DeckTypes
 
@@ -34,15 +32,10 @@ class Deck(ABC):
         self.buttons = buttons if buttons else []
         self._is_open = False
 
-        if self.deck_interface:
-            self.reset()
-
         if not self.buttons:
             # Populate with the correct number of (empty) buttons
-            self.open()
             for i in range(0, self.__class__.get_num_buttons()):
                 self.add_button(i)
-            self.close()
 
         Deck.instantiated_decks.append(self)
 
