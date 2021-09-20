@@ -12,7 +12,8 @@ install:
 
 # command to run tests
 script:
-  - python tests/run_tests.py
+  - coverage run --source=streamdeckx tests/run_tests.py
+  - coverage xml
 
 # SonarQube Analysis
 addons:

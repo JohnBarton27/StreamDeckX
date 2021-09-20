@@ -4,3 +4,5 @@ venv/
 **/test-reports/*
 *.pyc
 *.iml
+.coverage
+coverage.xml
