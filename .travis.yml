@@ -12,3 +12,11 @@ install:
 # command to run tests
 script:
   - python tests/run_tests.py
+
+# SonarQube Analysis
+addons:
+  sonarcloud:
+    organization: "johnbarton27" # the key of the org you chose at step #3
+script:
+  # other script steps might be done before running the actual analysis
+  - sonar-scanner
