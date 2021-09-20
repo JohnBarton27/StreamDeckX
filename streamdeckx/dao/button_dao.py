@@ -1,8 +1,8 @@
 import logging
 import sqlite3 as sl
 
-from dao.dao import Dao
 from button_style import ButtonStyle
+from dao.dao import Dao
 
 
 class ButtonDao(Dao):
@@ -122,7 +122,7 @@ class ButtonDao(Dao):
 
         if not deck:
             from dao.deck_dao import DeckDao
-            deck_dao - DeckDao()
+            deck_dao = DeckDao()
             deck = deck_dao.get_by_id(deck_id, include_buttons=False)
 
         if icon or font or label:
@@ -149,7 +149,7 @@ class ButtonDao(Dao):
 
         if not deck:
             from dao.deck_dao import DeckDao
-            deck_dao - DeckDao()
+            deck_dao = DeckDao()
             deck = deck_dao.get_by_id(deck_id, include_buttons=False)
 
         deck.open()
