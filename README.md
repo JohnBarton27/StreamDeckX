@@ -49,3 +49,4 @@ id | int | Primary Key, autoincrement
 type | text |
 button_id | int | Foreign Key (button.id)
 action_order | int |
+parameter | text |

@@ -127,7 +127,8 @@ def connect_to_database():
                     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                     type TEXT NOT NULL,
                     button_id INTEGER NOT NULL REFERENCES button(id) ON DELETE CASCADE,
-                    action_order INTEGER NOT NULL 
+                    action_order INTEGER NOT NULL,
+                    parameter TEXT 
                 );
             """)
 
