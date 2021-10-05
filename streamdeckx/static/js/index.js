@@ -5,6 +5,7 @@ let config = null;
 let currButton = null;
 let actionFieldsArea = null;
 let buttonTextField = null;
+let textActionValueElem = null;
 
 $(document).ready(function() {
     connSdSelect = $("#conn-sd-select");
@@ -73,6 +74,15 @@ function openAddActionModal() {
     let addActionButton = $("#addActionButton");
     addActionButton.click(function() {
         // Submit creation of action
+        $.post('/setButtonAction', {
+            'deckId': currDeckId,
+            'button': currButton,
+            'action_text': textActionValueElem.val()
+        }, 'json').done(
+            function (data) {
+                console.log(data);
+            }
+        );
     });
 }
 
@@ -81,6 +91,8 @@ function showTextActionFields() {
         <label for="textValue">Text: </label>
         <input type="text" id="textValue" style="margin-top: 5px;"/>
     `);
+
+    textActionValueElem = $("#textValue");
 }
 
 function showDefaultActionFields() {

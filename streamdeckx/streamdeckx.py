@@ -86,6 +86,33 @@ def set_button_text():
     return 'Failed to find deck!'
 
 
+@app.route('/setButtonAction', methods=['POST'])
+def set_button_action():
+    from action import TextAction
+    from deck import Deck
+
+    from dao.action_dao import ActionDao
+
+    deck_id = request.form['deckId']
+    button_position = int(request.form['button'])
+    action = request.form['action_text']
+
+    decks = Deck.get_connected()
+
+    for deck in decks:
+        if deck.id == deck_id:
+            # This is the deck we selected
+            button = deck.buttons[button_position]
+            action = TextAction(action, button, 0)
+
+            action_dao = ActionDao()
+            action_dao.create(action)
+
+            return 'Success!'
+
+    return 'Failed to find deck!'
+
+
 def connect_to_database():
     db_name = 'sdx_db.db'
     try:

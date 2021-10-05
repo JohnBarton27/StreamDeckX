@@ -14,6 +14,10 @@ class Action(ABC):
     def action_type(self):
         pass
 
+    @abstractmethod
+    def execute(self):
+        pass
+
 
 class ActionFactory:
 
@@ -48,3 +52,6 @@ class TextAction(Action):
 
     def __hash__(self):
         return hash(self.text)
+
+    def execute(self):
+        print(f'Printing: {self.text}')
