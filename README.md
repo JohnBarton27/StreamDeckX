@@ -31,11 +31,21 @@ name | text |
 type | text |
 
 #### button
+
 Column | Type | Notes/Constraints
 --- | --- | ---
 id | int | Primary Key, autoincrement
 deck_id | text | Foreign Key (deck.id)
-position | int | 
+position | int |
 icon | text |
 font | text |
 label | text |
+
+#### action
+
+Column | Type | Notes/Constraints
+--- | --- | ---
+id | int | Primary Key, autoincrement
+type | text |
+button_id | int | Foreign Key (button.id)
+action_order | int |

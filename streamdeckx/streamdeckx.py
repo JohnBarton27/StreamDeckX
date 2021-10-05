@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request
 import logging
 import os
 import sqlite3 as sl
-from urllib import parse
 from urllib.request import pathname2url
+
+from flask import Flask, render_template, request
 
 
 class StreamDeckX(Flask):
@@ -97,6 +97,7 @@ def connect_to_database():
         logging.warning('Could not find database - will initialize an empty one!')
         conn = sl.connect(db_name)
 
+        # DECK
         with conn:
             conn.execute("""
                 CREATE TABLE deck (
@@ -106,6 +107,7 @@ def connect_to_database():
                 );                
             """)
 
+        # BUTTON
         with conn:
             conn.execute("""
                 CREATE TABLE button (
@@ -115,6 +117,17 @@ def connect_to_database():
                     icon TEXT,
                     font TEXT,
                     label TEXT
+                );
+            """)
+
+        # ACTION
+        with conn:
+            conn.execute("""
+                CREATE TABLE action (
+                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    type TEXT NOT NULL,
+                    button_id INTEGER NOT NULL REFERENCES button(id) ON DELETE CASCADE,
+                    action_order INTEGER NOT NULL 
                 );
             """)
 
