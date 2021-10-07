@@ -25,9 +25,8 @@ class Deck(ABC):
         if isinstance(deck_id, bytes):
             deck_id = deck_id.decode('utf-8')
 
-        # The 'deck_id' provided by the Stream Deck API can have a lot of extra pieces -
-        # this strips it down to what we actually need
-        self.id = Deck._strip_id(deck_id)
+        # The 'deck_id' is actually the Stream Deck's Serial Number
+        self.id = deck_id
         self.name = name
         self.buttons = buttons if buttons else []
         self._is_open = False
@@ -53,7 +52,11 @@ class Deck(ABC):
         decks = DeviceManager().enumerate()
 
         for deck in decks:
-            if Deck._strip_id(deck.id()) == self.id:
+            deck.open()
+            serial_num = deck.get_serial_number()
+            deck.close()
+
+            if serial_num == self.id:
                 return deck
 
     def open(self):
@@ -107,10 +110,12 @@ class Deck(ABC):
         deck_objs = []
 
         for deck in decks:
-            deck_id = Deck._strip_id(deck.id())
+            deck.open()
+            deck_id = deck.get_serial_number()
+            deck.close()
 
             # Check to see if we have already instantiated this deck
-            instantiated_deck = Deck._get_instantiated_deck_by_id(deck.id())
+            instantiated_deck = Deck._get_instantiated_deck_by_id(deck_id)
 
             # If we haven't already instantiated it, we need to get it from the database
             if not instantiated_deck:
@@ -122,12 +127,12 @@ class Deck(ABC):
                 continue
 
             if deck.deck_type() == DeckTypes.XL.value:
-                deck_obj = XLDeck(deck.id())
+                deck_obj = XLDeck(deck_id)
                 Deck.deck_dao.create(deck_obj)
                 deck_objs.append(deck_obj)
                 deck_obj.update()
             elif deck.deck_type() == DeckTypes.ORIGINAL.value:
-                deck_obj = OriginalDeck(deck.id())
+                deck_obj = OriginalDeck(deck_id)
                 Deck.deck_dao.create(deck_obj)
                 deck_objs.append(deck_obj)
                 deck_obj.update()

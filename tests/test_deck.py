@@ -1,7 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock, PropertyMock
 
-from button import Button
 from deck import Deck, MiniDeck, OriginalDeck, XLDeck
 
 
@@ -30,10 +29,10 @@ class TestDeck(unittest.TestCase):
     def test_deck_interface(self):
         """Deck.deck_interface"""
         deck_interface1 = MagicMock()
-        deck_interface1.id.return_value = 'def456'
+        deck_interface1.get_serial_number.return_value = 'def456'
 
         deck_interface2 = MagicMock()
-        deck_interface2.id.return_value = 'abc123'
+        deck_interface2.get_serial_number.return_value = 'abc123'
 
         self.m_dev_manager.enumerate.return_value = [deck_interface1, deck_interface2]
 
@@ -41,10 +40,13 @@ class TestDeck(unittest.TestCase):
 
         self.assertEqual(deck.deck_interface, deck_interface2)
 
-    def test_open_from_closed(self):
+    @patch('deck.Deck.deck_interface', new_callable=PropertyMock)
+    def test_open_from_closed(self, m_deck_int):
         """Deck.open.from_closed"""
         deck_interface = MagicMock()
-        deck_interface.id.return_value = 'abc123'
+        deck_interface.get_serial_number.return_value = 'abc123'
+
+        m_deck_int.return_value = deck_interface
 
         self.m_dev_manager.enumerate.return_value = [deck_interface]
 
@@ -56,10 +58,13 @@ class TestDeck(unittest.TestCase):
 
         self.assertEqual(deck_interface.open.call_count, 1)
 
-    def test_open_from_open(self):
+    @patch('deck.Deck.deck_interface', new_callable=PropertyMock)
+    def test_open_from_open(self, m_deck_int):
         """Deck.open.from_open"""
         deck_interface = MagicMock()
-        deck_interface.id.return_value = 'abc123'
+        deck_interface.get_serial_number.return_value = 'abc123'
+
+        m_deck_int.return_value = deck_interface
 
         self.m_dev_manager.enumerate.return_value = [deck_interface]
 
@@ -71,10 +76,13 @@ class TestDeck(unittest.TestCase):
 
         self.assertEqual(deck_interface.open.call_count, 0)
 
-    def test_close_from_closed(self):
+    @patch('deck.Deck.deck_interface', new_callable=PropertyMock)
+    def test_close_from_closed(self, m_deck_int):
         """Deck.close.from_closed"""
         deck_interface = MagicMock()
-        deck_interface.id.return_value = 'abc123'
+        deck_interface.get_serial_number.return_value = 'abc123'
+
+        m_deck_int.return_value = deck_interface
 
         self.m_dev_manager.enumerate.return_value = [deck_interface]
 
@@ -86,10 +94,13 @@ class TestDeck(unittest.TestCase):
 
         self.assertEqual(deck_interface.close.call_count, 0)
 
-    def test_close_from_open(self):
+    @patch('deck.Deck.deck_interface', new_callable=PropertyMock)
+    def test_close_from_open(self, m_deck_int):
         """Deck.close.from_open"""
         deck_interface = MagicMock()
-        deck_interface.id.return_value = 'abc123'
+        deck_interface.get_serial_number.return_value = 'abc123'
+
+        m_deck_int.return_value = deck_interface
 
         self.m_dev_manager.enumerate.return_value = [deck_interface]
 
@@ -101,10 +112,13 @@ class TestDeck(unittest.TestCase):
 
         self.assertEqual(deck_interface.close.call_count, 1)
 
-    def test_reset_from_closed(self):
+    @patch('deck.Deck.deck_interface', new_callable=PropertyMock)
+    def test_reset_from_closed(self, m_deck_int):
         """Deck.reset.from_closed"""
         deck_interface = MagicMock()
-        deck_interface.id.return_value = 'abc123'
+        deck_interface.get_serial_number.return_value = 'abc123'
+
+        m_deck_int.return_value = deck_interface
 
         self.m_dev_manager.enumerate.return_value = [deck_interface]
 
@@ -120,10 +134,13 @@ class TestDeck(unittest.TestCase):
         self.assertEqual(deck_interface.close.call_count, 1)
         self.assertEqual(deck_interface.reset.call_count, 1)
 
-    def test_reset_from_open(self):
+    @patch('deck.Deck.deck_interface', new_callable=PropertyMock)
+    def test_reset_from_open(self, m_deck_int):
         """Deck.reset.from_open"""
         deck_interface = MagicMock()
-        deck_interface.id.return_value = 'abc123'
+        deck_interface.get_serial_number.return_value = 'abc123'
+
+        m_deck_int.return_value = deck_interface
 
         self.m_dev_manager.enumerate.return_value = [deck_interface]
 
@@ -144,7 +161,7 @@ class TestDeck(unittest.TestCase):
         """Deck.get_connected.single_xl"""
         xl_deck1 = MagicMock()
         xl_deck1.deck_type.return_value = 'Stream Deck XL'
-        xl_deck1.id.return_value = 'xl_deck1_id'
+        xl_deck1.get_serial_number.return_value = 'xl_deck1_id'
         self.m_dev_manager.enumerate.return_value = [xl_deck1]
         self.m_deck_dao_by_id.return_value = None
         m_inst_by_id.return_value = None
@@ -163,7 +180,7 @@ class TestDeck(unittest.TestCase):
         """Deck.get_connected.single_original"""
         orig_deck1 = MagicMock()
         orig_deck1.deck_type.return_value = 'Stream Deck Original'
-        orig_deck1.id.return_value = 'orig_deck1_id'
+        orig_deck1.get_serial_number.return_value = 'orig_deck1_id'
         self.m_dev_manager.enumerate.return_value = [orig_deck1]
         self.m_deck_dao_by_id.return_value = None
         m_inst_by_id.return_value = None
@@ -182,11 +199,11 @@ class TestDeck(unittest.TestCase):
         """Deck.get_connected.original_xl"""
         orig_deck1 = MagicMock()
         orig_deck1.deck_type.return_value = 'Stream Deck Original'
-        orig_deck1.id.return_value = 'orig_deck1_id'
+        orig_deck1.get_serial_number.return_value = 'orig_deck1_id'
 
         xl_deck1 = MagicMock()
         xl_deck1.deck_type.return_value = 'Stream Deck XL'
-        xl_deck1.id.return_value = 'xl_deck1_id'
+        xl_deck1.get_serial_number.return_value = 'xl_deck1_id'
 
         self.m_dev_manager.enumerate.return_value = [orig_deck1, xl_deck1]
         self.m_deck_dao_by_id.return_value = None
@@ -209,7 +226,7 @@ class TestDeck(unittest.TestCase):
         """Deck.get_connected.unknown"""
         unknown_deck1 = MagicMock()
         unknown_deck1.deck_type.return_value = 'Stream Deck Unknown'
-        unknown_deck1.id.return_value = 'unknown_deck1_id'
+        unknown_deck1.get_serial_number.return_value = 'unknown_deck1_id'
         dev_manager = MagicMock()
         self.m_dev_manager.enumerate.return_value = [unknown_deck1]
         self.m_deck_dao_by_id.return_value = None
@@ -247,17 +264,6 @@ class TestXLDeck(unittest.TestCase):
         self.assertEqual(deck.id, 'xl_id')
         self.assertEqual(len(deck.buttons), 32)
 
-    def test_init_strip_id(self):
-        """XLDeck.__init__"""
-        deck = XLDeck('\\hid%#W$AsadSfaefS^Fsef6{123-456-abcd}')
-        self.assertEqual(deck.id, '123-456-abcd')
-
-    def test_init_id_in_bytes(self):
-        """XLDeck.__init__.id_in_bytes"""
-        deck = XLDeck(b'xl_id')
-        self.assertEqual(deck.id, 'xl_id')
-        self.assertEqual(len(deck.buttons), 32)
-
     @patch('button.Button.html', new_callable=PropertyMock)
     def test_html(self, m_button_html):
         """XLDeck.html"""
@@ -279,12 +285,6 @@ class TestOriginalDeck(unittest.TestCase):
     def test_init(self):
         """OriginalDeck.__init__"""
         deck = OriginalDeck('orig_id')
-        self.assertEqual(deck.id, 'orig_id')
-        self.assertEqual(len(deck.buttons), 15)
-
-    def test_init_id_in_bytes(self):
-        """OriginalDeck.__init__.id_in_bytes"""
-        deck = OriginalDeck(b'orig_id')
         self.assertEqual(deck.id, 'orig_id')
         self.assertEqual(len(deck.buttons), 15)
 
