@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import MagicMock
 
 from action import TextAction
 
@@ -7,43 +8,50 @@ class TestTextAction(unittest.TestCase):
 
     def test_init(self):
         """TextAction.__init__"""
-        action = TextAction('username')
+        btn = MagicMock()
+        action = TextAction('username', btn, 1)
         self.assertEqual(action.text, 'username')
 
     def test_repr(self):
         """TextAction.__repr__"""
-        action = TextAction('username')
+        btn = MagicMock()
+        action = TextAction('username', btn, 1)
         self.assertEqual(repr(action), 'username')
 
     def test_str(self):
         """TextAction.__str__"""
-        action = TextAction('username')
+        btn = MagicMock()
+        action = TextAction('username', btn, 1)
         self.assertEqual(str(action), 'username')
 
     def test_eq_equal(self):
         """TextAction.__eq__.equal"""
-        action1 = TextAction('username')
-        action2 = TextAction('username')
+        btn = MagicMock()
+        action1 = TextAction('username', btn, 1)
+        action2 = TextAction('username', btn, 1)
 
         self.assertEqual(action1, action2)
 
     def test_eq_diff_types(self):
         """TextAction.__eq__.diff_types"""
-        action1 = TextAction('username')
+        btn = MagicMock()
+        action1 = TextAction('username', btn, 1)
         action2 = 'username'
 
         self.assertNotEqual(action1, action2)
 
     def test_eq_diff_text(self):
         """TextAction.__eq__.diff_text"""
-        action1 = TextAction('username')
-        action2 = TextAction('password')
+        btn = MagicMock()
+        action1 = TextAction('username', btn, 1)
+        action2 = TextAction('password', btn, 1)
 
         self.assertNotEqual(action1, action2)
 
     def test_hash(self):
         """TextAction.__hash__"""
-        action = TextAction('username')
+        btn = MagicMock()
+        action = TextAction('username', btn, 1)
         self.assertEqual(hash(action), hash('username'))
 
 
