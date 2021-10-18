@@ -51,6 +51,13 @@ class Deck(ABC):
         # Print new key state
         print("Deck {} Key {} = {}".format(deck.id(), key, state), flush=True)
 
+        deck = Deck._get_instantiated_deck_by_id(deck.id())
+        print(f'{deck}')
+        button = deck.buttons[key]
+
+        print(f'{deck} | {button}')
+        print(button.actions)
+
     def set_callbacks(self):
         self.deck_interface.set_key_callback(Deck.key_change_callback)
 
