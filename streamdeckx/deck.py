@@ -64,8 +64,6 @@ class Deck(ABC):
             print(f'__THREAD NAME: {t.name}')
 
         self.deck_interface.set_key_callback(int_key_change_callback)
-        import time
-        time.sleep(2)
 
         for t in threading.enumerate():
             print(f'THREAD NAME: {t.name}')
