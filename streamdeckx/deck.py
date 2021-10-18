@@ -65,15 +65,6 @@ class Deck(ABC):
 
         self.deck_interface.set_key_callback(int_key_change_callback)
 
-        for t in threading.enumerate():
-            print(f'THREAD NAME: {t.name}')
-            if t is threading.currentThread():
-                continue
-
-            if t.is_alive():
-                print(f'JOINING {t.name}')
-                t.join()
-
     @functools.cached_property
     def deck_interface(self):
         decks = DeviceManager().enumerate()
