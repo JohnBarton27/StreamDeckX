@@ -1,7 +1,7 @@
-import logging
+import io
+
 from PIL import Image, ImageDraw, ImageFont
 from StreamDeck.ImageHelpers import PILHelper
-import io
 
 from button_style import ButtonStyle
 from dao.button_dao import ButtonDao
@@ -122,4 +122,6 @@ class Button:
         image = self.render_key_image()
 
         # Update requested key with the generated image.
+        self.deck.open()
         self.deck.deck_interface.set_key_image(self.position, image)
+        self.deck.close()

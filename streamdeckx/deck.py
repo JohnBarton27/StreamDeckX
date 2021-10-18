@@ -3,6 +3,7 @@ import os
 import re
 from abc import ABC
 
+import StreamDeck.Transport.Transport
 from StreamDeck.DeviceManager import DeviceManager
 
 from button import Button
@@ -21,15 +22,14 @@ class Deck(ABC):
 
     instantiated_decks = []
 
-    def __init__(self, deck_id: str, name: str = None, buttons: list = None):
-        if isinstance(deck_id, bytes):
-            deck_id = deck_id.decode('utf-8')
-
+    def __init__(self, deck_id: str, name: str = None, buttons: list = None, session_id: str = None):
+        print(f'Instantiating {deck_id} | {session_id}')
         # The 'deck_id' is actually the Stream Deck's Serial Number
         self.id = deck_id
         self.name = name
         self.buttons = buttons if buttons else []
         self._is_open = False
+        self.session_id = session_id
 
         if not self.buttons:
             # Populate with the correct number of (empty) buttons
@@ -57,6 +57,7 @@ class Deck(ABC):
             deck.close()
 
             if serial_num == self.id:
+                deck.set_key_callback(Deck.key_change_callback)
                 return deck
 
     def open(self):
@@ -73,17 +74,11 @@ class Deck(ABC):
         if not self.deck_interface:
             return
 
-        self.open()
         self.deck_interface.reset()
-        self.close()
 
     def update(self):
-        self.open()
-
         for button in self.buttons:
             button.update_key_image()
-
-        self.close()
 
     @classmethod
     def get_num_buttons(cls):
@@ -101,7 +96,7 @@ class Deck(ABC):
     @staticmethod
     def _get_instantiated_deck_by_id(deck_id):
         for deck in Deck.instantiated_decks:
-            if deck.id == deck_id:
+            if deck.session_id == deck_id:
                 return deck
 
     @staticmethod
@@ -110,34 +105,42 @@ class Deck(ABC):
         deck_objs = []
 
         for deck in decks:
-            deck.open()
-            deck_id = deck.get_serial_number()
-            deck.close()
+            deck_id = deck.id()
 
             # Check to see if we have already instantiated this deck
             instantiated_deck = Deck._get_instantiated_deck_by_id(deck_id)
 
             # If we haven't already instantiated it, we need to get it from the database
             if not instantiated_deck:
-                instantiated_deck = Deck.deck_dao.get_by_id(deck_id)
+                try:
+                    serial_num = deck.get_serial_number()
+                except StreamDeck.Transport.Transport.TransportError:
+                    deck.open()
+                    serial_num = deck.get_serial_number()
+                    deck.close()
+                instantiated_deck = Deck.deck_dao.get_by_id(serial_num)
+                instantiated_deck.session_id = deck_id
 
             if instantiated_deck:
                 deck_objs.append(instantiated_deck)
                 instantiated_deck.update()
                 continue
 
+            deck.open()
+            serial_num = deck.get_serial_number()
             if deck.deck_type() == DeckTypes.XL.value:
-                deck_obj = XLDeck(deck_id)
+                deck_obj = XLDeck(serial_num, session_id=deck_id)
                 Deck.deck_dao.create(deck_obj)
                 deck_objs.append(deck_obj)
                 deck_obj.update()
             elif deck.deck_type() == DeckTypes.ORIGINAL.value:
-                deck_obj = OriginalDeck(deck_id)
+                deck_obj = OriginalDeck(serial_num, session_id=deck_id)
                 Deck.deck_dao.create(deck_obj)
                 deck_objs.append(deck_obj)
                 deck_obj.update()
             else:
                 print(f'Unsupported deck type "{deck.deck_type()}"!')
+            deck.close()
 
         return deck_objs
 
@@ -153,14 +156,19 @@ class Deck(ABC):
 
         return html
 
+    @staticmethod
+    def key_change_callback(deck, key, state):
+        # Print new key state
+        print("Deck {} Key {} = {}".format(deck.id(), key, state), flush=True)
+
 
 class XLDeck(Deck):
     type = DeckTypes.XL
     cols = 8
     rows = 4
 
-    def __init__(self, deck_id: str, buttons: list = None):
-        super().__init__(deck_id, name=str(self.__class__.type.value), buttons=buttons)
+    def __init__(self, deck_id: str, buttons: list = None, session_id: str = None):
+        super().__init__(deck_id, name=str(self.__class__.type.value), buttons=buttons, session_id=session_id)
 
 
 class OriginalDeck(Deck):
@@ -168,8 +176,8 @@ class OriginalDeck(Deck):
     cols = 5
     rows = 3
 
-    def __init__(self, deck_id: str, buttons: list = None):
-        super().__init__(deck_id, name=str(self.__class__.type.value), buttons=buttons)
+    def __init__(self, deck_id: str, buttons: list = None, session_id: str = None):
+        super().__init__(deck_id, name=str(self.__class__.type.value), buttons=buttons, session_id=session_id)
 
 
 class MiniDeck(Deck):
@@ -177,5 +185,5 @@ class MiniDeck(Deck):
     cols = 3
     rows = 2
 
-    def __init__(self, deck_id: str, buttons: list = None):
-        super().__init__(deck_id, name=str(self.__class__.type.value), buttons=buttons)
+    def __init__(self, deck_id: str, buttons: list = None, session_id: str = None):
+        super().__init__(deck_id, name=str(self.__class__.type.value), buttons=buttons, session_id=session_id)
