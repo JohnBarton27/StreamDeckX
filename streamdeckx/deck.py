@@ -59,10 +59,6 @@ class Deck(ABC):
     def set_callbacks(self):
         print(f'Setting callback for {self.id}')
 
-        import threading
-        for t in threading.enumerate():
-            print(f'__THREAD NAME: {t.name}')
-
         self.deck_interface.set_key_callback(int_key_change_callback)
 
     @functools.cached_property
