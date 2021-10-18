@@ -24,7 +24,7 @@ def sdx_startup():
 @app.route('/')
 def hello():
     from deck import Deck
-    decks = Deck.get_connected(update_images=True)
+    decks = Deck.get_connected()
     curr_deck = decks[0]
 
     return render_template('index.html', connected_decks=decks, curr_deck_html=curr_deck.html)
@@ -160,6 +160,11 @@ def connect_to_database():
             """)
 
 
+def int_key_change_callback(call_deck, key, state):
+    # Print new key state
+    print("Deck {} Key {} = {}".format(call_deck.id(), key, state), flush=True)
+
+
 if __name__ == '__main__':
     # Setup Logging
     logging.basicConfig(format='%(levelname)s [%(asctime)s]: %(message)s', level=logging.INFO)
@@ -171,4 +176,17 @@ if __name__ == '__main__':
     connect_to_database()
     logging.info('Successfully connected to database.')
 
-    app.run(port=5050)
+    import threading
+
+    threading.Thread(target=lambda: app.run(port=5050, debug=False, use_reloader=False), name='FlaskThread').start()
+
+    from deck import Deck
+
+    decks = Deck.get_connected(update_images=True)
+    for deck in decks:
+        deck.open()
+        deck.set_callbacks()
+
+    # app.run(port=5050)
+
+    print("here")

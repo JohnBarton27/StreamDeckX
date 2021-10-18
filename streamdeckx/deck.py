@@ -12,6 +12,11 @@ from deck_types import DeckTypes
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
 
 
+def int_key_change_callback(call_deck, key, state):
+    # Print new key state
+    print("Deck {} Key {} = {}".format(call_deck.id(), key, state), flush=True)
+
+
 class Deck(ABC):
     generic_name = None
     cols = None
@@ -46,6 +51,31 @@ class Deck(ABC):
     def add_button(self, index):
         self.buttons.append(Button(index, self))
 
+    @staticmethod
+    def key_change_callback(deck, key, state):
+        # Print new key state
+        print("Deck {} Key {} = {}".format(deck.id(), key, state), flush=True)
+
+    def set_callbacks(self):
+        print(f'Setting callback for {self.id}')
+
+        import threading
+        for t in threading.enumerate():
+            print(f'__THREAD NAME: {t.name}')
+
+        self.deck_interface.set_key_callback(int_key_change_callback)
+        import time
+        time.sleep(2)
+
+        for t in threading.enumerate():
+            print(f'THREAD NAME: {t.name}')
+            if t is threading.currentThread():
+                continue
+
+            if t.is_alive():
+                print(f'JOINING {t.name}')
+                t.join()
+
     @functools.cached_property
     def deck_interface(self):
         decks = DeviceManager().enumerate()
@@ -54,7 +84,6 @@ class Deck(ABC):
             serial_num = Deck._get_serial_from_session_id(deck.id())
 
             if serial_num == self.id:
-                deck.set_key_callback(Deck.key_change_callback)
                 return deck
 
     def open(self):
@@ -162,11 +191,6 @@ class Deck(ABC):
                 position += 1
 
         return html
-
-    @staticmethod
-    def key_change_callback(deck, key, state):
-        # Print new key state
-        print("Deck {} Key {} = {}".format(deck.id(), key, state), flush=True)
 
 
 class XLDeck(Deck):
