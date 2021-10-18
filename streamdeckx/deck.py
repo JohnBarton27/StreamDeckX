@@ -23,7 +23,6 @@ class Deck(ABC):
     mappings = []
 
     def __init__(self, deck_id: str, name: str = None, buttons: list = None, session_id: str = None):
-        print(f'Instantiating {deck_id} | {session_id}')
         # The 'deck_id' is actually the Stream Deck's Serial Number
         self.id = deck_id
         self.name = name
