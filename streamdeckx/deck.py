@@ -57,8 +57,6 @@ class Deck(ABC):
         print("Deck {} Key {} = {}".format(deck.id(), key, state), flush=True)
 
     def set_callbacks(self):
-        print(f'Setting callback for {self.id}')
-
         self.deck_interface.set_key_callback(int_key_change_callback)
 
     @functools.cached_property
