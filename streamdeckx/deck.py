@@ -136,6 +136,7 @@ class Deck(ABC):
                 instantiated_deck = Deck.deck_dao.get_by_id(serial_num)
 
             if instantiated_deck:
+                instantiated_deck.session_id = deck_id
                 deck_objs.append(instantiated_deck)
                 if update_images:
                     instantiated_deck.update()

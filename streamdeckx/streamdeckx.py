@@ -178,6 +178,7 @@ if __name__ == '__main__':
     from deck import Deck
 
     decks = Deck.get_connected(update_images=True)
+
     for deck in decks:
         deck.open()
         deck.set_callbacks()
