@@ -104,15 +104,21 @@ class Deck(ABC):
                 return mapping['serial_number']
 
     @staticmethod
-    def get_connected():
+    def get_connected(update_images: bool = False):
         decks = DeviceManager().enumerate()
         deck_objs = []
 
         for deck in decks:
             deck_id = deck.id()
-            deck.open()
-            serial_num = deck.get_serial_number()
-            deck.close()
+
+            if not any(deck_id == mapping['session_id'] for mapping in Deck.mappings):
+                # If this is a new/unrecognized session, get its serial number
+                deck.open()
+                serial_num = deck.get_serial_number()
+                deck.close()
+            else:
+                # We must already have the serial number
+                serial_num = Deck._get_serial_from_session_id(deck_id)
 
             Deck.mappings.append({'session_id': deck_id, 'serial_number': serial_num})
 
@@ -125,19 +131,22 @@ class Deck(ABC):
 
             if instantiated_deck:
                 deck_objs.append(instantiated_deck)
-                instantiated_deck.update()
+                if update_images:
+                    instantiated_deck.update()
                 continue
 
             if deck.deck_type() == DeckTypes.XL.value:
                 deck_obj = XLDeck(serial_num, session_id=deck_id)
                 Deck.deck_dao.create(deck_obj)
                 deck_objs.append(deck_obj)
-                deck_obj.update()
+                if update_images:
+                    deck_obj.update()
             elif deck.deck_type() == DeckTypes.ORIGINAL.value:
                 deck_obj = OriginalDeck(serial_num, session_id=deck_id)
                 Deck.deck_dao.create(deck_obj)
                 deck_objs.append(deck_obj)
-                deck_obj.update()
+                if update_images:
+                    deck_obj.update()
             else:
                 print(f'Unsupported deck type "{deck.deck_type()}"!')
 

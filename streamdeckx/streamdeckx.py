@@ -24,7 +24,7 @@ def sdx_startup():
 @app.route('/')
 def hello():
     from deck import Deck
-    decks = Deck.get_connected()
+    decks = Deck.get_connected(update_images=True)
     curr_deck = decks[0]
 
     return render_template('index.html', connected_decks=decks, curr_deck_html=curr_deck.html)
