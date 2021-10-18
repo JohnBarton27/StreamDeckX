@@ -160,11 +160,6 @@ def connect_to_database():
             """)
 
 
-def int_key_change_callback(call_deck, key, state):
-    # Print new key state
-    print("Deck {} Key {} = {}".format(call_deck.id(), key, state), flush=True)
-
-
 if __name__ == '__main__':
     # Setup Logging
     logging.basicConfig(format='%(levelname)s [%(asctime)s]: %(message)s', level=logging.INFO)
@@ -186,7 +181,3 @@ if __name__ == '__main__':
     for deck in decks:
         deck.open()
         deck.set_callbacks()
-
-    # app.run(port=5050)
-
-    print("here")
