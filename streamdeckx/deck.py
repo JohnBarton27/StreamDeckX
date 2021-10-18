@@ -3,7 +3,6 @@ import os
 import re
 from abc import ABC
 
-import StreamDeck.Transport.Transport
 from StreamDeck.DeviceManager import DeviceManager
 
 from button import Button
@@ -21,6 +20,7 @@ class Deck(ABC):
     deck_dao = DeckDao()
 
     instantiated_decks = []
+    mappings = []
 
     def __init__(self, deck_id: str, name: str = None, buttons: list = None, session_id: str = None):
         print(f'Instantiating {deck_id} | {session_id}')
@@ -52,9 +52,7 @@ class Deck(ABC):
         decks = DeviceManager().enumerate()
 
         for deck in decks:
-            deck.open()
-            serial_num = deck.get_serial_number()
-            deck.close()
+            serial_num = Deck._get_serial_from_session_id(deck.id())
 
             if serial_num == self.id:
                 deck.set_key_callback(Deck.key_change_callback)
@@ -100,34 +98,36 @@ class Deck(ABC):
                 return deck
 
     @staticmethod
+    def _get_serial_from_session_id(session_id: str):
+        for mapping in Deck.mappings:
+            if mapping['session_id'] == session_id:
+                return mapping['serial_number']
+
+    @staticmethod
     def get_connected():
         decks = DeviceManager().enumerate()
         deck_objs = []
 
         for deck in decks:
             deck_id = deck.id()
+            deck.open()
+            serial_num = deck.get_serial_number()
+            deck.close()
+
+            Deck.mappings.append({'session_id': deck_id, 'serial_number': serial_num})
 
             # Check to see if we have already instantiated this deck
             instantiated_deck = Deck._get_instantiated_deck_by_id(deck_id)
 
             # If we haven't already instantiated it, we need to get it from the database
             if not instantiated_deck:
-                try:
-                    serial_num = deck.get_serial_number()
-                except StreamDeck.Transport.Transport.TransportError:
-                    deck.open()
-                    serial_num = deck.get_serial_number()
-                    deck.close()
                 instantiated_deck = Deck.deck_dao.get_by_id(serial_num)
-                instantiated_deck.session_id = deck_id
 
             if instantiated_deck:
                 deck_objs.append(instantiated_deck)
                 instantiated_deck.update()
                 continue
 
-            deck.open()
-            serial_num = deck.get_serial_number()
             if deck.deck_type() == DeckTypes.XL.value:
                 deck_obj = XLDeck(serial_num, session_id=deck_id)
                 Deck.deck_dao.create(deck_obj)
@@ -140,7 +140,6 @@ class Deck(ABC):
                 deck_obj.update()
             else:
                 print(f'Unsupported deck type "{deck.deck_type()}"!')
-            deck.close()
 
         return deck_objs
 
