@@ -6,6 +6,7 @@ from abc import ABC
 from StreamDeck.DeviceManager import DeviceManager
 
 from button import Button
+from dao.action_dao import ActionDao
 from dao.deck_dao import DeckDao
 from deck_types import DeckTypes
 
@@ -48,15 +49,21 @@ class Deck(ABC):
 
     @staticmethod
     def key_change_callback(deck, key, state):
+        if not state:
+            # Button was released
+            return
+
         # Print new key state
         print("Deck {} Key {} = {}".format(deck.id(), key, state), flush=True)
 
         deck = Deck._get_instantiated_deck_by_id(deck.id())
-        print(f'{deck}')
         button = deck.buttons[key]
 
-        print(f'{deck} | {button}')
-        print(button.actions)
+        action_dao = ActionDao()
+        actions = action_dao.get_for_button(button)
+
+        for action in actions:
+            action.execute()
 
     def set_callbacks(self):
         self.deck_interface.set_key_callback(Deck.key_change_callback)

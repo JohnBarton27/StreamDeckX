@@ -24,7 +24,7 @@ class ActionFactory:
     @staticmethod
     def get_by_type(action_type: str):
         if action_type == 'TEXT':
-            return TextAction.__init__
+            return TextAction
 
 
 class TextAction(Action):
