@@ -1,11 +1,13 @@
 <h3>Button Configuration ({{ button.position }})</h3>
 <hr>
-{% for action in button.actions %}
-    <div class="action">
-        <p style="margin: 0; font-size: 0.8rem; font-style: italic; text-decoration: underline;">{{ action.__class__.__name__ }}</p>
-        <p style="margin: 0;">{{ action.parameter }}</p>
-    </div>
-{% endfor %}
+{% if button.actions is not none %}
+    {% for action in button.actions %}
+        <div class="action">
+            <p style="margin: 0; font-size: 0.8rem; font-style: italic; text-decoration: underline;">{{ action.__class__.__name__ }}</p>
+            <p style="margin: 0;">{{ action.parameter }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
 <button onclick="openAddActionModal()">+ Add Action</button>
 <label for="buttonText">Text</label>
 <input id="buttonText" type="text" value="{{ button.style.label }}">
