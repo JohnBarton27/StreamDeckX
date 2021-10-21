@@ -105,6 +105,13 @@ class Button:
         """Add an action to this Button"""
         self.actions.append(action)
 
+    def execute_actions(self):
+        if not self.actions:
+            return
+        
+        for action in self.actions:
+            action.execute()
+
     def serialize(self):
         """Converts this button into its JSON representation, suitable for returning from an API"""
         return {

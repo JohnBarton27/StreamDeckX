@@ -2,10 +2,12 @@ import logging
 import sqlite3 as sl
 
 from button_style import ButtonStyle
+from dao.action_dao import ActionDao
 from dao.dao import Dao
 
 
 class ButtonDao(Dao):
+    action_dao = ActionDao()
 
     def get_by_id(self, button_id: int, deck=None):
         """
@@ -32,6 +34,7 @@ class ButtonDao(Dao):
                 return None
 
         button = ButtonDao.get_obj_from_result(dict(result[0]), deck=deck)
+        button.actions = ButtonDao.action_dao.get_for_button(button)
         return button
 
     def get_for_deck(self, deck):
@@ -58,6 +61,8 @@ class ButtonDao(Dao):
                 return None
 
         buttons = ButtonDao.get_objs_from_result(results, deck=deck)
+        for button in buttons:
+            button.actions = ButtonDao.action_dao.get_for_button(button)
         return buttons
 
     def create(self, button):
