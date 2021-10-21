@@ -8,7 +8,7 @@
         </div>
     {% endfor %}
 {% endif %}
-<button onclick="openAddActionModal()">+ Add Action</button>
+<button onclick="openAddActionModal({{ button.position }})">+ Add Action</button>
 <label for="buttonText">Text</label>
 <input id="buttonText" type="text" value="{{ button.style.label }}">
 <button onclick="submit()">Save</button>

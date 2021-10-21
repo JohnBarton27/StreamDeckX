@@ -107,6 +107,7 @@ def set_button_action():
 
             action_dao = ActionDao()
             action_dao.create(action)
+            button.actions.append(action)
 
             return 'Success!'
 

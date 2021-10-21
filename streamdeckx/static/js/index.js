@@ -46,7 +46,7 @@ function openConfig(position) {
     });
 }
 
-function openAddActionModal() {
+function openAddActionModal(position) {
     actionFieldsArea = $("#actionFields");
     actionFieldsArea.html('');
 
@@ -55,7 +55,7 @@ function openAddActionModal() {
 
     // Add listeners
     let actionTypeSelect = $("#actionTypeSelect");
-    actionTypeSelect.change(function() {
+    actionTypeSelect.change(function () {
         let selectedActionType = actionTypeSelect.val();
         switch (selectedActionType) {
             case "text":
@@ -81,6 +81,14 @@ function openAddActionModal() {
         }, 'json').done(
             function (data) {
                 console.log(data);
+
+                // Close Modal
+                closeActionModalButton.click()
+
+                // Refresh Config HTML
+                $.get('/configHtml', {'deckId': currDeckId, 'button': position}, function (data) {
+                    config.html(data);
+                });
             }
         );
     });
