@@ -99,6 +99,26 @@ class ActionDao(Dao):
                 f'Updating action ({action.id}): order = {action.order} | parameter = {action.parameter}')
             conn.commit()
 
+    def delete(self, action):
+        """
+        Deletes the given Action from the database
+
+        Args:
+            action (Action): Action object that already exists in the database to be deleted
+
+        Returns:
+            None
+        """
+        conn = ActionDao.get_db_conn()
+
+        with conn:
+            cursor = conn.cursor()
+            cursor.execute(f"""
+                DELETE FROM action WHERE id = ?;
+            """, (action.id,))
+            logging.info(f'Deleting action ({action.id}): order = {action.order} | parameter = {action.parameter}')
+            conn.commit()
+
     @staticmethod
     def get_obj_from_result(result, button=None):
         """

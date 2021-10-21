@@ -114,6 +114,34 @@ def set_button_action():
     return 'Failed to find deck!'
 
 
+@app.route('/setButtonAction', methods=['DELETE'])
+def delete_button_action():
+    from deck import Deck
+
+    from dao.action_dao import ActionDao
+
+    deck_id = request.form['deckId']
+    button_position = int(request.form['button'])
+    action_id = int(request.form['action'])
+
+    action_dao = ActionDao()
+
+    decks = Deck.get_connected()
+
+    for deck in decks:
+        if deck.id == deck_id:
+            # This is the deck we selected
+            button = deck.buttons[button_position]
+            for action in button.actions:
+                if action.id == action_id:
+                    action_dao.delete(action)
+                    button.actions.remove(action)
+
+            return render_template('configuration.html', button=button)
+
+    return 'Failed to find deck!'
+
+
 def connect_to_database():
     db_name = 'sdx_db.db'
     try:

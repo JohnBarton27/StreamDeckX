@@ -94,6 +94,21 @@ function openAddActionModal(position) {
     });
 }
 
+function deleteAction(button_id, action_id) {
+    $.ajax('/setButtonAction',
+        {
+            type: 'DELETE',
+            data: {
+                'deckId': currDeckId,
+                'button': button_id,
+                'action': action_id
+            },
+            success: function (data) {
+                config.html(data);
+            }
+        });
+}
+
 function showTextActionFields() {
     actionFieldsArea.html(`
         <label for="textValue">Text: </label>
