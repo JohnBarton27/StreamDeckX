@@ -1,8 +1,8 @@
-<h3>Button Configuration ({{ button }})</h3>
+<h3>Button Configuration ({{ button.position }})</h3>
 <hr>
 <button onclick="openAddActionModal()">+ Add Action</button>
 <label for="buttonText">Text</label>
-<input id="buttonText" type="text">
+<input id="buttonText" type="text" value="{{ button.style.label }}">
 <button onclick="submit()">Save</button>
 
 <div id="addActionModal" class="modal">

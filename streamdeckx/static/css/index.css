@@ -19,9 +19,14 @@ button {
     background-color: transparent;
     color: #FAFDED;
     border-radius: 10px;
-    padding: 10px;
+    padding: 5px;
     width: 100%;
     border-color: #FAFDED;
+    margin: 10px 0;
+}
+
+hr {
+    margin: 0;
 }
 
 .btn {

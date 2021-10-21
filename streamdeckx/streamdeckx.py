@@ -57,7 +57,7 @@ def get_config_html():
             # This is the deck we selected
             button = deck.buttons[button_position]
 
-            return render_template('configuration.html', button=button.position)
+            return render_template('configuration.html', button=button)
 
     # TODO add error
     return 'Deck not found!'
