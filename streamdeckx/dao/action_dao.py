@@ -140,7 +140,6 @@ class ActionDao(Dao):
             Action[]: List of Action objects
         """
         actions = []
-
         for result in results:
 
             if not button:

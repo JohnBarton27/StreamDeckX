@@ -55,3 +55,11 @@ class TextAction(Action):
 
     def execute(self):
         print(f'Printing: {self.text}')
+        from pynput.keyboard import Controller
+
+        keyboard = Controller()
+
+        # Press and release space
+        for char in self.text:
+            keyboard.press(char)
+            keyboard.release(char)
