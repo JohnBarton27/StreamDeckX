@@ -131,6 +131,31 @@ class TestActionDao(unittest.TestCase):
         self.m_conn.commit.assert_not_called()
         self.m_log_debug.assert_not_called()
 
+    def test_delete(self):
+        button = MagicMock()
+        button.id = 123
+        action = TextAction('My Text', button, 0, action_id=4)
+
+        ad = ActionDao()
+        ad.delete(action)
+
+        self.m_cursor.execute.assert_called_with('DELETE FROM action WHERE id = ?;', (4,))
+        self.m_conn.commit.assert_called()
+        self.m_log_debug.assert_called_with('Deleting action (4): action.order=0 | action.parameter=\'My Text\'')
+
+    def test_delete_no_id(self):
+        button = MagicMock()
+        button.id = 123
+        action = TextAction('My Text', button, 0)
+
+        ad = ActionDao()
+        self.assertRaises(ActionMissingIdError, ad.delete, action)
+
+        # Nothing should have been called
+        self.m_cursor.execute.assert_not_called()
+        self.m_conn.commit.assert_not_called()
+        self.m_log_debug.assert_not_called()
+
 
 if __name__ == '__main__':
     unittest.main()
