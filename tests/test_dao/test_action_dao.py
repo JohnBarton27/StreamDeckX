@@ -156,6 +156,48 @@ class TestActionDao(unittest.TestCase):
         self.m_conn.commit.assert_not_called()
         self.m_log_debug.assert_not_called()
 
+    def test_obj_from_result_with_button(self):
+        button = MagicMock()
+
+        result = {
+            'id': 17,
+            'type': 'TEXT',
+            'button_id': 4,
+            'action_order': 1,
+            'parameter': 'Hello, World!'
+        }
+
+        action = ActionDao.get_obj_from_result(result, button)
+
+        self.assertEqual(action.id, 17)
+        self.assertIsInstance(action, TextAction)
+        self.assertEqual(action.button, button)
+        self.assertEqual(action.order, 1)
+        self.assertEqual(action.parameter, 'Hello, World!')
+
+    @patch('dao.button_dao.ButtonDao.get_by_id')
+    def test_obj_from_result_without_button(self, m_button_by_id):
+        button = MagicMock()
+        m_button_by_id.return_value = button
+
+        result = {
+            'id': 17,
+            'type': 'TEXT',
+            'button_id': 4,
+            'action_order': 1,
+            'parameter': 'Hello, World!'
+        }
+
+        action = ActionDao.get_obj_from_result(result)
+
+        m_button_by_id.assert_called_with(4)
+
+        self.assertEqual(action.id, 17)
+        self.assertIsInstance(action, TextAction)
+        self.assertEqual(action.button, button)
+        self.assertEqual(action.order, 1)
+        self.assertEqual(action.parameter, 'Hello, World!')
+
 
 if __name__ == '__main__':
     unittest.main()
