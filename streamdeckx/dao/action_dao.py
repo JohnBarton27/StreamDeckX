@@ -46,9 +46,7 @@ class ActionDao(Dao):
         with conn:
             conn.row_factory = sl.Row
             cursor = conn.cursor()
-            cursor.execute("""
-                SELECT * FROM action WHERE button_id=?;
-            """, (str(button.id),))
+            cursor.execute('SELECT * FROM action WHERE button_id=?;', (str(button.id),))
 
             results = cursor.fetchall()
             if not results:
