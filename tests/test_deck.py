@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch, MagicMock, PropertyMock
+from unittest.mock import call, patch, MagicMock, PropertyMock
 
 from deck import Deck, MiniDeck, OriginalDeck, XLDeck
 
@@ -26,19 +26,24 @@ class TestDeck(unittest.TestCase):
         self.m_deck_dao_create = deck_dao_create_patch.start()
         self.addCleanup(deck_dao_create_patch.stop)
 
-    def test_deck_interface(self):
+    @patch('deck.Deck._get_serial_from_session_id')
+    def test_deck_interface(self, m_from_session_id):
         """Deck.deck_interface"""
         deck_interface1 = MagicMock()
         deck_interface1.get_serial_number.return_value = 'def456'
+        deck_interface1.id.return_value = 'deck1_id'
 
         deck_interface2 = MagicMock()
         deck_interface2.get_serial_number.return_value = 'abc123'
+        deck_interface2.id.return_value = 'deck2_id'
 
         self.m_dev_manager.enumerate.return_value = [deck_interface1, deck_interface2]
+        m_from_session_id.side_effect = ['def456', 'abc123']
 
         deck = XLDeck('abc123')
 
         self.assertEqual(deck.deck_interface, deck_interface2)
+        m_from_session_id.assert_has_calls([call('deck1_id'), call('deck2_id')], any_order=False)
 
     @patch('deck.Deck.deck_interface', new_callable=PropertyMock)
     def test_open_from_closed(self, m_deck_int):
