@@ -22,9 +22,7 @@ class ActionDao(Dao):
         with conn:
             conn.row_factory = sl.Row
             cursor = conn.cursor()
-            cursor.execute("""
-                SELECT * FROM action WHERE id=?;
-            """, (str(action_id),))
+            cursor.execute('SELECT * FROM action WHERE id=?;', (str(action_id),))
 
             result = cursor.fetchall()
             if not result:
