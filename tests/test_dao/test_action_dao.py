@@ -198,6 +198,78 @@ class TestActionDao(unittest.TestCase):
         self.assertEqual(action.order, 1)
         self.assertEqual(action.parameter, 'Hello, World!')
 
+    def test_objs_from_result_with_button(self):
+        button = MagicMock()
+
+        results = [
+            {
+                'id': 17,
+                'type': 'TEXT',
+                'button_id': 4,
+                'action_order': 0,
+                'parameter': 'Hello, '
+            },
+            {
+                'id': 18,
+                'type': 'TEXT',
+                'button_id': 4,
+                'action_order': 1,
+                'parameter': 'World!'
+            }
+        ]
+
+        actions = ActionDao.get_objs_from_result(results, button)
+
+        self.assertEqual(actions[0].id, 17)
+        self.assertIsInstance(actions[0], TextAction)
+        self.assertEqual(actions[0].button, button)
+        self.assertEqual(actions[0].order, 0)
+        self.assertEqual(actions[0].parameter, 'Hello, ')
+
+        self.assertEqual(actions[1].id, 18)
+        self.assertIsInstance(actions[1], TextAction)
+        self.assertEqual(actions[1].button, button)
+        self.assertEqual(actions[1].order, 1)
+        self.assertEqual(actions[1].parameter, 'World!')
+
+    @patch('dao.button_dao.ButtonDao.get_by_id')
+    def test_objs_from_result_without_button(self, m_button_by_id):
+        button = MagicMock()
+        m_button_by_id.return_value = button
+
+        results = [
+            {
+                'id': 17,
+                'type': 'TEXT',
+                'button_id': 4,
+                'action_order': 0,
+                'parameter': 'Hello, '
+            },
+            {
+                'id': 18,
+                'type': 'TEXT',
+                'button_id': 4,
+                'action_order': 1,
+                'parameter': 'World!'
+            }
+        ]
+
+        actions = ActionDao.get_objs_from_result(results)
+
+        m_button_by_id.assert_called_with(4)
+
+        self.assertEqual(actions[0].id, 17)
+        self.assertIsInstance(actions[0], TextAction)
+        self.assertEqual(actions[0].button, button)
+        self.assertEqual(actions[0].order, 0)
+        self.assertEqual(actions[0].parameter, 'Hello, ')
+
+        self.assertEqual(actions[1].id, 18)
+        self.assertIsInstance(actions[1], TextAction)
+        self.assertEqual(actions[1].button, button)
+        self.assertEqual(actions[1].order, 1)
+        self.assertEqual(actions[1].parameter, 'World!')
+
 
 if __name__ == '__main__':
     unittest.main()
