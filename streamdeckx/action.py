@@ -63,3 +63,10 @@ class TextAction(Action):
         for char in self.text:
             keyboard.press(char)
             keyboard.release(char)
+
+
+class ActionMissingIdError(Exception):
+    """
+    Raised when an Action needs an ID, one has not been given/set.
+    """
+    pass

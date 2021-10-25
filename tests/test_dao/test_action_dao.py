@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from action import TextAction
+from action import TextAction, ActionMissingIdError
 from dao.action_dao import ActionDao
 
 
@@ -19,6 +19,11 @@ class TestActionDao(unittest.TestCase):
         # Mock Cursor
         self.m_cursor = MagicMock()
         self.m_conn.cursor.return_value = self.m_cursor
+
+        # Logging
+        log_debug_patch = patch('dao.action_dao.logging.debug')
+        self.m_log_debug = log_debug_patch.start()
+        self.addCleanup(log_debug_patch.stop)
 
     def test_get_by_id_dne(self):
         self.m_cursor.fetchall.return_value = []
@@ -98,6 +103,33 @@ class TestActionDao(unittest.TestCase):
         self.m_cursor.execute.assert_called_with(
             'INSERT INTO action (type, button_id, action_order, parameter) VALUES (?, ?, ?, ?);',
             ('TEXT', 123, 0, 'My Text'))
+        self.m_conn.commit.assert_called()
+
+    def test_update(self):
+        button = MagicMock()
+        button.id = 123
+        action = TextAction('My Text', button, 0, action_id=4)
+
+        ad = ActionDao()
+        ad.update(action)
+
+        self.m_cursor.execute.assert_called_with('UPDATE action SET action_order = ?, parameter = ? WHERE id = ?;',
+                                                 (0, 'My Text', 4))
+        self.m_conn.commit.assert_called()
+        self.m_log_debug.assert_called_with('Updating action (4): action.order=0 | action.parameter=\'My Text\'')
+
+    def test_update_no_id(self):
+        button = MagicMock()
+        button.id = 123
+        action = TextAction('My Text', button, 0)
+
+        ad = ActionDao()
+        self.assertRaises(ActionMissingIdError, ad.update, action)
+
+        # Nothing should have been called
+        self.m_cursor.execute.assert_not_called()
+        self.m_conn.commit.assert_not_called()
+        self.m_log_debug.assert_not_called()
 
 
 if __name__ == '__main__':

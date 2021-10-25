@@ -1,6 +1,7 @@
 import logging
 import sqlite3 as sl
 
+from action import ActionMissingIdError
 from dao.dao import Dao
 
 
@@ -83,15 +84,16 @@ class ActionDao(Dao):
         Returns:
             None
         """
+        if not action.id:
+            raise ActionMissingIdError('Action ID is required for updating an Action')
         conn = ActionDao.get_db_conn()
 
         with conn:
             cursor = conn.cursor()
-            cursor.execute(f"""
-                UPDATE action SET action_order = ?, parameter = ? WHERE id = ?;
-            """, (action.order, action.parameter, action.id))
-            logging.info(
-                f'Updating action ({action.id}): order = {action.order} | parameter = {action.parameter}')
+            cursor.execute('UPDATE action SET action_order = ?, parameter = ? WHERE id = ?;',
+                           (action.order, action.parameter, action.id))
+            logging.debug(
+                f'Updating action ({action.id}): {action.order=} | {action.parameter=}')
             conn.commit()
 
     def delete(self, action):
@@ -111,7 +113,7 @@ class ActionDao(Dao):
             cursor.execute(f"""
                 DELETE FROM action WHERE id = ?;
             """, (action.id,))
-            logging.info(f'Deleting action ({action.id}): order = {action.order} | parameter = {action.parameter}')
+            logging.debug(f'Deleting action ({action.id}): order = {action.order} | parameter = {action.parameter}')
             conn.commit()
 
     @staticmethod
