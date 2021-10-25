@@ -55,7 +55,7 @@ class Deck(ABC):
         # Print new key state
         print("Deck {} Key {} = {}".format(deck.id(), key, state), flush=True)
 
-        deck = Deck._get_instantiated_deck_by_id(deck.id())
+        deck = Deck._get_instantiated_deck_by_session_id(deck.id())
         button = deck.buttons[key]
         button.execute_actions()
 
@@ -106,7 +106,7 @@ class Deck(ABC):
             return full_id
 
     @staticmethod
-    def _get_instantiated_deck_by_id(deck_id):
+    def _get_instantiated_deck_by_session_id(deck_id):
         for deck in Deck.instantiated_decks:
             if deck.session_id == deck_id:
                 return deck
@@ -137,7 +137,7 @@ class Deck(ABC):
             Deck.mappings.append({'session_id': deck_id, 'serial_number': serial_num})
 
             # Check to see if we have already instantiated this deck
-            instantiated_deck = Deck._get_instantiated_deck_by_id(deck_id)
+            instantiated_deck = Deck._get_instantiated_deck_by_session_id(deck_id)
 
             # If we haven't already instantiated it, we need to get it from the database
             if not instantiated_deck:

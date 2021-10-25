@@ -161,7 +161,7 @@ class TestDeck(unittest.TestCase):
         self.assertEqual(deck_interface.close.call_count, 1)
         self.assertEqual(deck_interface.reset.call_count, 1)
 
-    @patch('deck.Deck._get_instantiated_deck_by_id')
+    @patch('deck.Deck._get_instantiated_deck_by_session_id')
     def test_get_connected_single_xl(self, m_inst_by_id):
         """Deck.get_connected.single_xl"""
         xl_deck1 = MagicMock()
@@ -180,7 +180,7 @@ class TestDeck(unittest.TestCase):
         self.assertEqual(decks[0].id, 'xl_deck1_id')
         self.m_deck_dao_create.assert_called()
 
-    @patch('deck.Deck._get_instantiated_deck_by_id')
+    @patch('deck.Deck._get_instantiated_deck_by_session_id')
     def test_get_connected_single_original(self, m_inst_by_id):
         """Deck.get_connected.single_original"""
         orig_deck1 = MagicMock()
@@ -199,7 +199,7 @@ class TestDeck(unittest.TestCase):
         self.assertEqual(decks[0].id, 'orig_deck1_id')
         self.m_deck_dao_create.assert_called()
 
-    @patch('deck.Deck._get_instantiated_deck_by_id')
+    @patch('deck.Deck._get_instantiated_deck_by_session_id')
     def test_get_connected_original_xl(self, m_inst_by_id):
         """Deck.get_connected.original_xl"""
         orig_deck1 = MagicMock()
@@ -225,7 +225,7 @@ class TestDeck(unittest.TestCase):
         self.assertEqual(decks[1].id, 'xl_deck1_id')
         self.m_deck_dao_create.assert_called()
 
-    @patch('deck.Deck._get_instantiated_deck_by_id')
+    @patch('deck.Deck._get_instantiated_deck_by_session_id')
     @patch('builtins.print')
     def test_get_connected_unknown(self, m_print, m_inst_by_id):
         """Deck.get_connected.unknown"""
@@ -245,13 +245,13 @@ class TestDeck(unittest.TestCase):
         m_print.assert_called()
         self.m_deck_dao_create.assert_not_called()
 
-    def test_get_instantiated_deck_by_id(self):
+    def test_get_instantiated_deck_by_session_id(self):
         """Deck.get_instantiated_deck_by_id"""
-        deck1 = XLDeck('xl_id')
-        deck2 = OriginalDeck('orig_id1')
-        deck3 = OriginalDeck('orig_id2')
+        deck1 = XLDeck('xl_id', session_id='1_sess')
+        deck2 = OriginalDeck('orig_id1', session_id='2_sess')
+        deck3 = OriginalDeck('orig_id2', session_id='3_sess')
 
-        deck2_from_inst = Deck._get_instantiated_deck_by_id('orig_id1')
+        deck2_from_inst = Deck._get_instantiated_deck_by_session_id('2_sess')
 
         self.assertEqual(deck2_from_inst, deck2)
 
