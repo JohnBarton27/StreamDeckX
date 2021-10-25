@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
+from action import TextAction
 from dao.action_dao import ActionDao
 
 
@@ -85,6 +86,18 @@ class TestActionDao(unittest.TestCase):
 
         m_objs_from_result.assert_called_with([{'id': 1}, {'id': 2}, {'id': 3}], button=button)
         self.assertEqual(results, [retrieved_action1, retrieved_action2, retrieved_action3])
+
+    def test_create(self):
+        button = MagicMock()
+        button.id = 123
+        action = TextAction('My Text', button, 0)
+
+        ad = ActionDao()
+        ad.create(action)
+
+        self.m_cursor.execute.assert_called_with(
+            'INSERT INTO action (type, button_id, action_order, parameter) VALUES (?, ?, ?, ?);',
+            ('TEXT', 123, 0, 'My Text'))
 
 
 if __name__ == '__main__':

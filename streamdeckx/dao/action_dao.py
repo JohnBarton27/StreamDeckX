@@ -69,9 +69,8 @@ class ActionDao(Dao):
 
         with conn:
             cursor = conn.cursor()
-            cursor.execute(f"""
-                INSERT into action (type, button_id, action_order, parameter) VALUES (?, ?, ?, ?);
-            """, (action.action_type, action.button.id, action.order, action.parameter))
+            cursor.execute('INSERT INTO action (type, button_id, action_order, parameter) VALUES (?, ?, ?, ?);',
+                           (action.action_type, action.button.id, action.order, action.parameter))
             conn.commit()
 
     def update(self, action):
