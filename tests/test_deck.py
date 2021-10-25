@@ -158,7 +158,7 @@ class TestDeck(unittest.TestCase):
         deck.reset()
 
         self.assertEqual(deck_interface.open.call_count, 0)
-        self.assertEqual(deck_interface.close.call_count, 1)
+        self.assertEqual(deck_interface.close.call_count, 0)
         self.assertEqual(deck_interface.reset.call_count, 1)
 
     @patch('deck.Deck._get_instantiated_deck_by_session_id')
