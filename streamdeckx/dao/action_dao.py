@@ -73,6 +73,7 @@ class ActionDao(Dao):
             cursor.execute('INSERT INTO action (type, button_id, action_order, parameter) VALUES (?, ?, ?, ?);',
                            (action.action_type, action.button.id, action.order, action.parameter))
             conn.commit()
+            action.id = cursor.lastrowid
 
     def update(self, action):
         """
