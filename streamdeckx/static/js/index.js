@@ -88,6 +88,7 @@ function openAddActionModal(position) {
                 // Refresh Config HTML
                 $.get('/configHtml', {'deckId': currDeckId, 'button': position}, function (data) {
                     config.html(data);
+                    buttonTextField = $("#buttonText");
                 });
             }
         );
@@ -105,6 +106,7 @@ function deleteAction(button_id, action_id) {
             },
             success: function (data) {
                 config.html(data);
+                buttonTextField = $("#buttonText");
             }
         });
 }

@@ -94,9 +94,7 @@ class Button:
             text (str): Text to apply to this Button
         """
         self.style.label = text
-        self.deck.open()
         self.update_key_image()
-        self.deck.close()
 
         # Update in database
         Button.button_dao.update(self)
@@ -129,6 +127,4 @@ class Button:
         image = self.render_key_image()
 
         # Update requested key with the generated image.
-        self.deck.open()
         self.deck.deck_interface.set_key_image(self.position, image)
-        self.deck.close()

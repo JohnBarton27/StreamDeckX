@@ -89,8 +89,16 @@ class Deck(ABC):
         self.deck_interface.reset()
 
     def update(self):
+        need_to_open = not self._is_open
+
+        if need_to_open:
+            self.open()
+
         for button in self.buttons:
             button.update_key_image()
+
+        if need_to_open:
+            self.close()
 
     @classmethod
     def get_num_buttons(cls):
