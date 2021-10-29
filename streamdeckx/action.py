@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import logging
 
 
 class Action(ABC):
@@ -54,7 +55,7 @@ class TextAction(Action):
         return hash(self.text)
 
     def execute(self):
-        print(f'Printing: {self.text}')
+        logging.info(f'Printing: {self.text}')
         from pynput.keyboard import Controller
 
         keyboard = Controller()

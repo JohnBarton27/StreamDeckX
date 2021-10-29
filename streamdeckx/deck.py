@@ -1,4 +1,5 @@
 import functools
+import logging
 import os
 import re
 from abc import ABC
@@ -53,7 +54,7 @@ class Deck(ABC):
             return
 
         # Print new key state
-        print("Deck {} Key {} = {}".format(deck.id(), key, state), flush=True)
+        logging.info("Deck {} Key {} = {}".format(deck.id(), key, state))
 
         deck = Deck._get_instantiated_deck_by_session_id(deck.id())
         button = deck.buttons[key]
