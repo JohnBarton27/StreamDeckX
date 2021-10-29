@@ -25,9 +25,7 @@ class ButtonDao(Dao):
         with conn:
             conn.row_factory = sl.Row
             cursor = conn.cursor()
-            cursor.execute("""
-                SELECT * FROM button WHERE id=?;
-            """, (str(button_id),))
+            cursor.execute('SELECT * FROM button WHERE id=?;', (str(button_id),))
 
             result = cursor.fetchall()
             if not result:
