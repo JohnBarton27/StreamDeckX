@@ -54,7 +54,7 @@ class Deck(ABC):
             return
 
         # Print new key state
-        logging.info("Deck {} Key {} = {}".format(deck.id(), key, state))
+        logging.debug("Deck {} Key {} = {}".format(deck.id(), key, state))
 
         deck = Deck._get_instantiated_deck_by_session_id(deck.id())
         button = deck.buttons[key]
