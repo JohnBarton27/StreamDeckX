@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, call, patch
 
 from dao.button_dao import ButtonDao
 
@@ -55,6 +55,7 @@ class TestButtonDao(unittest.TestCase):
         self.assertEqual(result, button)
         self.assertEqual(result.actions, [action1, action2])
 
+        self.m_cursor.execute.assert_called_with('SELECT * FROM button WHERE id=?;', ('123',))
         m_obj_from_res.assert_called_with({'id': 123}, deck=None)
         self.m_actions_for_btn.assert_called_with(button)
 
@@ -77,8 +78,50 @@ class TestButtonDao(unittest.TestCase):
         self.assertEqual(result, button)
         self.assertEqual(result.actions, [action1, action2])
 
+        self.m_cursor.execute.assert_called_with('SELECT * FROM button WHERE id=?;', ('123',))
         m_obj_from_res.assert_called_with({'id': 123}, deck=deck)
         self.m_actions_for_btn.assert_called_with(button)
+
+    def test_get_for_deck_dne(self):
+        self.m_cursor.fetchall.return_value = []
+
+        deck = MagicMock()
+        deck.id = 'abc123'
+
+        bd = ButtonDao()
+        buttons = bd.get_for_deck(deck)
+
+        self.assertIsNone(buttons)
+
+        self.m_cursor.execute.assert_called_with('SELECT * FROM button WHERE deck_id=?;', ('abc123',))
+
+    @patch('dao.button_dao.ButtonDao.get_objs_from_result')
+    def test_get_for_deck(self, m_objs_from_res):
+        self.m_cursor.fetchall.return_value = [{'id': '1'}, {'id': '2'}]
+
+        deck = MagicMock()
+        deck.id = 'abc123'
+
+        button1 = MagicMock()
+        button2 = MagicMock()
+
+        m_objs_from_res.return_value = [button1, button2]
+
+        action1 = MagicMock()
+        action2 = MagicMock()
+        action3 = MagicMock()
+        self.m_actions_for_btn.side_effect = [[action1, action2], [action3]]
+
+        bd = ButtonDao()
+        buttons = bd.get_for_deck(deck)
+
+        self.assertEqual([button1, button2], buttons)
+        self.assertEqual([action1, action2], button1.actions)
+        self.assertEqual([action3], button2.actions)
+
+        self.m_cursor.execute.assert_called_with('SELECT * FROM button WHERE deck_id=?;', ('abc123',))
+        m_objs_from_res.assert_called_with([{'id': '1'}, {'id': '2'}], deck=deck)
+        self.m_actions_for_btn.assert_has_calls([call(button1), call(button2)])
 
 
 if __name__ == '__main__':

@@ -50,9 +50,7 @@ class ButtonDao(Dao):
         with conn:
             conn.row_factory = sl.Row
             cursor = conn.cursor()
-            cursor.execute("""
-                SELECT * FROM button WHERE deck_id=?;
-            """, (str(deck.id),))
+            cursor.execute('SELECT * FROM button WHERE deck_id=?;', (str(deck.id),))
 
             results = cursor.fetchall()
             if not results:
