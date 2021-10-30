@@ -75,9 +75,7 @@ class ButtonDao(Dao):
 
         with conn:
             cursor = conn.cursor()
-            cursor.execute(f"""
-                INSERT into button (deck_id, position) VALUES (?, ?);
-            """, (button.deck.id, button.position))
+            cursor.execute('INSERT INTO button (deck_id, position) VALUES (?, ?);', (button.deck.id, button.position))
             conn.commit()
             button.id = cursor.lastrowid
 

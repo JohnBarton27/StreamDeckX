@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import MagicMock, call, patch
 
 from dao.button_dao import ButtonDao
+from button import Button
 
 
 class TestButtonDao(unittest.TestCase):
@@ -122,6 +123,21 @@ class TestButtonDao(unittest.TestCase):
         self.m_cursor.execute.assert_called_with('SELECT * FROM button WHERE deck_id=?;', ('abc123',))
         m_objs_from_res.assert_called_with([{'id': '1'}, {'id': '2'}], deck=deck)
         self.m_actions_for_btn.assert_has_calls([call(button1), call(button2)])
+
+    def test_create(self):
+        deck = MagicMock()
+        deck.id = 'abc123'
+        button = Button(12, deck)
+
+        bd = ButtonDao()
+
+        self.m_cursor.lastrowid = 57
+
+        bd.create(button)
+
+        self.assertEqual(57, button.id)
+        
+        self.m_cursor.execute.assert_called_with('INSERT INTO button (deck_id, position) VALUES (?, ?);', ('abc123', 12))
 
 
 if __name__ == '__main__':
