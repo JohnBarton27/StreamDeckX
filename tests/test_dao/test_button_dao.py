@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, call, patch
 
 from dao.button_dao import ButtonDao
 from button import Button, ButtonMissingIdError
+from button_style import ButtonStyle
 
 
 class TestButtonDao(unittest.TestCase):
@@ -24,6 +25,11 @@ class TestButtonDao(unittest.TestCase):
         actions_for_btn_patch = patch('dao.action_dao.ActionDao.get_for_button')
         self.m_actions_for_btn = actions_for_btn_patch.start()
         self.addCleanup(actions_for_btn_patch.stop)
+
+        # Deck Dao
+        get_deck_by_id_patch = patch('dao.deck_dao.DeckDao.get_by_id')
+        self.m_get_deck_by_id = get_deck_by_id_patch.start()
+        self.addCleanup(get_deck_by_id_patch.stop)
 
         # Logging
         log_debug_patch = patch('dao.button_dao.logging.debug')
@@ -166,6 +172,74 @@ class TestButtonDao(unittest.TestCase):
         self.assertRaises(ButtonMissingIdError, bd.update, button)
 
         self.m_cursor.execute.assert_not_called()
+
+    def test_get_obj_from_result_no_deck(self):
+        result = {
+            'position': 12,
+            'id': 57,
+            'deck_id': 'abc123',
+            'icon': 'my_icon.jpeg',
+            'font': 'Roboto.ttf',
+            'label': 'Press Me!'
+        }
+
+        deck = MagicMock()
+        self.m_get_deck_by_id.return_value = deck
+
+        button = ButtonDao.get_obj_from_result(result)
+
+        self.assertEqual(12, button.position)
+        self.assertEqual(57, button.id)
+        self.assertEqual(deck, button.deck)
+        self.assertEqual('my_icon.jpeg', button.style.icon)
+        self.assertEqual('Roboto.ttf', button.style.font)
+        self.assertEqual('Press Me!', button.style.label)
+
+        self.m_get_deck_by_id.assert_called_with('abc123', include_buttons=False)
+
+    def test_get_obj_from_result_with_deck(self):
+        result = {
+            'position': 12,
+            'id': 57,
+            'deck_id': 'abc123',
+            'icon': 'my_icon.jpeg',
+            'font': 'Roboto.ttf',
+            'label': 'Press Me!'
+        }
+
+        deck = MagicMock()
+
+        button = ButtonDao.get_obj_from_result(result, deck=deck)
+
+        self.assertEqual(12, button.position)
+        self.assertEqual(57, button.id)
+        self.assertEqual(deck, button.deck)
+        self.assertEqual('my_icon.jpeg', button.style.icon)
+        self.assertEqual('Roboto.ttf', button.style.font)
+        self.assertEqual('Press Me!', button.style.label)
+
+        self.m_get_deck_by_id.assert_not_called()
+
+    def test_get_obj_from_result_no_style(self):
+        result = {
+            'position': 12,
+            'id': 57,
+            'deck_id': 'abc123',
+            'icon': None,
+            'font': None,
+            'label': None
+        }
+
+        deck = MagicMock()
+
+        button = ButtonDao.get_obj_from_result(result, deck=deck)
+
+        self.assertEqual(12, button.position)
+        self.assertEqual(57, button.id)
+        self.assertEqual(deck, button.deck)
+        self.assertEqual(ButtonStyle('text', font='Roboto-Regular.ttf', label='12'), button.style)
+
+        self.m_get_deck_by_id.assert_not_called()
 
 
 if __name__ == '__main__':
