@@ -241,6 +241,39 @@ class TestButtonDao(unittest.TestCase):
 
         self.m_get_deck_by_id.assert_not_called()
 
+    @patch('dao.button_dao.ButtonDao.get_obj_from_result')
+    def test_get_objs_from_result_no_deck(self, m_obj_from_res):
+        results = [{'id': 57, 'deck_id': 'abc123'}, {'id': 58, 'deck_id': 'abc123'}]
+
+        button1 = MagicMock()
+        button2 = MagicMock()
+        m_obj_from_res.side_effect = [button1, button2]
+
+        deck = MagicMock()
+        self.m_get_deck_by_id.return_value = deck
+
+        buttons = ButtonDao.get_objs_from_result(results)
+        self.assertEqual([button1, button2], buttons)
+
+        self.m_get_deck_by_id.assert_called_with('abc123', include_buttons=False)
+        m_obj_from_res.assert_has_calls([call({'id': 57, 'deck_id': 'abc123'}, deck=deck), call({'id': 58, 'deck_id': 'abc123'}, deck=deck)])
+
+    @patch('dao.button_dao.ButtonDao.get_obj_from_result')
+    def test_get_objs_from_result_with_deck(self, m_obj_from_res):
+        results = [{'id': 57, 'deck_id': 'abc123'}, {'id': 58, 'deck_id': 'abc123'}]
+
+        button1 = MagicMock()
+        button2 = MagicMock()
+        m_obj_from_res.side_effect = [button1, button2]
+
+        deck = MagicMock()
+
+        buttons = ButtonDao.get_objs_from_result(results, deck=deck)
+        self.assertEqual([button1, button2], buttons)
+
+        self.m_get_deck_by_id.assert_not_called()
+        m_obj_from_res.assert_has_calls([call({'id': 57, 'deck_id': 'abc123'}, deck=deck), call({'id': 58, 'deck_id': 'abc123'}, deck=deck)])
+
 
 if __name__ == '__main__':
     unittest.main()
