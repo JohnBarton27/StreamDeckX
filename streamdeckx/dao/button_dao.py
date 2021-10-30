@@ -89,14 +89,17 @@ class ButtonDao(Dao):
         Returns:
             None
         """
+        if not button.id:
+            from button import ButtonMissingIdError
+            raise ButtonMissingIdError('Must set Button ID before updating!')
+
         conn = ButtonDao.get_db_conn()
 
         with conn:
             cursor = conn.cursor()
-            cursor.execute(f"""
-                UPDATE button SET icon = ?, font = ?, label = ? WHERE id = ?;
-            """, (button.style.icon, button.style.font, button.style.label, button.id))
-            logging.info(f'Updating button ({button.id}): icon = {button.style.icon} | font = {button.style.font} | label = {button.style.label}')
+            cursor.execute('UPDATE button SET icon = ?, font = ?, label = ? WHERE id = ?;',
+                           (button.style.icon, button.style.font, button.style.label, button.id))
+            logging.debug(f'Updating button ({button.id}): icon = {button.style.icon} | font = {button.style.font} | label = {button.style.label}')
             conn.commit()
 
     @staticmethod

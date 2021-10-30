@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock, call, patch
 
 from dao.button_dao import ButtonDao
-from button import Button
+from button import Button, ButtonMissingIdError
 
 
 class TestButtonDao(unittest.TestCase):
@@ -136,8 +136,36 @@ class TestButtonDao(unittest.TestCase):
         bd.create(button)
 
         self.assertEqual(57, button.id)
-        
+
         self.m_cursor.execute.assert_called_with('INSERT INTO button (deck_id, position) VALUES (?, ?);', ('abc123', 12))
+
+    def test_update(self):
+        deck = MagicMock()
+        deck.id = 'abc123'
+        button = Button(12, deck, btn_id=57)
+
+        style = MagicMock()
+        style.icon = 'my_icon.png'
+        style.font = 'Arial'
+        style.label = 'Press Me!'
+
+        button.style = style
+
+        bd = ButtonDao()
+        bd.update(button)
+
+        self.m_cursor.execute.assert_called_with('UPDATE button SET icon = ?, font = ?, label = ? WHERE id = ?;', ('my_icon.png', 'Arial', 'Press Me!', 57))
+        self.m_log_debug.assert_called()
+
+    def test_update_missing_id(self):
+        deck = MagicMock()
+        deck.id = 'abc123'
+        button = Button(12, deck)
+
+        bd = ButtonDao()
+        self.assertRaises(ButtonMissingIdError, bd.update, button)
+
+        self.m_cursor.execute.assert_not_called()
 
 
 if __name__ == '__main__':

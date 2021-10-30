@@ -128,3 +128,10 @@ class Button:
 
         # Update requested key with the generated image.
         self.deck.deck_interface.set_key_image(self.position, image)
+
+
+class ButtonMissingIdError(Exception):
+    """
+    Raised when a Button needs an ID, but one has not been given/set.
+    """
+    pass

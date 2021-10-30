@@ -68,6 +68,6 @@ class TextAction(Action):
 
 class ActionMissingIdError(Exception):
     """
-    Raised when an Action needs an ID, one has not been given/set.
+    Raised when an Action needs an ID, but one has not been given/set.
     """
     pass
