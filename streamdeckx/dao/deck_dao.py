@@ -17,9 +17,7 @@ class DeckDao(Dao):
         with conn:
             conn.row_factory = sl.Row
             cursor = conn.cursor()
-            cursor.execute(f"""
-                SELECT * FROM deck WHERE id='{deck_id}';
-            """)
+            cursor.execute('SELECT * FROM deck WHERE id=?;', (deck_id,))
 
             results = cursor.fetchall()
             if not results:
