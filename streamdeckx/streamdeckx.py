@@ -106,8 +106,6 @@ def set_button_action():
 
 @app.route('/setButtonAction', methods=['DELETE'])
 def delete_button_action():
-    from deck import Deck
-
     from dao.action_dao import ActionDao
 
     deck_id = request.form['deckId']

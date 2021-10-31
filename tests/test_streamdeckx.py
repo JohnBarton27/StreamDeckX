@@ -185,6 +185,50 @@ class TestStreamdeckX(unittest.TestCase):
         self.m_get_connected.assert_called()
         m_create_action.assert_called()
 
+    def test_delete_button_action_no_deck(self):
+        self.m_get_connected.return_value = []
+
+        with self.assertRaises(NoSuchDeckException):
+            response = self.app.delete('/setButtonAction', data={
+                'deckId': 'def123',
+                'button': '1',
+                'action': '21'
+            })
+
+            self.assertEqual(500, response._status_code)
+
+        self.m_get_connected.assert_called()
+
+    @patch('dao.action_dao.ActionDao.delete')
+    def test_delete_button_action(self, m_delete_action):
+        deck1 = MagicMock()
+        deck1.id = 'abc123'
+
+        button0 = MagicMock()
+        button1 = MagicMock()
+
+        action = MagicMock()
+        action.id = 21
+        button1.actions = [action]
+
+        deck1.buttons = [button0, button1]
+
+        self.m_get_connected.return_value = [deck1]
+        html = 'BUTTON HTML'
+        self.m_render_template.return_value = html
+
+        self.app.delete('/setButtonAction', data={
+            'deckId': 'abc123',
+            'button': '1',
+            'action': '21'
+        })
+
+        self.assertEqual(0, len(button1.actions))
+
+        self.m_get_connected.assert_called()
+        m_delete_action.assert_called()
+        self.m_render_template.assert_called_with('configuration.html', button=button1)
+
 
 if __name__ == '__main__':
     unittest.main()
