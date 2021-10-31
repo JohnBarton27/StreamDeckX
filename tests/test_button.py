@@ -8,10 +8,6 @@ from deck import OriginalDeck
 class TestButton(unittest.TestCase):
 
     def setUp(self) -> None:
-        patch_render_button = patch('button.Button.update_key_image')
-        self.m_render_button = patch_render_button.start()
-        self.addCleanup(patch_render_button.stop)
-
         self.deck1 = OriginalDeck('deck123')
 
         patch_action_execute = patch('action.Action.execute')
@@ -130,6 +126,18 @@ class TestButton(unittest.TestCase):
 
         self.assertEqual(button.serialize(), {'position': 10, 'style': {'label': '10'}})
         m_bs_serialize.assert_called()
+
+    @patch('deck.Deck.deck_interface')
+    @patch('button.Button.render_key_image')
+    def test_update_key_image(self, m_render_key, m_deck_int):
+        button = Button(10, self.deck1)
+        image = MagicMock()
+        m_render_key.return_value = image
+
+        button.update_key_image()
+
+        m_render_key.assert_called()
+        m_deck_int.set_key_image.assert_called_with(10, image)
 
 
 if __name__ == '__main__':
