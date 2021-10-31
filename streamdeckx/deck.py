@@ -221,3 +221,8 @@ class MiniDeck(Deck):
 
     def __init__(self, deck_id: str, buttons: list = None, session_id: str = None):
         super().__init__(deck_id, name=str(self.__class__.type.value), buttons=buttons, session_id=session_id)
+
+
+class NoSuchDeckException(Exception):
+    """Raised when a given deck cannot be found"""
+    pass

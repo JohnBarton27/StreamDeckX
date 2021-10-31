@@ -19,12 +19,18 @@ def _get_connected_decks():
     return Deck.get_connected()
 
 
-def _get_deck_by_id(deck_id):
+def _get_deck_by_id(deck_id, raise_exception=True):
     decks = _get_connected_decks()
     for deck in decks:
         if deck.id == deck_id:
             # This is the deck we selected
             return deck
+
+    if raise_exception:
+        from deck import NoSuchDeckException
+        raise NoSuchDeckException(f'Could not find deck with {deck_id=}')
+    else:
+        logging.warning(f'Could not find deck with {deck_id=}')
 
 
 @app.route('/')
@@ -53,8 +59,6 @@ def get_config_html():
     button_position = int(request.args.get('button'))
 
     deck = _get_deck_by_id(deck_id)
-    if not deck:
-        return 'Deck not found!'
 
     button = deck.buttons[button_position]
 
@@ -71,8 +75,6 @@ def set_button_config():
     logging.info(f'Setting {button_position} on {deck_id} to {button_text}')
 
     deck = _get_deck_by_id(deck_id)
-    if not deck:
-        return 'Failed to find deck!'
 
     button = deck.buttons[button_position]
     button.set_text(button_text)
@@ -91,8 +93,6 @@ def set_button_action():
     action = request.form['action_text']
 
     deck = _get_deck_by_id(deck_id)
-    if not deck:
-        return 'Failed to find deck!'
 
     button = deck.buttons[button_position]
     action = TextAction(action, button, 0)
@@ -117,8 +117,6 @@ def delete_button_action():
     action_dao = ActionDao()
 
     deck = _get_deck_by_id(deck_id)
-    if not deck:
-        return 'Failed to find deck!'
 
     button = deck.buttons[button_position]
     for action in button.actions:
