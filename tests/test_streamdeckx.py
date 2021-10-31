@@ -72,6 +72,31 @@ class TestStreamdeckX(unittest.TestCase):
 
         self.m_log_warn.assert_called()
 
+    def test_index_with_deck(self):
+        deck = MagicMock()
+        deck.html = '<p>Deck HTML</p>'
+
+        self.m_get_connected.return_value = [deck]
+        self.m_render_template.return_value = b'INDEX HTML'
+
+        response = self.app.get('/')
+
+        self.assertEqual(b'INDEX HTML', response.data)
+
+        self.m_get_connected.assert_called()
+        self.m_render_template.assert_called_with('index.html', connected_decks=[deck], curr_deck_html='<p>Deck HTML</p>')
+
+    def test_index_no_deck(self):
+        self.m_get_connected.return_value = []
+        self.m_render_template.return_value = b'INDEX HTML'
+
+        response = self.app.get('/')
+
+        self.assertEqual(b'INDEX HTML', response.data)
+
+        self.m_get_connected.assert_called()
+        self.m_render_template.assert_called_with('index.html', connected_decks=[], curr_deck_html='<p>No Stream Decks connected!</p>')
+
     def test_get_config_html_no_deck(self):
         deck1 = MagicMock()
         deck1.id = 'def456'

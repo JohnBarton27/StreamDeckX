@@ -36,9 +36,12 @@ def _get_deck_by_id(deck_id, raise_exception=True):
 @app.route('/')
 def index():
     decks = _get_connected_decks()
-    curr_deck = decks[0]
+    if decks:
+        curr_deck = decks[0]
+        return render_template('index.html', connected_decks=decks, curr_deck_html=curr_deck.html)
 
-    return render_template('index.html', connected_decks=decks, curr_deck_html=curr_deck.html)
+    # No decks found
+    return render_template('index.html', connected_decks=[], curr_deck_html='<p>No Stream Decks connected!</p>')
 
 
 @app.route('/deckHtml')
