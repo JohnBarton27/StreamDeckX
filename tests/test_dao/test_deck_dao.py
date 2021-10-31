@@ -1,7 +1,8 @@
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import call, patch, MagicMock
 
 from dao.deck_dao import DeckDao
+from deck import XLDeck
 
 
 class TestDeckDao(unittest.TestCase):
@@ -43,6 +44,21 @@ class TestDeckDao(unittest.TestCase):
 
         self.m_cursor.execute.assert_called_with('SELECT * FROM deck WHERE id=?;', ('abc123',))
         m_obj_from_res.assert_called_with([{'id': 'abc123'}], include_buttons=True)
+
+    @patch('dao.deck_dao.DeckDao.button_dao')
+    def test_create(self, m_btn_dao):
+        button1 = MagicMock()
+        button2 = MagicMock()
+        button3 = MagicMock()
+
+        deck = XLDeck('abc123', buttons=[button1, button2, button3])
+
+        dd = DeckDao()
+        dd.create(deck)
+
+        self.m_cursor.execute.assert_called_with('INSERT INTO deck (id, name, type) VALUES (?, ?, ?);',
+                                                 ('abc123', 'Stream Deck XL', 'XL'))
+        m_btn_dao.create.assert_has_calls([call(button1), call(button2), call(button3)], any_order=True)
 
 
 if __name__ == '__main__':

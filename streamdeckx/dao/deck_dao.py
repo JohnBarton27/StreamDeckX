@@ -31,9 +31,8 @@ class DeckDao(Dao):
 
         with conn:
             cursor = conn.cursor()
-            cursor.execute(f"""
-                INSERT INTO deck (id, name, type) VALUES (?, ?, ?);
-            """, (deck.id, deck.name, deck.__class__.type.name))
+            cursor.execute('INSERT INTO deck (id, name, type) VALUES (?, ?, ?);',
+                           (deck.id, deck.name, deck.__class__.type.name))
             conn.commit()
 
             # Create all buttons
