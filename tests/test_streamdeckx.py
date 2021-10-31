@@ -21,6 +21,30 @@ class TestStreamdeckX(unittest.TestCase):
 
         self.assertEqual([deck1, deck2], decks)
 
+    def test_get_deck_by_id(self):
+        deck1 = MagicMock()
+        deck1.id = 'def456'
+        deck2 = MagicMock()
+        deck2.id = 'abc123'
+
+        self.m_get_connected.return_value = [deck1, deck2]
+
+        deck = streamdeckx._get_deck_by_id('abc123')
+
+        self.assertEqual(deck2, deck)
+
+    def test_get_deck_by_id_no_match(self):
+        deck1 = MagicMock()
+        deck1.id = 'def456'
+        deck2 = MagicMock()
+        deck2.id = 'abc123'
+
+        self.m_get_connected.return_value = [deck1, deck2]
+
+        deck = streamdeckx._get_deck_by_id('john')
+
+        self.assertIsNone(deck)
+
 
 if __name__ == '__main__':
     unittest.main()
