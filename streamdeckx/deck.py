@@ -44,6 +44,13 @@ class Deck(ABC):
     def __repr__(self):
         return f'{self.name} ({self.id})'
 
+    def __eq__(self, other):
+        # Type check
+        if not isinstance(other, type(self)):
+            return False
+
+        return self.id == other.id
+
     def add_button(self, index):
         self.buttons.append(Button(index, self))
 
