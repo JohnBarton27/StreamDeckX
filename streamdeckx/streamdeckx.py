@@ -14,6 +14,15 @@ class StreamDeckX(Flask):
 app = StreamDeckX(__name__, template_folder=os.path.abspath('static'))
 
 
+def _get_deck_by_id(deck_id):
+    from deck import Deck
+    decks = Deck.get_connected()
+    for deck in decks:
+        if deck.id == deck_id:
+            # This is the deck we selected
+            return deck
+
+
 @app.route('/')
 def index():
     from deck import Deck
@@ -25,64 +34,51 @@ def index():
 
 @app.route('/deckHtml')
 def get_deck_html():
-    from deck import Deck
-    decks = Deck.get_connected()
     deck_id = request.args.get('deckId')
-    for deck in decks:
-        if deck.id == deck_id:
-            # This is the deck we selected
-            return deck.html
+    deck = _get_deck_by_id(deck_id)
 
-    # TODO add error
-    return 'Deck not found!'
+    if not deck:
+        # TODO add error
+        return 'Deck not found!'
+
+    return deck.html
 
 
 @app.route('/configHtml')
 def get_config_html():
-    from deck import Deck
     deck_id = request.args.get('deckId')
     button_position = int(request.args.get('button'))
 
-    decks = Deck.get_connected()
+    deck = _get_deck_by_id(deck_id)
+    if not deck:
+        return 'Deck not found!'
 
-    for deck in decks:
-        if deck.id == deck_id:
-            # This is the deck we selected
-            button = deck.buttons[button_position]
+    button = deck.buttons[button_position]
 
-            return render_template('configuration.html', button=button)
-
-    # TODO add error
-    return 'Deck not found!'
+    return render_template('configuration.html', button=button)
 
 
 @app.route('/setButtonConfig', methods=['POST'])
 def set_button_config():
-    from deck import Deck
-
     deck_id = request.form['deckId']
     button_position = int(request.form['button'])
     button_text = request.form['buttonText']
 
     logging.info(f'Setting {button_position} on {deck_id} to {button_text}')
 
-    decks = Deck.get_connected()
+    deck = _get_deck_by_id(deck_id)
+    if not deck:
+        return 'Failed to find deck!'
 
-    for deck in decks:
-        if deck.id == deck_id:
-            # This is the deck we selected
-            button = deck.buttons[button_position]
-            button.set_text(button_text)
+    button = deck.buttons[button_position]
+    button.set_text(button_text)
 
-            return button.image_bytes.decode("utf-8")
-
-    return 'Failed to find deck!'
+    return button.image_bytes.decode("utf-8")
 
 
 @app.route('/setButtonAction', methods=['POST'])
 def set_button_action():
     from action import TextAction
-    from deck import Deck
 
     from dao.action_dao import ActionDao
 
@@ -90,21 +86,18 @@ def set_button_action():
     button_position = int(request.form['button'])
     action = request.form['action_text']
 
-    decks = Deck.get_connected()
+    deck = _get_deck_by_id(deck_id)
+    if not deck:
+        return 'Failed to find deck!'
 
-    for deck in decks:
-        if deck.id == deck_id:
-            # This is the deck we selected
-            button = deck.buttons[button_position]
-            action = TextAction(action, button, 0)
+    button = deck.buttons[button_position]
+    action = TextAction(action, button, 0)
 
-            action_dao = ActionDao()
-            action_dao.create(action)
-            button.actions.append(action)
+    action_dao = ActionDao()
+    action_dao.create(action)
+    button.actions.append(action)
 
-            return 'Success!'
-
-    return 'Failed to find deck!'
+    return 'Success!'
 
 
 @app.route('/setButtonAction', methods=['DELETE'])
@@ -119,20 +112,17 @@ def delete_button_action():
 
     action_dao = ActionDao()
 
-    decks = Deck.get_connected()
+    deck = _get_deck_by_id(deck_id)
+    if not deck:
+        return 'Failed to find deck!'
 
-    for deck in decks:
-        if deck.id == deck_id:
-            # This is the deck we selected
-            button = deck.buttons[button_position]
-            for action in button.actions:
-                if action.id == action_id:
-                    action_dao.delete(action)
-                    button.actions.remove(action)
+    button = deck.buttons[button_position]
+    for action in button.actions:
+        if action.id == action_id:
+            action_dao.delete(action)
+            button.actions.remove(action)
 
-            return render_template('configuration.html', button=button)
-
-    return 'Failed to find deck!'
+    return render_template('configuration.html', button=button)
 
 
 def connect_to_database():
