@@ -22,7 +22,7 @@ def sdx_startup():
 
 
 @app.route('/')
-def hello():
+def index():
     from deck import Deck
     decks = Deck.get_connected()
     curr_deck = decks[0]
@@ -64,7 +64,7 @@ def get_config_html():
 
 
 @app.route('/setButtonConfig', methods=['POST'])
-def set_button_text():
+def set_button_config():
     from deck import Deck
 
     deck_id = request.form['deckId']
