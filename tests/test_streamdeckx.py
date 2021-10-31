@@ -85,6 +85,46 @@ class TestStreamdeckX(unittest.TestCase):
         self.m_get_connected.assert_called()
         self.m_render_template.assert_called_with('configuration.html', button=button1)
 
+    def test_set_button_config_no_deck(self):
+        deck1 = MagicMock()
+        deck1.id = 'abc123'
+
+        self.m_get_connected.return_value = [deck1]
+
+        response = self.app.post('/setButtonConfig', data={
+            'deckId': 'def123',
+            'button': '1',
+            'buttonText': 'Hello'
+        })
+
+        self.assertEqual('Failed to find deck!'.encode('utf-8'), response.data)
+
+        self.m_get_connected.assert_called()
+
+    @patch('button.Button.set_text')
+    def test_set_button_config(self, m_btn_set_text):
+        deck1 = MagicMock()
+        deck1.id = 'abc123'
+
+        button0 = MagicMock()
+        button1 = MagicMock()
+        button1.image_bytes = b'an image!'
+
+        deck1.buttons = [button0, button1]
+
+        self.m_get_connected.return_value = [deck1]
+
+        response = self.app.post('/setButtonConfig', data={
+            'deckId': 'abc123',
+            'button': '1',
+            'buttonText': 'Hello'
+        })
+
+        self.assertEqual(b'an image!', response.data)
+
+        self.m_get_connected.assert_called()
+        button1.set_text.assert_called_with('Hello')
+
 
 if __name__ == '__main__':
     unittest.main()

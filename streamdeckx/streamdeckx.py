@@ -63,6 +63,7 @@ def get_config_html():
 
 @app.route('/setButtonConfig', methods=['POST'])
 def set_button_config():
+    # TODO add error handling for missing form parameters
     deck_id = request.form['deckId']
     button_position = int(request.form['button'])
     button_text = request.form['buttonText']
