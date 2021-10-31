@@ -7,3 +7,4 @@ venv/
 **/sdx_db.db
 .coverage
 coverage.xml
+htmlcov

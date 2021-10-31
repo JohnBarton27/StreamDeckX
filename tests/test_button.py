@@ -57,6 +57,18 @@ class TestButton(unittest.TestCase):
         self.assertEqual(button.html, '<span id="12" class="btn" onclick="openConfig(12)"><img id="12-img" height="72" width="72" src="data:image/PNG;base64, 123456"></span>')
         img_bytes.decode.assert_called()
 
+    @patch('button.Button.button_dao.update')
+    @patch('button.Button.update_key_image')
+    def test_set_text(self, m_update_key_image, m_btn_update):
+        button = Button(12, self.deck1)
+
+        button.set_text('hello!')
+
+        self.assertEqual('hello!', button.style.label)
+
+        m_update_key_image.assert_called()
+        m_btn_update.assert_called()
+
     @patch('button_style.ButtonStyle.serialize')
     def test_serialize(self, m_bs_serialize):
         """Button.serialize"""
