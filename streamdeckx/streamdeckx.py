@@ -14,9 +14,13 @@ class StreamDeckX(Flask):
 app = StreamDeckX(__name__, template_folder=os.path.abspath('static'))
 
 
-def _get_deck_by_id(deck_id):
+def _get_connected_decks():
     from deck import Deck
-    decks = Deck.get_connected()
+    return Deck.get_connected()
+
+
+def _get_deck_by_id(deck_id):
+    decks = _get_connected_decks()
     for deck in decks:
         if deck.id == deck_id:
             # This is the deck we selected
@@ -25,8 +29,7 @@ def _get_deck_by_id(deck_id):
 
 @app.route('/')
 def index():
-    from deck import Deck
-    decks = Deck.get_connected()
+    decks = _get_connected_decks()
     curr_deck = decks[0]
 
     return render_template('index.html', connected_decks=decks, curr_deck_html=curr_deck.html)
