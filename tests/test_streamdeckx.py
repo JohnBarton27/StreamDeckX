@@ -13,6 +13,10 @@ class TestStreamdeckX(unittest.TestCase):
 
         self.app = streamdeckx.app.test_client()
 
+        render_template_patch = patch('streamdeckx.render_template')
+        self.m_render_template = render_template_patch.start()
+        self.addCleanup(render_template_patch.stop)
+
     def test_get_connected_decks(self):
         deck1 = MagicMock()
         deck2 = MagicMock()
@@ -58,6 +62,28 @@ class TestStreamdeckX(unittest.TestCase):
         response = self.app.get('/configHtml?deckId=ghi789&button=27')
 
         self.assertEqual(b'Deck not found!', response.data)
+
+    def test_get_config_html(self):
+        deck1 = MagicMock()
+        deck1.id = 'def456'
+        deck2 = MagicMock()
+        deck2.id = 'abc123'
+
+        button0 = MagicMock()
+        button1 = MagicMock()
+
+        deck2.buttons = [button0, button1]
+
+        self.m_get_connected.return_value = [deck1, deck2]
+        html = 'BUTTON HTML'
+        self.m_render_template.return_value = html
+
+        response = self.app.get('/configHtml?deckId=abc123&button=1')
+
+        self.assertEqual(html.encode('utf-8'), response.data)
+
+        self.m_get_connected.assert_called()
+        self.m_render_template.assert_called_with('configuration.html', button=button1)
 
 
 if __name__ == '__main__':
