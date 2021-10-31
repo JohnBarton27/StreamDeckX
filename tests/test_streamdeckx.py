@@ -147,6 +147,44 @@ class TestStreamdeckX(unittest.TestCase):
         self.m_get_connected.assert_called()
         button1.set_text.assert_called_with('Hello')
 
+    def test_set_button_action_no_deck(self):
+        self.m_get_connected.return_value = []
+
+        with self.assertRaises(NoSuchDeckException):
+            response = self.app.post('/setButtonAction', data={
+                'deckId': 'def123',
+                'button': '1',
+                'action_text': 'username'
+            })
+
+            self.assertEqual(500, response._status_code)
+
+        self.m_get_connected.assert_called()
+
+    @patch('dao.action_dao.ActionDao.create')
+    def test_set_button_action(self, m_create_action):
+        deck1 = MagicMock()
+        deck1.id = 'abc123'
+
+        button0 = MagicMock()
+        button1 = MagicMock()
+        button1.actions = []
+
+        deck1.buttons = [button0, button1]
+
+        self.m_get_connected.return_value = [deck1]
+
+        self.app.post('/setButtonAction', data={
+            'deckId': 'abc123',
+            'button': '1',
+            'action_text': 'username'
+        })
+
+        self.assertEqual(1, len(button1.actions))
+
+        self.m_get_connected.assert_called()
+        m_create_action.assert_called()
+
 
 if __name__ == '__main__':
     unittest.main()
