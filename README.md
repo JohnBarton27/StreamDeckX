@@ -1,6 +1,11 @@
 # Stream Deck X
 **Stream Deck X** is a cross-platform application for using an Elgato Stream Deck.
 
+## Status
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=streamdeckx&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=streamdeckx)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=streamdeckx&metric=coverage)](https://sonarcloud.io/summary/new_code?id=streamdeckx)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=streamdeckx&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=streamdeckx)
+
 ## Setup
 ### Requirements
 * Python 3.8+
