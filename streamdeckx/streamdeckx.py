@@ -199,8 +199,8 @@ if __name__ == '__main__':
 
     from deck import Deck
 
-    decks = Deck.get_connected(update_images=True)
+    connected_decks = Deck.get_connected(update_images=True)
 
-    for deck in decks:
-        deck.open()
-        deck.set_callbacks()
+    for conn_deck in connected_decks:
+        conn_deck.open()
+        conn_deck.set_callbacks()
