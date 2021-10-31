@@ -14,6 +14,10 @@ class TestButton(unittest.TestCase):
 
         self.deck1 = OriginalDeck('deck123')
 
+        patch_action_execute = patch('action.Action.execute')
+        self.m_action_exec = patch_action_execute.start()
+        self.addCleanup(patch_action_execute.stop)
+
     def test_init(self):
         """Button.__init__"""
         button = Button(12, self.deck1)
@@ -89,13 +93,34 @@ class TestButton(unittest.TestCase):
         self.assertEqual([], button.actions)
 
         action1 = MagicMock()
-        action2 = MagicMock()
 
         button.add_action(action1)
         self.assertEquals([action1], button.actions)
 
         button.add_action(action1)
         self.assertEquals([action1, action1], button.actions)
+
+    def test_execute_actions_none(self):
+        button = Button(12, self.deck1)
+        self.assertEqual([], button.actions)
+
+        button.execute_actions()
+        self.m_action_exec.assert_not_called()
+
+    def test_execute_actions(self):
+        button = Button(12, self.deck1)
+        self.assertEqual([], button.actions)
+
+        action1 = MagicMock()
+        action2 = MagicMock()
+
+        button.add_action(action1)
+        button.add_action(action2)
+
+        button.execute_actions()
+
+        action1.execute.assert_called()
+        action2.execute.assert_called()
 
     @patch('button_style.ButtonStyle.serialize')
     def test_serialize(self, m_bs_serialize):
