@@ -69,6 +69,34 @@ class TestButton(unittest.TestCase):
         m_update_key_image.assert_called()
         m_btn_update.assert_called()
 
+    def test_add_action(self):
+        button = Button(12, self.deck1)
+
+        self.assertEqual([], button.actions)
+
+        action1 = MagicMock()
+        action2 = MagicMock()
+
+        button.add_action(action1)
+        self.assertEquals([action1], button.actions)
+
+        button.add_action(action2)
+        self.assertEquals([action1, action2], button.actions)
+
+    def test_add_action_duplicates(self):
+        button = Button(12, self.deck1)
+
+        self.assertEqual([], button.actions)
+
+        action1 = MagicMock()
+        action2 = MagicMock()
+
+        button.add_action(action1)
+        self.assertEquals([action1], button.actions)
+
+        button.add_action(action1)
+        self.assertEquals([action1, action1], button.actions)
+
     @patch('button_style.ButtonStyle.serialize')
     def test_serialize(self, m_bs_serialize):
         """Button.serialize"""
