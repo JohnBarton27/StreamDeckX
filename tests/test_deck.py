@@ -185,7 +185,7 @@ class TestDeck(unittest.TestCase):
         """Deck.get_connected.single_original"""
         orig_deck1 = MagicMock()
         orig_deck1.deck_type.return_value = 'Stream Deck Original'
-        orig_deck1.get_serial_number.return_value = 'orig_deck1_id'
+        orig_deck1.get_serial_number.return_value = 'orig_deck1'
         self.m_dev_manager.enumerate.return_value = [orig_deck1]
         self.m_deck_dao_by_id.return_value = None
         m_inst_by_id.return_value = None
@@ -196,7 +196,7 @@ class TestDeck(unittest.TestCase):
 
         self.assertEqual(len(decks), 1)
         self.assertEqual(type(decks[0]), OriginalDeck)
-        self.assertEqual(decks[0].id, 'orig_deck1_id')
+        self.assertEqual(decks[0].id, 'orig_deck1')
         self.m_deck_dao_create.assert_called()
 
     @patch('deck.Deck._get_instantiated_deck_by_session_id')
@@ -204,7 +204,7 @@ class TestDeck(unittest.TestCase):
         """Deck.get_connected.original_xl"""
         orig_deck1 = MagicMock()
         orig_deck1.deck_type.return_value = 'Stream Deck Original'
-        orig_deck1.get_serial_number.return_value = 'orig_deck1_id'
+        orig_deck1.get_serial_number.return_value = 'orig_deck1'
 
         xl_deck1 = MagicMock()
         xl_deck1.deck_type.return_value = 'Stream Deck XL'
@@ -221,7 +221,7 @@ class TestDeck(unittest.TestCase):
         self.assertEqual(len(decks), 2)
         self.assertEqual(type(decks[0]), OriginalDeck)
         self.assertEqual(type(decks[1]), XLDeck)
-        self.assertEqual(decks[0].id, 'orig_deck1_id')
+        self.assertEqual(decks[0].id, 'orig_deck1')
         self.assertEqual(decks[1].id, 'xl_deck1_id')
         self.m_deck_dao_create.assert_called()
 

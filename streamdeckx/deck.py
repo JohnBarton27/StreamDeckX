@@ -144,7 +144,8 @@ class Deck(ABC):
             if not any(deck_id == mapping['session_id'] for mapping in Deck.mappings):
                 # If this is a new/unrecognized session, get its serial number
                 deck.open()
-                serial_num = deck.get_serial_number()
+                serial_num = deck.get_serial_number()[:12]
+                logging.debug(f'Found deck with {serial_num=}')
                 deck.close()
             else:
                 # We must already have the serial number

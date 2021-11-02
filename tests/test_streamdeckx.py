@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 
 import streamdeckx
+from button import Button
 from deck import NoSuchDeckException
 
 
@@ -191,9 +192,8 @@ class TestStreamdeckX(unittest.TestCase):
         deck1 = MagicMock()
         deck1.id = 'abc123'
 
-        button0 = MagicMock()
-        button1 = MagicMock()
-        button1.actions = []
+        button0 = Button(0, deck1)
+        button1 = Button(1, deck1)
 
         deck1.buttons = [button0, button1]
 
@@ -229,8 +229,8 @@ class TestStreamdeckX(unittest.TestCase):
         deck1 = MagicMock()
         deck1.id = 'abc123'
 
-        button0 = MagicMock()
-        button1 = MagicMock()
+        button0 = Button(0, deck1)
+        button1 = Button(1, deck1)
 
         action = MagicMock()
         action.id = 21
