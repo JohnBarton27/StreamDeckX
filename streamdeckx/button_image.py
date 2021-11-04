@@ -9,14 +9,14 @@ class ButtonImage:
     def __init__(self, style, deck):
         self.style = style
         self.deck = deck
-        self.image_size = 0
+        self._image_size = 0
 
     @property
     def image(self):
         icon = Image.open(self.style.icon_path)
 
         image = PILHelper.create_scaled_image(self.deck.deck_interface, icon, margins=[0, 0, 0, 0])
-        self.image_size = image.size[0]
+        self._image_size = image.size[0]
         self.draw_text(ImageDraw.Draw(image))
 
         return image
@@ -44,7 +44,7 @@ class ButtonImage:
         text_lines = self.get_split_text(font)
         max_width = ButtonImage.get_max_width(text_lines, font)
 
-        outer_buffer = round((self.image_size - max_width) / 2)
+        outer_buffer = round((self._image_size - max_width) / 2)
 
         draw.text((outer_buffer, 10), text='\n'.join(text_lines), font=font, align="center", fill="white")
 
@@ -53,7 +53,7 @@ class ButtonImage:
 
         text_width = ButtonImage.get_text_dimensions(raw_text, font)[0]
 
-        if text_width > self.image_size:
+        if text_width > self._image_size:
             # Split by word
             split_text = raw_text.split(' ')
             text_lines = []
@@ -63,7 +63,7 @@ class ButtonImage:
                 curr_line.append(word)
                 line_width = ButtonImage.get_text_dimensions(' '.join(curr_line), font)[0]
 
-                if line_width > self.image_size:
+                if line_width > self._image_size:
                     # Went too far! Need to break off the last thing we added
                     words_for_line = curr_line[:-1]
                     text_lines.append(' '.join(words_for_line))
