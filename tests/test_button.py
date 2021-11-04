@@ -46,7 +46,7 @@ class TestButton(unittest.TestCase):
         button = Button(12, self.deck1)
         self.assertEqual(hash(button), hash(12))
 
-    @patch('button.Button.image_bytes', new_callable=PropertyMock)
+    @patch('button_image.ButtonImage.image_bytes', new_callable=PropertyMock)
     def test_html(self, m_image_bytes):
         """Button.html"""
         img_bytes = MagicMock()
@@ -128,7 +128,7 @@ class TestButton(unittest.TestCase):
         m_bs_serialize.assert_called()
 
     @patch('deck.Deck.deck_interface')
-    @patch('button.Button.render_key_image')
+    @patch('button_image.ButtonImage.render_key_image')
     def test_update_key_image(self, m_render_key, m_deck_int):
         button = Button(10, self.deck1)
         image = MagicMock()
