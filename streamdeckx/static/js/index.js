@@ -5,6 +5,8 @@ let config = null;
 let currButton = null;
 let actionFieldsArea = null;
 let buttonTextField = null;
+let buttonBackgroundColorField = null;
+let buttonTextColorField = null;
 let textActionValueElem = null;
 
 $(document).ready(function() {
@@ -42,7 +44,9 @@ function openConfig(position) {
 
     $.get('/configHtml', {'deckId': currDeckId, 'button': position}, function(data) {
         config.html(data);
-        buttonTextField = $("#buttonText")
+        buttonTextField = $("#buttonText");
+        buttonBackgroundColorField = $("#buttonBackgroundColor");
+        buttonTextColorField = $("#buttonTextColor");
     });
 }
 
@@ -89,6 +93,8 @@ function openAddActionModal(position) {
                 $.get('/configHtml', {'deckId': currDeckId, 'button': position}, function (data) {
                     config.html(data);
                     buttonTextField = $("#buttonText");
+                    buttonBackgroundColorField = $("#buttonBackgroundColor");
+                    buttonTextColorField = $("#buttonTextColor");
                 });
             }
         );
@@ -107,6 +113,8 @@ function deleteAction(button_id, action_id) {
             success: function (data) {
                 config.html(data);
                 buttonTextField = $("#buttonText");
+                buttonBackgroundColorField = $("#buttonBackgroundColor");
+                buttonTextColorField = $("#buttonTextColor");
             }
         });
 }
@@ -128,8 +136,10 @@ function showDefaultActionFields() {
 
 function submit() {
     let buttonText = buttonTextField.val()
+    let backgroundColor = buttonBackgroundColorField.val();
+    let textColor = buttonTextColorField.val();
 
-    $.post('/setButtonConfig', {'deckId': currDeckId, 'button': currButton, 'buttonText': buttonText}, 'json').done(
+    $.post('/setButtonConfig', {'deckId': currDeckId, 'button': currButton, 'buttonText': buttonText, 'backgroundColor': backgroundColor, 'textColor': textColor}, 'json').done(
         function(data) {
             $('#' + currButton + '-img').attr('src', 'data:image/PNG;base64, ' + data);
         }

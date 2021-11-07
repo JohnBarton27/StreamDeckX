@@ -63,6 +63,20 @@ class Button:
         # Update in database
         Button.button_dao.update(self)
 
+    def set_colors(self, text_color: str, background_color: str):
+        """
+        Sets the colors of this button. Expects colors to be in the format 'f######'.
+
+        Args:
+            text_color (str): The color of any text in the button
+            background_color (str): The color of the button's background
+        """
+        self.style.text_color = text_color
+        self.style.background_color = background_color
+        self.update_key_image()
+
+        Button.button_dao.update(self)
+
     def add_action(self, action):
         """Add an action to this Button"""
         self.actions.append(action)

@@ -11,8 +11,18 @@
     {% endfor %}
 {% endif %}
 <button onclick="openAddActionModal({{ button.position }})">+ Add Action</button>
-<label for="buttonText">Text</label>
-<input id="buttonText" type="text" value="{{ button.style.label }}">
+<div>
+    <label for="buttonText">Text</label>
+    <input id="buttonText" type="text" value="{{ button.style.label }}">
+</div>
+<div>
+    <label for="buttonBackgroundColor">Background Color</label>
+    <input id="buttonBackgroundColor" type="color" value="{{ button.style.background_color }}">
+</div>
+<div>
+    <label for="buttonTextColor">Text Color</label>
+    <input id="buttonTextColor" type="color" value="{{ button.style.text_color }}">
+</div>
 <button onclick="submit()">Save</button>
 
 <div id="addActionModal" class="modal">

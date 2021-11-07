@@ -74,6 +74,8 @@ def set_button_config():
     deck_id = request.form['deckId']
     button_position = int(request.form['button'])
     button_text = request.form['buttonText']
+    background_color = request.form['backgroundColor']
+    text_color = request.form['textColor']
 
     logging.info(f'Setting {button_position} on {deck_id} to {button_text}')
 
@@ -81,6 +83,7 @@ def set_button_config():
 
     button = deck.buttons[button_position]
     button.set_text(button_text)
+    button.set_colors(text_color, background_color)
 
     return button.button_image.image_bytes.decode("utf-8")
 
@@ -158,7 +161,9 @@ def connect_to_database():
                     position INTEGER NOT NULL,
                     icon TEXT,
                     font TEXT,
-                    label TEXT
+                    label TEXT,
+                    background_color TEXT DEFAULT '#000000',
+                    text_color TEXT DEFAULT '#ffffff'
                 );
             """)
 
