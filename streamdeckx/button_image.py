@@ -53,28 +53,32 @@ class ButtonImage:
 
         text_width = ButtonImage.get_text_dimensions(raw_text, font)[0]
 
-        if text_width > self._image_size:
-            # Split by word
-            split_text = raw_text.split(' ')
-            text_lines = []
+        if text_width < self._image_size:
+            return [raw_text]
 
-            curr_line = []
-            for word in split_text:
-                curr_line.append(word)
-                line_width = ButtonImage.get_text_dimensions(' '.join(curr_line), font)[0]
+        # Split by word
+        split_text = raw_text.split(' ')
+        text_lines = []
+        curr_line = None
 
-                if line_width > self._image_size:
-                    # Went too far! Need to break off the last thing we added
-                    words_for_line = curr_line[:-1]
-                    text_lines.append(' '.join(words_for_line))
+        for word in split_text:
+            if not curr_line:
+                curr_line = ImageLine([word], font)
+                continue
 
-                    curr_line = [curr_line[-1]]
+            curr_line.stage_word(word)
 
-            # Add the final (short enough) line
-            text_lines.append(' '.join(curr_line))
-            return text_lines
+            if curr_line.staged_width > self._image_size:
+                # Went too far! Need to break off the last thing we added
+                text_lines.append(str(curr_line))
+                curr_line = ImageLine([word], font)
+            else:
+                # This word was "safe" to add, so add it
+                curr_line.commit_staged_word()
 
-        return [raw_text]
+        # Add the final (short enough) line
+        text_lines.append(str(curr_line))
+        return text_lines
 
     @staticmethod
     def get_max_width(text_lines, font):
@@ -94,3 +98,32 @@ class ButtonImage:
         text_height = font.getmask(text_string).getbbox()[3] + descent
 
         return text_width, text_height
+
+
+class ImageLine:
+
+    def __init__(self, words: list, font):
+        self.words = words
+        self.font = font
+        self._staged_word = None
+
+    def __repr__(self):
+        return ' '.join(self.words)
+
+    def __str__(self):
+        return ' '.join(self.words)
+
+    @property
+    def width(self):
+        return ButtonImage.get_text_dimensions(' '.join(self.words), self.font)[0]
+
+    @property
+    def staged_width(self):
+        return ButtonImage.get_text_dimensions(' '.join(self.words + [self._staged_word]), self.font)[0]
+
+    def stage_word(self, next_word):
+        self._staged_word = next_word
+
+    def commit_staged_word(self):
+        self.words.append(self._staged_word)
+        self._staged_word = None
