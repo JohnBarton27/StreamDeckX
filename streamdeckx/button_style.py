@@ -57,6 +57,22 @@ class ButtonStyle:
 
         return os.path.join(ButtonStyle.ASSETS_PATH, self.font)
 
+    @property
+    def rgb_background_color(self):
+        return ButtonStyle._hex_to_rgb(self.background_color)
+
+    @property
+    def rgb_text_color(self):
+        return ButtonStyle._hex_to_rgb(self.text_color)
+
+    @staticmethod
+    def _hex_to_rgb(hex_color):
+        r_hex = hex_color[1:3]
+        g_hex = hex_color[3:5]
+        b_hex = hex_color[5:7]
+
+        return int(r_hex, 16), int(g_hex, 16), int(b_hex, 16)
+
     def serialize(self):
         return {
             'label': self.label
