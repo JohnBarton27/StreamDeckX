@@ -154,13 +154,15 @@ class TestButtonDao(unittest.TestCase):
         style.icon = 'my_icon.png'
         style.font = 'Arial'
         style.label = 'Press Me!'
+        style.background_color = '#000000'
+        style.text_color = '#ffffff'
 
         button.style = style
 
         bd = ButtonDao()
         bd.update(button)
 
-        self.m_cursor.execute.assert_called_with('UPDATE button SET icon = ?, font = ?, label = ? WHERE id = ?;', ('my_icon.png', 'Arial', 'Press Me!', 57))
+        self.m_cursor.execute.assert_called_with('UPDATE button SET icon = ?, font = ?, label = ?, background_color = ?, text_color = ? WHERE id = ?;', ('my_icon.png', 'Arial', 'Press Me!', '#000000', '#ffffff', 57))
         self.m_log_debug.assert_called()
 
     def test_update_missing_id(self):
@@ -180,7 +182,9 @@ class TestButtonDao(unittest.TestCase):
             'deck_id': 'abc123',
             'icon': 'my_icon.jpeg',
             'font': 'Roboto.ttf',
-            'label': 'Press Me!'
+            'label': 'Press Me!',
+            'background_color': '#000000',
+            'text_color': '#ffffff'
         }
 
         deck = MagicMock()
@@ -194,6 +198,8 @@ class TestButtonDao(unittest.TestCase):
         self.assertEqual('my_icon.jpeg', button.style.icon)
         self.assertEqual('Roboto.ttf', button.style.font)
         self.assertEqual('Press Me!', button.style.label)
+        self.assertEqual('#000000', button.style.background_color)
+        self.assertEqual('#ffffff', button.style.text_color)
 
         self.m_get_deck_by_id.assert_called_with('abc123', include_buttons=False)
 
@@ -204,7 +210,9 @@ class TestButtonDao(unittest.TestCase):
             'deck_id': 'abc123',
             'icon': 'my_icon.jpeg',
             'font': 'Roboto.ttf',
-            'label': 'Press Me!'
+            'label': 'Press Me!',
+            'background_color': '#000000',
+            'text_color': '#ffffff'
         }
 
         deck = MagicMock()
@@ -217,6 +225,8 @@ class TestButtonDao(unittest.TestCase):
         self.assertEqual('my_icon.jpeg', button.style.icon)
         self.assertEqual('Roboto.ttf', button.style.font)
         self.assertEqual('Press Me!', button.style.label)
+        self.assertEqual('#000000', button.style.background_color)
+        self.assertEqual('#ffffff', button.style.text_color)
 
         self.m_get_deck_by_id.assert_not_called()
 
@@ -227,7 +237,9 @@ class TestButtonDao(unittest.TestCase):
             'deck_id': 'abc123',
             'icon': None,
             'font': None,
-            'label': None
+            'label': None,
+            'background_color': '#000000',
+            'text_color': '#ffffff'
         }
 
         deck = MagicMock()

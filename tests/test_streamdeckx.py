@@ -142,7 +142,9 @@ class TestStreamdeckX(unittest.TestCase):
             response = self.app.post('/setButtonConfig', data={
                 'deckId': 'def123',
                 'button': '1',
-                'buttonText': 'Hello'
+                'buttonText': 'Hello',
+                'backgroundColor': '#008080',
+                'textColor': '#000000'
             })
 
             self.assertEqual(500, response._status_code)
@@ -156,7 +158,9 @@ class TestStreamdeckX(unittest.TestCase):
 
         button0 = MagicMock()
         button1 = MagicMock()
-        button1.image_bytes = b'an image!'
+        button_image = MagicMock()
+        button_image.image_bytes = b'an image!'
+        button1.button_image = button_image
 
         deck1.buttons = [button0, button1]
 
@@ -165,7 +169,9 @@ class TestStreamdeckX(unittest.TestCase):
         response = self.app.post('/setButtonConfig', data={
             'deckId': 'abc123',
             'button': '1',
-            'buttonText': 'Hello'
+            'buttonText': 'Hello',
+            'backgroundColor': '#008080',
+            'textColor': '#000000'
         })
 
         self.assertEqual(b'an image!', response.data)
