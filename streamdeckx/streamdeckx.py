@@ -82,7 +82,7 @@ def set_button_config():
     button = deck.buttons[button_position]
     button.set_text(button_text)
 
-    return button.image_bytes.decode("utf-8")
+    return button.button_image.image_bytes.decode("utf-8")
 
 
 @app.route('/setButtonAction', methods=['POST'])
