@@ -144,7 +144,8 @@ class TestStreamdeckX(unittest.TestCase):
                 'button': '1',
                 'buttonText': 'Hello',
                 'backgroundColor': '#008080',
-                'textColor': '#000000'
+                'textColor': '#000000',
+                'fontSize': '16'
             })
 
             self.assertEqual(500, response._status_code)
@@ -171,13 +172,16 @@ class TestStreamdeckX(unittest.TestCase):
             'button': '1',
             'buttonText': 'Hello',
             'backgroundColor': '#008080',
-            'textColor': '#000000'
+            'textColor': '#000000',
+            'fontSize': '24'
         })
 
         self.assertEqual(b'an image!', response.data)
 
         self.m_get_connected.assert_called()
         button1.set_text.assert_called_with('Hello')
+        button1.set_colors.assert_called_with('#000000', '#008080')
+        button1.set_font_size.assert_called_with(24)
 
     def test_set_button_action_no_deck(self):
         self.m_get_connected.return_value = []

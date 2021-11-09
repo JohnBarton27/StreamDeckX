@@ -76,6 +76,7 @@ def set_button_config():
     button_text = request.form['buttonText']
     background_color = request.form['backgroundColor']
     text_color = request.form['textColor']
+    font_size = int(request.form['fontSize'])
 
     logging.info(f'Setting {button_position} on {deck_id} to {button_text}')
 
@@ -84,6 +85,7 @@ def set_button_config():
     button = deck.buttons[button_position]
     button.set_text(button_text)
     button.set_colors(text_color, background_color)
+    button.set_font_size(font_size)
 
     return button.button_image.image_bytes.decode("utf-8")
 
