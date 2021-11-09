@@ -121,6 +121,7 @@ class ButtonDao(Dao):
         deck_id = result['deck_id']
         icon = result['icon']
         font = result['font']
+        font_size = result['font_size']
         label = result['label']
         background_color = result['background_color']
         text_color = result['text_color']
@@ -131,7 +132,7 @@ class ButtonDao(Dao):
             deck = deck_dao.get_by_id(deck_id, include_buttons=False)
 
         if any([icon, font, label]):
-            bs = ButtonStyle('style', icon, font, label, background_color=background_color, text_color=text_color)
+            bs = ButtonStyle('style', icon, font, font_size=font_size, label=label, background_color=background_color, text_color=text_color)
         else:
             bs = None
 

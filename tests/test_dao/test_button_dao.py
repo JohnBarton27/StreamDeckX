@@ -182,6 +182,7 @@ class TestButtonDao(unittest.TestCase):
             'deck_id': 'abc123',
             'icon': 'my_icon.jpeg',
             'font': 'Roboto.ttf',
+            'font_size': 24,
             'label': 'Press Me!',
             'background_color': '#000000',
             'text_color': '#ffffff'
@@ -197,6 +198,7 @@ class TestButtonDao(unittest.TestCase):
         self.assertEqual(deck, button.deck)
         self.assertEqual('my_icon.jpeg', button.style.icon)
         self.assertEqual('Roboto.ttf', button.style.font)
+        self.assertEqual(24, button.style.font_size)
         self.assertEqual('Press Me!', button.style.label)
         self.assertEqual('#000000', button.style.background_color)
         self.assertEqual('#ffffff', button.style.text_color)
@@ -210,6 +212,7 @@ class TestButtonDao(unittest.TestCase):
             'deck_id': 'abc123',
             'icon': 'my_icon.jpeg',
             'font': 'Roboto.ttf',
+            'font_size': 24,
             'label': 'Press Me!',
             'background_color': '#000000',
             'text_color': '#ffffff'
@@ -224,6 +227,7 @@ class TestButtonDao(unittest.TestCase):
         self.assertEqual(deck, button.deck)
         self.assertEqual('my_icon.jpeg', button.style.icon)
         self.assertEqual('Roboto.ttf', button.style.font)
+        self.assertEqual(24, button.style.font_size)
         self.assertEqual('Press Me!', button.style.label)
         self.assertEqual('#000000', button.style.background_color)
         self.assertEqual('#ffffff', button.style.text_color)
@@ -237,6 +241,7 @@ class TestButtonDao(unittest.TestCase):
             'deck_id': 'abc123',
             'icon': None,
             'font': None,
+            'font_size': 16,
             'label': None,
             'background_color': '#000000',
             'text_color': '#ffffff'
@@ -249,7 +254,7 @@ class TestButtonDao(unittest.TestCase):
         self.assertEqual(12, button.position)
         self.assertEqual(57, button.id)
         self.assertEqual(deck, button.deck)
-        self.assertEqual(ButtonStyle('text', font='Roboto-Regular.ttf', label='12'), button.style)
+        self.assertEqual(ButtonStyle('text', font='Roboto-Regular.ttf', font_size=16, label='12'), button.style)
 
         self.m_get_deck_by_id.assert_not_called()
 

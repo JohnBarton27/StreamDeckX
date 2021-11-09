@@ -161,6 +161,7 @@ def connect_to_database():
                     position INTEGER NOT NULL,
                     icon TEXT,
                     font TEXT,
+                    font_size INTEGER DEFAULT 16,
                     label TEXT,
                     background_color TEXT DEFAULT '#000000',
                     text_color TEXT DEFAULT '#ffffff'
