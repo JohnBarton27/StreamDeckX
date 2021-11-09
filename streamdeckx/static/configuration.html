@@ -1,4 +1,4 @@
-<h3>Button Configuration ({{ button.position }})</h3>
+<h3 style="text-align: center;">Button Configuration ({{ button.position }})</h3>
 <hr>
 {% if button.actions is not none %}
     {% for action in button.actions %}
@@ -11,17 +11,17 @@
     {% endfor %}
 {% endif %}
 <button onclick="openAddActionModal({{ button.position }})">+ Add Action</button>
-<div>
-    <label for="buttonText">Text</label>
+<div class="config-item">
+    <label for="buttonText">Text:</label>
     <input id="buttonText" type="text" value="{{ button.style.label }}">
 </div>
-<div>
-    <label for="buttonBackgroundColor">Background Color</label>
-    <input id="buttonBackgroundColor" type="color" value="{{ button.style.background_color }}">
+<div class="config-item">
+    <label for="buttonTextColor">Text Color:</label>
+    <input id="buttonTextColor" class="color-picker" type="color" value="{{ button.style.text_color }}">
 </div>
-<div>
-    <label for="buttonTextColor">Text Color</label>
-    <input id="buttonTextColor" type="color" value="{{ button.style.text_color }}">
+<div class="config-item">
+    <label for="buttonBackgroundColor">Background Color:</label>
+    <input id="buttonBackgroundColor" class="color-picker" type="color" value="{{ button.style.background_color }}">
 </div>
 <button onclick="submit()">Save</button>
 
