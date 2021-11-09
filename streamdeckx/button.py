@@ -77,6 +77,18 @@ class Button:
 
         Button.button_dao.update(self)
 
+    def set_font_size(self, font_size: int):
+        """
+        Sets the font size used on this button. Expects an integer.
+
+        Args:
+            font_size (int): Size of the font to be used on this button
+        """
+        self.style.font_size = font_size
+        self.update_key_image()
+
+        Button.button_dao.update(self)
+
     def add_action(self, action):
         """Add an action to this Button"""
         self.actions.append(action)
