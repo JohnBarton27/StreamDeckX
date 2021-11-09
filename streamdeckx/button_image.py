@@ -41,7 +41,7 @@ class ButtonImage:
         return PILHelper.to_native_format(self.deck.deck_interface, self.image)
 
     def draw_text(self, draw):
-        font = ImageFont.truetype(self.style.font_path, 16)
+        font = ImageFont.truetype(self.style.font_path, self.style.font_size)
         text_lines = self.get_split_text(font)
         max_width = ButtonImage.get_max_width(text_lines, font)
 
