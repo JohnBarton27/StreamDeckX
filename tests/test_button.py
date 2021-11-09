@@ -69,6 +69,19 @@ class TestButton(unittest.TestCase):
         m_update_key_image.assert_called()
         m_btn_update.assert_called()
 
+    @patch('button.Button.button_dao.update')
+    @patch('button.Button.update_key_image')
+    def test_set_colors(self, m_update_key_image, m_btn_update):
+        button = Button(12, self.deck1)
+
+        button.set_colors('#123456', '#abcdef')
+
+        self.assertEqual('#123456', button.style.text_color)
+        self.assertEqual('#abcdef', button.style.background_color)
+
+        m_update_key_image.assert_called()
+        m_btn_update.assert_called()
+
     def test_add_action(self):
         button = Button(12, self.deck1)
 
