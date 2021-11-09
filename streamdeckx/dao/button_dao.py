@@ -97,9 +97,9 @@ class ButtonDao(Dao):
 
         with conn:
             cursor = conn.cursor()
-            cursor.execute('UPDATE button SET icon = ?, font = ?, label = ?, background_color = ?, text_color = ? WHERE id = ?;',
-                           (button.style.icon, button.style.font, button.style.label, button.style.background_color, button.style.text_color, button.id))
-            logging.debug(f'Updating button ({button.id}): icon = {button.style.icon} | font = {button.style.font} | label = {button.style.label} | background_color = {button.style.background_color} | text_color = {button.style.text_color}')
+            cursor.execute('UPDATE button SET icon = ?, font = ?, font_size = ?, label = ?, background_color = ?, text_color = ? WHERE id = ?;',
+                           (button.style.icon, button.style.font, button.style.font_size, button.style.label, button.style.background_color, button.style.text_color, button.id))
+            logging.debug(f'Updating button ({button.id}): icon = {button.style.icon} | font = {button.style.font} | font_size = {button.style.font_size} | label = {button.style.label} | background_color = {button.style.background_color} | text_color = {button.style.text_color}')
             conn.commit()
 
     @staticmethod

@@ -153,6 +153,7 @@ class TestButtonDao(unittest.TestCase):
         style = MagicMock()
         style.icon = 'my_icon.png'
         style.font = 'Arial'
+        style.font_size = 24
         style.label = 'Press Me!'
         style.background_color = '#000000'
         style.text_color = '#ffffff'
@@ -162,7 +163,7 @@ class TestButtonDao(unittest.TestCase):
         bd = ButtonDao()
         bd.update(button)
 
-        self.m_cursor.execute.assert_called_with('UPDATE button SET icon = ?, font = ?, label = ?, background_color = ?, text_color = ? WHERE id = ?;', ('my_icon.png', 'Arial', 'Press Me!', '#000000', '#ffffff', 57))
+        self.m_cursor.execute.assert_called_with('UPDATE button SET icon = ?, font = ?, font_size = ?, label = ?, background_color = ?, text_color = ? WHERE id = ?;', ('my_icon.png', 'Arial', 24, 'Press Me!', '#000000', '#ffffff', 57))
         self.m_log_debug.assert_called()
 
     def test_update_missing_id(self):
