@@ -97,6 +97,52 @@ class TestButtonStyle(unittest.TestCase):
         m_join.assert_called_with(ButtonStyle.ASSETS_PATH, 'Arial.ttf')
         self.assertEqual(font_path, 'path/to/Arial.ttf')
 
+    @patch('button_style.ButtonStyle._hex_to_rgb')
+    def test_rgb_background_color(self, m_hex_to_rgb):
+        bs = ButtonStyle('My Style', background_color='#010203')
+        m_hex_to_rgb.return_value = (1, 2, 3)
+
+        self.assertEqual((1, 2, 3), bs.rgb_background_color)
+
+        m_hex_to_rgb.assert_called_with('#010203')
+
+    @patch('button_style.ButtonStyle._hex_to_rgb')
+    def test_rgb_text_color(self, m_hex_to_rgb):
+        bs = ButtonStyle('My Style', text_color='#020406')
+        m_hex_to_rgb.return_value = (2, 4, 6)
+
+        self.assertEqual((2, 4, 6), bs.rgb_text_color)
+
+        m_hex_to_rgb.assert_called_with('#020406')
+
+    def test_hex_to_rgb_black(self):
+        hex_color = '#000000'
+
+        rgb = ButtonStyle._hex_to_rgb(hex_color)
+
+        self.assertEqual((0, 0, 0), rgb)
+
+    def test_hex_to_rgb_white(self):
+        hex_color = '#ffffff'
+
+        rgb = ButtonStyle._hex_to_rgb(hex_color)
+
+        self.assertEqual((255, 255, 255), rgb)
+
+    def test_hex_to_rgb_teal(self):
+        hex_color = '#008080'
+
+        rgb = ButtonStyle._hex_to_rgb(hex_color)
+
+        self.assertEqual((0, 128, 128), rgb)
+
+    def test_hex_to_rgb_red(self):
+        hex_color = '#ee0000'
+
+        rgb = ButtonStyle._hex_to_rgb(hex_color)
+
+        self.assertEqual((238, 0, 0), rgb)
+
 
 if __name__ == '__main__':
     unittest.main()
