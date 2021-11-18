@@ -7,6 +7,7 @@ let actionFieldsArea = null;
 let buttonTextField = null;
 let buttonBackgroundColorField = null;
 let buttonTextColorField = null;
+let buttonFontSizeField = null;
 let textActionValueElem = null;
 
 $(document).ready(function() {
@@ -18,11 +19,19 @@ $(document).ready(function() {
     // Set listener on dropdown
     connSdSelect.on('change', function () {
         currDeckId = connSdSelect.val();
-        $.get('/deckHtml', {'deckId': currDeckId}, function(data) {
+        $.get('/deckHtml', {'deckId': currDeckId}, function (data) {
             currDeck.html(data);
         });
     });
 });
+
+function updateConfigFields(data) {
+    config.html(data);
+    buttonTextField = $("#buttonText");
+    buttonBackgroundColorField = $("#buttonBackgroundColor");
+    buttonTextColorField = $("#buttonTextColor");
+    buttonFontSizeField = $("#buttonFontSize");
+}
 
 function openConfig(position) {
     let buttonElem = $("#" + position);
@@ -35,18 +44,15 @@ function openConfig(position) {
     }
 
     // Remove from all other elements
-    $('.clicked').each(function(i, elem) {
+    $('.clicked').each(function (i, elem) {
         $(elem).removeClass('clicked');
     });
 
     currButton = position;
     buttonElem.addClass('clicked');
 
-    $.get('/configHtml', {'deckId': currDeckId, 'button': position}, function(data) {
-        config.html(data);
-        buttonTextField = $("#buttonText");
-        buttonBackgroundColorField = $("#buttonBackgroundColor");
-        buttonTextColorField = $("#buttonTextColor");
+    $.get('/configHtml', {'deckId': currDeckId, 'button': position}, function (data) {
+        updateConfigFields(data);
     });
 }
 
@@ -91,10 +97,7 @@ function openAddActionModal(position) {
 
                 // Refresh Config HTML
                 $.get('/configHtml', {'deckId': currDeckId, 'button': position}, function (data) {
-                    config.html(data);
-                    buttonTextField = $("#buttonText");
-                    buttonBackgroundColorField = $("#buttonBackgroundColor");
-                    buttonTextColorField = $("#buttonTextColor");
+                    updateConfigFields(data)
                 });
             }
         );
@@ -111,10 +114,7 @@ function deleteAction(button_id, action_id) {
                 'action': action_id
             },
             success: function (data) {
-                config.html(data);
-                buttonTextField = $("#buttonText");
-                buttonBackgroundColorField = $("#buttonBackgroundColor");
-                buttonTextColorField = $("#buttonTextColor");
+                updateConfigFields(data);
             }
         });
 }
