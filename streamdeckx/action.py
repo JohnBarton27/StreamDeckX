@@ -1,5 +1,5 @@
-from abc import ABC, abstractmethod
 import logging
+from abc import ABC, abstractmethod
 
 
 class Action(ABC):
@@ -26,6 +26,9 @@ class ActionFactory:
     def get_by_type(action_type: str):
         if action_type == 'TEXT':
             return TextAction
+
+        if action_type == 'MULTIKEY':
+            return MultiKeyPressAction
 
 
 class TextAction(Action):
@@ -64,6 +67,40 @@ class TextAction(Action):
         for char in self.text:
             keyboard.press(char)
             keyboard.release(char)
+
+
+class MultiKeyPressAction(Action):
+    """Class for an action where multiple keys are pressed at once"""
+
+    @property
+    def action_type(self):
+        return 'MULTIKEY'
+
+    def __init__(self, parameter: str, button, order: int, action_id: int = None):
+        super().__init__(parameter, button, order, action_id=action_id)
+        self.key_presses = parameter.split(';')
+
+    def __repr__(self):
+        return '+'.join(self.key_presses)
+
+    def __str__(self):
+        return '+'.join(self.key_presses)
+
+    def __eq__(self, other):
+        if self.__class__ != other.__class__:
+            return False
+
+        if len(self.key_presses) != len(other.key_presses):
+            return False
+
+        # Ensure all key presses in our list exist in the other
+        return all([key in other.key_presses for key in self.key_presses])
+
+    def __hash__(self):
+        return hash('+'.join(self.key_presses))
+
+    def execute(self):
+        logging.info(f'Pressing: {"+".join(self.key_presses)}')
 
 
 class ActionMissingIdError(Exception):
