@@ -138,8 +138,9 @@ function submit() {
     let buttonText = buttonTextField.val()
     let backgroundColor = buttonBackgroundColorField.val();
     let textColor = buttonTextColorField.val();
+    let fontSize = buttonFontSizeField.val();
 
-    $.post('/setButtonConfig', {'deckId': currDeckId, 'button': currButton, 'buttonText': buttonText, 'backgroundColor': backgroundColor, 'textColor': textColor}, 'json').done(
+    $.post('/setButtonConfig', {'deckId': currDeckId, 'button': currButton, 'buttonText': buttonText, 'backgroundColor': backgroundColor, 'textColor': textColor, 'fontSize': fontSize}, 'json').done(
         function(data) {
             $('#' + currButton + '-img').attr('src', 'data:image/PNG;base64, ' + data);
         }
