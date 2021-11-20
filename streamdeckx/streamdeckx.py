@@ -92,18 +92,25 @@ def set_button_config():
 
 @app.route('/setButtonAction', methods=['POST'])
 def set_button_action():
-    from action import TextAction
+    from action import TextAction, MultiKeyPressAction
 
     from dao.action_dao import ActionDao
 
     deck_id = request.form['deckId']
     button_position = int(request.form['button'])
     action = request.form['action_text']
+    action_type = request.form['type']
 
     deck = _get_deck_by_id(deck_id)
 
     button = deck.buttons[button_position]
-    action = TextAction(action, button, 0)
+
+    if action_type == 'TEXT':
+        action = TextAction(action, button, 0)
+    elif action_type == 'MULTIKEY':
+        action = MultiKeyPressAction(action, button, 0)
+    else:
+        raise Exception(f'Unknown action type: {action_type}')
 
     action_dao = ActionDao()
     action_dao.create(action)

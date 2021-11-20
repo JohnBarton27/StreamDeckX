@@ -9,8 +9,12 @@ let buttonBackgroundColorField = null;
 let buttonTextColorField = null;
 let buttonFontSizeField = null;
 let textActionValueElem = null;
+let multiKeyActionValueElem = null;
+let multiKeySelect = null;
+let selectedKeysElem = null;
+let currActionType = null;
 
-$(document).ready(function() {
+$(document).ready(function () {
     connSdSelect = $("#conn-sd-select");
     currDeck = $("#curr-deck");
     config = $("#config");
@@ -71,6 +75,9 @@ function openAddActionModal(position) {
             case "text":
                 showTextActionFields();
                 break;
+            case "multikey":
+                showMultiKeyActionFields();
+                break;
             default:
                 showDefaultActionFields();
         }
@@ -83,11 +90,20 @@ function openAddActionModal(position) {
 
     let addActionButton = $("#addActionButton");
     addActionButton.click(function() {
+        let action_text = null;
+
+        if (currActionType === 'TEXT') {
+            action_text = textActionValueElem.val();
+        } else if (currActionType === 'MULTIKEY') {
+            action_text = multiKeyActionValueElem.val();
+        }
+
         // Submit creation of action
         $.post('/setButtonAction', {
             'deckId': currDeckId,
             'button': currButton,
-            'action_text': textActionValueElem.val()
+            'action_text': action_text,
+            'type': currActionType
         }, 'json').done(
             function (data) {
                 console.log(data);
@@ -98,6 +114,7 @@ function openAddActionModal(position) {
                 // Refresh Config HTML
                 $.get('/configHtml', {'deckId': currDeckId, 'button': position}, function (data) {
                     updateConfigFields(data)
+                    currActionType = null;
                 });
             }
         );
@@ -126,12 +143,74 @@ function showTextActionFields() {
     `);
 
     textActionValueElem = $("#textValue");
+    currActionType = 'TEXT';
+}
+
+function addMultiKeyToDisplay(keyName) {
+    let newMultiKey = $("<span></span>").text(keyName);
+    let newKeyRemoveX = $("<span></span>").attr("id", "delete-" + keyName).attr("onclick", "removeMultiKey(" + keyName + "_)").html("&times;");
+
+    newMultiKey.append(newKeyRemoveX);
+    newMultiKey.addClass("multi-key");
+    selectedKeysElem.append(newMultiKey);
+}
+
+function showMultiKeyActionFields() {
+    actionFieldsArea.html(`
+        <label for="multiKeyValue">Keys: </label>
+        <span id="selectedKeys"></span>
+        <select id="multiKeySelect">
+            <option>Select Key...</option>
+            <option value="ALT">ALT</option>
+            <option value="CTRL">CTRL</option>
+            <option value="ENTER">ENTER</option>
+            <option value="SHIFT">SHIFT</option>
+        </select>
+    `);
+
+    multiKeySelect = $("#multiKeySelect");
+    selectedKeysElem = $("#selectedKeys");
+
+    multiKeySelect.on('change', function () {
+        addMultiKeyToDisplay(multiKeySelect.val());
+    });
+
+    multiKeyActionValueElem = $("#multiKeyValue");
+    currActionType = 'MULTIKEY'
+
+    // Listeners
+    let pressedKeys = []
+    let allPressedKeys = []
+
+    // Listen for key presses
+    $(document).on("keydown", function (e) {
+        // If this is our first pressed key, clear out allPressedKeys
+        if (pressedKeys.length === 0) {
+            allPressedKeys = []
+        }
+
+        pressedKeys.push(e.key);
+        allPressedKeys.push(e.key);
+
+        multiKeyActionValueElem.val(allPressedKeys.join(';'));
+    });
+
+    // Listen for key releases
+    $(document).on("keyup", function (e) {
+        const keyIndex = pressedKeys.indexOf(e.key);
+        if (keyIndex > -1) {
+            pressedKeys.splice(keyIndex, 1);
+        }
+    });
+
 }
 
 function showDefaultActionFields() {
     actionFieldsArea.html(`
         <p>Unknown action type!</p>
     `);
+
+    currActionType = null;
 }
 
 function submit() {

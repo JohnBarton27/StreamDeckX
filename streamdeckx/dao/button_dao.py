@@ -58,7 +58,8 @@ class ButtonDao(Dao):
 
         buttons = ButtonDao.get_objs_from_result(results, deck=deck)
         for button in buttons:
-            button.actions = ButtonDao.action_dao.get_for_button(button)
+            db_actions = ButtonDao.action_dao.get_for_button(button)
+            button.actions = db_actions if db_actions else []
         return buttons
 
     def create(self, button):

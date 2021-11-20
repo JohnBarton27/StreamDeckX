@@ -104,15 +104,22 @@ hr {
 
 /* The Close Button */
 .close {
-  color: #FAFDED;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+    color: #FAFDED;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
 }
 
 .close:hover,
 .close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.multi-key {
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 0 8px 0 8px;
+    margin: 0 4px 0 4px;
 }
