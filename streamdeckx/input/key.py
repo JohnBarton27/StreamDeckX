@@ -76,9 +76,9 @@ class KeyGroup:
 
     @staticmethod
     def get_all():
+        special_keys = KeyGroup('Special', Key.get_special_keys())
         alpha_keys = KeyGroup('Alpha', Key.get_alpha_keys())
         num_keys = KeyGroup('Numbers', Key.get_num_keys())
         function_keys = KeyGroup('Function', Key.get_function_keys())
-        special_keys = KeyGroup('Special', Key.get_special_keys())
 
-        return [alpha_keys, num_keys, function_keys, special_keys]
+        return [special_keys, alpha_keys, num_keys, function_keys]
