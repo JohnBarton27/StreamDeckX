@@ -115,9 +115,9 @@ class MultiKeyPressAction(Action):
     def _get_key(text):
         from pynput.keyboard import Key
 
-        if text == 'Alt':
+        if text == 'ALT':
             return Key.alt
-        elif text == 'Ctrl':
+        elif text == 'CTRL':
             return Key.ctrl
         elif text == 'F1':
             return Key.f1
@@ -161,9 +161,9 @@ class MultiKeyPressAction(Action):
             return Key.f20
         elif text == 'OS':
             return Key.cmd
-        elif text == 'Shift':
+        elif text == 'SHIFT':
             return Key.shift
-        elif text == 'Tab':
+        elif text == 'TAB':
             return Key.tab
         else:
             return text

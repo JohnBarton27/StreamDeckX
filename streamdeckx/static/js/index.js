@@ -96,7 +96,7 @@ function openAddActionModal(position) {
         if (currActionType === 'TEXT') {
             action_text = textActionValueElem.val();
         } else if (currActionType === 'MULTIKEY') {
-            action_text = multiKeyActionValueElem.val();
+            action_text = multiKeySelectedKeys.join(';');
         }
 
         // Submit creation of action
