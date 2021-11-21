@@ -5,6 +5,8 @@ from urllib.request import pathname2url
 
 from flask import Flask, render_template, request
 
+from input.key import KeyGroup
+
 
 class StreamDeckX(Flask):
     def run(self, host=None, port=None, debug=None, load_dotenv=True, **options):
@@ -138,6 +140,18 @@ def delete_button_action():
             button.actions.remove(action)
 
     return render_template('configuration.html', button=button)
+
+
+# API
+@app.route('/api/v1/keys', methods=['GET'])
+def get_all_keys():
+    json = {
+        'groups': []
+    }
+    for key_group in KeyGroup.get_all():
+        json['groups'].append(key_group.json())
+
+    return json
 
 
 def connect_to_database():
