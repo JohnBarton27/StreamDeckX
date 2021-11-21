@@ -160,7 +160,7 @@ async function showMultiKeyActionFields() {
     let response = await fetch('/api/v1/keys');
     let data = await response.json();
 
-    let selectHtml = ``;
+    let selectHtml = `<option value="">Select...</option>`;
     for (let i = 0; i < data.groups.length; i++) {
         selectHtml += `<optgroup label="` + data.groups[i].name + `">`;
 
@@ -182,7 +182,10 @@ async function showMultiKeyActionFields() {
     selectedKeysElem = $("#selectedKeys");
 
     multiKeySelect.on('change', function () {
-        addMultiKeyToDisplay(multiKeySelect.val());
+        if (multiKeySelect.val() !== 'Select...') {
+            addMultiKeyToDisplay(multiKeySelect.val());
+            multiKeySelect.val("");
+        }
     });
 
     multiKeyActionValueElem = $("#multiKeyValue");
