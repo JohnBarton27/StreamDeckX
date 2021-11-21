@@ -12,6 +12,7 @@ let textActionValueElem = null;
 let multiKeyActionValueElem = null;
 let multiKeySelect = null;
 let selectedKeysElem = null;
+let multiKeySelectedKeys = [];
 let currActionType = null;
 
 $(document).ready(function () {
@@ -155,7 +156,7 @@ function addMultiKeyToDisplay(keyName) {
     selectedKeysElem.append(newMultiKey);
 }
 
-async function showMultiKeyActionFields() {
+async function updateMultiKeySelect() {
     // Get Supported Keys
     let response = await fetch('/api/v1/keys');
     let data = await response.json();
@@ -166,55 +167,43 @@ async function showMultiKeyActionFields() {
 
         for (let j = 0; j < data.groups[i].keys.length; j++) {
             let key = data.groups[i].keys[j].value;
-            selectHtml += `<option value="` + key + `">` + key + `</option>`;
+
+            if (!multiKeySelectedKeys.includes(key)) {
+                selectHtml += `<option value="` + key + `">` + key + `</option>`;
+            }
         }
 
         selectHtml += `</optgroup>`;
     }
 
+    multiKeySelect = $("#multiKeySelect");
+    multiKeySelect.html(selectHtml);
+}
+
+async function showMultiKeyActionFields() {
     actionFieldsArea.html(`
         <label for="multiKeyValue">Keys: </label>
         <span id="selectedKeys"></span>
-        <select id="multiKeySelect">` + selectHtml + `</select>
+        <select id="multiKeySelect"></select>
     `);
 
-    multiKeySelect = $("#multiKeySelect");
+    await updateMultiKeySelect();
+
     selectedKeysElem = $("#selectedKeys");
 
     multiKeySelect.on('change', function () {
-        if (multiKeySelect.val() !== 'Select...') {
-            addMultiKeyToDisplay(multiKeySelect.val());
+        let selectedVal = multiKeySelect.val();
+        if (selectedVal !== 'Select...') {
+            addMultiKeyToDisplay(selectedVal);
+            multiKeySelectedKeys.push(selectedVal);
             multiKeySelect.val("");
         }
+
+        updateMultiKeySelect();
     });
 
     multiKeyActionValueElem = $("#multiKeyValue");
     currActionType = 'MULTIKEY'
-
-    // Listeners
-    let pressedKeys = []
-    let allPressedKeys = []
-
-    // Listen for key presses
-    $(document).on("keydown", function (e) {
-        // If this is our first pressed key, clear out allPressedKeys
-        if (pressedKeys.length === 0) {
-            allPressedKeys = []
-        }
-
-        pressedKeys.push(e.key);
-        allPressedKeys.push(e.key);
-
-        multiKeyActionValueElem.val(allPressedKeys.join(';'));
-    });
-
-    // Listen for key releases
-    $(document).on("keyup", function (e) {
-        const keyIndex = pressedKeys.indexOf(e.key);
-        if (keyIndex > -1) {
-            pressedKeys.splice(keyIndex, 1);
-        }
-    });
 
 }
 
