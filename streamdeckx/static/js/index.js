@@ -155,17 +155,27 @@ function addMultiKeyToDisplay(keyName) {
     selectedKeysElem.append(newMultiKey);
 }
 
-function showMultiKeyActionFields() {
+async function showMultiKeyActionFields() {
+    // Get Supported Keys
+    let response = await fetch('/api/v1/keys');
+    let data = await response.json();
+
+    let selectHtml = ``;
+    for (let i = 0; i < data.groups.length; i++) {
+        selectHtml += `<optgroup label="` + data.groups[i].name + `">`;
+
+        for (let j = 0; j < data.groups[i].keys.length; j++) {
+            let key = data.groups[i].keys[j].value;
+            selectHtml += `<option value="` + key + `">` + key + `</option>`;
+        }
+
+        selectHtml += `</optgroup>`;
+    }
+
     actionFieldsArea.html(`
         <label for="multiKeyValue">Keys: </label>
         <span id="selectedKeys"></span>
-        <select id="multiKeySelect">
-            <option>Select Key...</option>
-            <option value="ALT">ALT</option>
-            <option value="CTRL">CTRL</option>
-            <option value="ENTER">ENTER</option>
-            <option value="SHIFT">SHIFT</option>
-        </select>
+        <select id="multiKeySelect">` + selectHtml + `</select>
     `);
 
     multiKeySelect = $("#multiKeySelect");
