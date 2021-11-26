@@ -1,6 +1,8 @@
 import logging
 from abc import ABC, abstractmethod
 
+from input.key import Key
+
 
 class Action(ABC):
 
@@ -72,6 +74,8 @@ class TextAction(Action):
 class MultiKeyPressAction(Action):
     """Class for an action where multiple keys are pressed at once"""
 
+    all_keys = Key.get_all_keys()
+
     @property
     def action_type(self):
         return 'MULTIKEY'
@@ -106,67 +110,16 @@ class MultiKeyPressAction(Action):
         keyboard = Controller()
 
         for key_press in self.key_presses:
-            keyboard.press(MultiKeyPressAction._get_key(key_press))
+            keyboard.press(MultiKeyPressAction._get_key(key_press).pkey)
 
         for key_press in reversed(self.key_presses):
-            keyboard.release(MultiKeyPressAction._get_key(key_press))
+            keyboard.release(MultiKeyPressAction._get_key(key_press).pkey)
 
     @staticmethod
     def _get_key(text):
-        from pynput.keyboard import Key
-
-        if text == 'ALT':
-            return Key.alt
-        elif text == 'CTRL':
-            return Key.ctrl
-        elif text == 'F1':
-            return Key.f1
-        elif text == 'F2':
-            return Key.f2
-        elif text == 'F3':
-            return Key.f3
-        elif text == 'F4':
-            return Key.f4
-        elif text == 'F5':
-            return Key.f5
-        elif text == 'F6':
-            return Key.f6
-        elif text == 'F7':
-            return Key.f7
-        elif text == 'F8':
-            return Key.f8
-        elif text == 'F9':
-            return Key.f9
-        elif text == 'F10':
-            return Key.f10
-        elif text == 'F11':
-            return Key.f11
-        elif text == 'F12':
-            return Key.f12
-        elif text == 'F13':
-            return Key.f13
-        elif text == 'F14':
-            return Key.f14
-        elif text == 'F15':
-            return Key.f15
-        elif text == 'F16':
-            return Key.f16
-        elif text == 'F17':
-            return Key.f17
-        elif text == 'F18':
-            return Key.f18
-        elif text == 'F19':
-            return Key.f19
-        elif text == 'F20':
-            return Key.f20
-        elif text == 'OS':
-            return Key.cmd
-        elif text == 'SHIFT':
-            return Key.shift
-        elif text == 'TAB':
-            return Key.tab
-        else:
-            return text
+        for key in MultiKeyPressAction.all_keys:
+            if key.name == text:
+                return key
 
 
 class ActionMissingIdError(Exception):

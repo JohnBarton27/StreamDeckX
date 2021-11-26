@@ -1,29 +1,31 @@
 import string
+from pynput.keyboard import Key as pkey
 
 
 class Key:
 
-    def __init__(self, val: str):
-        self.val = val
+    def __init__(self, name: str, pkey: pkey):
+        self.name = name
+        self.pkey = pkey
 
     def __str__(self):
-        return self.val
+        return self.name
 
     def __repr__(self):
-        return self.val
+        return self.name
 
     def __hash__(self):
-        return hash(self.val)
+        return hash(self.name)
 
     def __eq__(self, other):
         if not isinstance(other, Key):
             return False
 
-        return self.val == other.val
+        return self.name == other.name
 
     def json(self):
         return {
-            'value': self.val
+            'value': self.name
         }
 
     @staticmethod
@@ -36,20 +38,60 @@ class Key:
 
     @staticmethod
     def get_function_keys():
-        return Key._get_for_vals([f'F{val}' for val in range(1, 21)])
+        return [Key('F1', pkey.f1),
+                Key('F2', pkey.f2),
+                Key('F3', pkey.f3),
+                Key('F4', pkey.f4),
+                Key('F5', pkey.f5),
+                Key('F6', pkey.f6),
+                Key('F7', pkey.f7),
+                Key('F8', pkey.f8),
+                Key('F9', pkey.f9),
+                Key('F10', pkey.f10),
+                Key('F11', pkey.f11),
+                Key('F12', pkey.f12),
+                Key('F13', pkey.f13),
+                Key('F14', pkey.f14),
+                Key('F15', pkey.f15),
+                Key('F16', pkey.f16),
+                Key('F17', pkey.f17),
+                Key('F18', pkey.f18),
+                Key('F19', pkey.f19),
+                Key('F20', pkey.f20)]
 
     @staticmethod
     def get_alpha_keys():
-        return Key._get_for_vals([char for char in string.ascii_lowercase])
+        return [Key(char, char) for char in string.ascii_lowercase]
 
     @staticmethod
     def get_num_keys():
-        return Key._get_for_vals([str(num) for num in range(0,9)])
+        return [Key(str(num), str(num)) for num in range(0, 9)]
 
     @staticmethod
     def get_special_keys():
-        special_keys = ['ALT', 'CTRL', 'DEL', 'ENTER', 'ESC', 'SHIFT']
-        return Key._get_for_vals(special_keys)
+        return [Key('ALT', pkey.alt),
+                Key('BACKSPACE', pkey.backspace),
+                Key('CAPS LOCK', pkey.caps_lock),
+                Key('CMD', pkey.cmd),
+                Key('CTRL', pkey.ctrl),
+                Key('DELETE', pkey.delete),
+                Key('DOWN ARROW', pkey.down),
+                Key('END', pkey.end),
+                Key('ENTER', pkey.enter),
+                Key('HOME', pkey.home),
+                Key('LEFT ARROW', pkey.left),
+                Key('PAGE DOWN', pkey.page_down),
+                Key('PAGE UP', pkey.page_up),
+                Key('RIGHT ARROW', pkey.right),
+                Key('SHIFT', pkey.shift),
+                Key('SPACE', pkey.space),
+                Key('TAB', pkey.tab),
+                Key('UP ARROW', pkey.up),
+                Key('INSERT', pkey.insert),
+                Key('MENU', pkey.menu),
+                Key('NUM LOCK', pkey.num_lock),
+                Key('PRINT SCREEN', pkey.print_screen),
+                Key('SCROLL LOCK', pkey.scroll_lock)]
 
     @staticmethod
     def get_all_keys():
