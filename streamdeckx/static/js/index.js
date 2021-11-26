@@ -107,8 +107,6 @@ function openAddActionModal(position) {
             'type': currActionType
         }, 'json').done(
             function (data) {
-                console.log(data);
-
                 // Close Modal
                 closeActionModalButton.click()
 
