@@ -48,7 +48,7 @@ class Key:
 
     @staticmethod
     def get_special_keys():
-        special_keys = ['ALT', 'CTRL', 'ENTER', 'ESC', 'SHIFT']
+        special_keys = ['ALT', 'CTRL', 'DEL', 'ENTER', 'ESC', 'SHIFT']
         return Key._get_for_vals(special_keys)
 
     @staticmethod

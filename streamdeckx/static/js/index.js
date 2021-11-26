@@ -146,12 +146,25 @@ function showTextActionFields() {
 }
 
 function addMultiKeyToDisplay(keyName) {
-    let newMultiKey = $("<span></span>").text(keyName);
-    let newKeyRemoveX = $("<span></span>").attr("id", "delete-" + keyName).attr("onclick", "removeMultiKey(" + keyName + "_)").html("&times;");
+    let newMultiKey = $("<span style='padding:5px;'></span>").text(keyName).attr("id", "multikey-" + keyName);
+    let newKeyRemoveX = $("<span style='padding-left:10px; padding-right: 5px; cursor: pointer;'></span>").attr("id", "delete-" + keyName).attr("onclick", "removeMultiKey('" + keyName + "')").html("&times;");
 
     newMultiKey.append(newKeyRemoveX);
     newMultiKey.addClass("multi-key");
     selectedKeysElem.append(newMultiKey);
+}
+
+function removeMultiKey(keyName) {
+    let keyToRemoveId = 'multikey-' + keyName;
+    $('#' + keyToRemoveId).remove();
+    let removalIndex = multiKeySelectedKeys.indexOf(keyName);
+
+    if (removalIndex > -1) {
+        multiKeySelectedKeys.splice(removalIndex, 1);
+    }
+
+    // Re-add removed key to the MultiKeySelect
+    updateMultiKeySelect();
 }
 
 async function updateMultiKeySelect() {
