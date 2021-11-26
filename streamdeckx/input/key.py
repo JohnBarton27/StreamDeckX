@@ -4,9 +4,9 @@ from pynput.keyboard import Key as pkey
 
 class Key:
 
-    def __init__(self, name: str, pkey: pkey):
+    def __init__(self, name: str, pykey: pkey):
         self.name = name
-        self.pkey = pkey
+        self.pkey = pykey
 
     def __str__(self):
         return self.name
@@ -29,14 +29,6 @@ class Key:
         }
 
     @staticmethod
-    def _get_for_vals(vals: list):
-        key_list = []
-        for val in vals:
-            key_list.append(Key(val))
-
-        return key_list
-
-    @staticmethod
     def get_function_keys():
         return [Key('F1', pkey.f1),
                 Key('F2', pkey.f2),
@@ -57,7 +49,11 @@ class Key:
                 Key('F17', pkey.f17),
                 Key('F18', pkey.f18),
                 Key('F19', pkey.f19),
-                Key('F20', pkey.f20)]
+                Key('F20', pkey.f20),
+                Key('F21', pkey.f21),
+                Key('F22', pkey.f22),
+                Key('F23', pkey.f23),
+                Key('F24', pkey.f24)]
 
     @staticmethod
     def get_alpha_keys():
@@ -65,7 +61,7 @@ class Key:
 
     @staticmethod
     def get_num_keys():
-        return [Key(str(num), str(num)) for num in range(0, 9)]
+        return [Key(str(num), str(num)) for num in range(0, 10)]
 
     @staticmethod
     def get_special_keys():
@@ -78,6 +74,7 @@ class Key:
                 Key('DOWN ARROW', pkey.down),
                 Key('END', pkey.end),
                 Key('ENTER', pkey.enter),
+                Key('ESC', pkey.esc),
                 Key('HOME', pkey.home),
                 Key('LEFT ARROW', pkey.left),
                 Key('PAGE DOWN', pkey.page_down),
