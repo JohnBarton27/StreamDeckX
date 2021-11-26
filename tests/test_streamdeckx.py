@@ -190,7 +190,8 @@ class TestStreamdeckX(unittest.TestCase):
             response = self.app.post('/setButtonAction', data={
                 'deckId': 'def123',
                 'button': '1',
-                'action_text': 'username'
+                'action_text': 'username',
+                'type': 'TEXT'
             })
 
             self.assertEqual(500, response._status_code)
@@ -212,7 +213,8 @@ class TestStreamdeckX(unittest.TestCase):
         self.app.post('/setButtonAction', data={
             'deckId': 'abc123',
             'button': '1',
-            'action_text': 'username'
+            'action_text': 'username',
+            'type': 'TEXT'
         })
 
         self.assertEqual(1, len(button1.actions))
