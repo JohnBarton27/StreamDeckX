@@ -69,6 +69,12 @@ class TestTextAction(BaseStreamdeckXTest):
 
 class TestMultiKeyPressAction(BaseStreamdeckXTest):
 
+    def test_action_type(self):
+        btn = MagicMock()
+        action = MultiKeyPressAction('CTRL;S', btn, 0)
+        
+        self.assertEqual('MULTIKEY', action.action_type)
+
     def test_init(self):
         btn = MagicMock()
         action = MultiKeyPressAction('CTRL;S', btn, 0)
