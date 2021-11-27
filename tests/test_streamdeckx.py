@@ -321,6 +321,24 @@ class TestStreamdeckX(BaseStreamdeckXTest):
         m_delete_action.assert_called()
         self.m_render_template.assert_called_with('configuration.html', button=button1)
 
+    @patch('input.key.KeyGroup.get_all')
+    def test_get_all_keys(self, m_all_key_groups):
+        kg1 = MagicMock()
+        kg1.json.return_value = {'name': 'Key Group 1'}
+
+        kg2 = MagicMock()
+        kg2.json.return_value = {'name': 'Key Group 2'}
+
+        m_all_key_groups.return_value = [kg1, kg2]
+
+        response = self.app.get('/api/v1/keys')
+
+        self.assertEqual({
+            'groups': [
+                {'name': 'Key Group 1'},
+                {'name': 'Key Group 2'}
+            ]
+        }, response.json)
 
 if __name__ == '__main__':
     unittest.main()
