@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
+from action import MultiKeyPressAction, TextAction
 from test_base import BaseStreamdeckXTest
 import streamdeckx
 from button import Button
@@ -200,7 +201,7 @@ class TestStreamdeckX(BaseStreamdeckXTest):
         self.m_get_connected.assert_called()
 
     @patch('dao.action_dao.ActionDao.create')
-    def test_set_button_action(self, m_create_action):
+    def test_set_button_action_text(self, m_create_action):
         deck1 = MagicMock()
         deck1.id = 'abc123'
 
@@ -219,6 +220,34 @@ class TestStreamdeckX(BaseStreamdeckXTest):
         })
 
         self.assertEqual(1, len(button1.actions))
+        self.assertTrue(isinstance(button1.actions[0], TextAction))
+
+        self.m_get_connected.assert_called()
+        m_create_action.assert_called()
+
+    @patch('dao.action_dao.ActionDao.create')
+    def test_set_button_action_multikey(self, m_create_action):
+        deck1 = MagicMock()
+        deck1.id = 'abc123'
+
+        button0 = Button(0, deck1)
+        button1 = Button(1, deck1)
+
+        deck1.buttons = [button0, button1]
+
+        self.m_get_connected.return_value = [deck1]
+
+        self.app.post('/setButtonAction', data={
+            'deckId': 'abc123',
+            'button': '1',
+            'action_text': 'CTRL;ALT;DEL',
+            'type': 'MULTIKEY'
+        })
+
+        self.assertEqual(1, len(button1.actions))
+        
+        self.assertTrue(isinstance(button1.actions[0], MultiKeyPressAction))
+        self.assertEqual('CTRL', button1.actions[0].keys[0].name)
 
         self.m_get_connected.assert_called()
         m_create_action.assert_called()
