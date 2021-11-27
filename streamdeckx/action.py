@@ -1,5 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
+import functools
 
 from input.key import Key
 
@@ -103,17 +104,22 @@ class MultiKeyPressAction(Action):
     def __hash__(self):
         return hash('+'.join(self.key_presses))
 
+    @functools.cached_property
+    def keys(self):
+        keys = []
+        for key_press in self.key_presses:
+            keys.append(MultiKeyPressAction._get_key(key_press))
+
+        return keys
+
     def execute(self):
         logging.info(f'Pressing: {"+".join(self.key_presses)}')
 
-        from pynput.keyboard import Controller
-        keyboard = Controller()
+        for key in self.keys:
+            key.press()
 
-        for key_press in self.key_presses:
-            keyboard.press(MultiKeyPressAction._get_key(key_press).pkey)
-
-        for key_press in reversed(self.key_presses):
-            keyboard.release(MultiKeyPressAction._get_key(key_press).pkey)
+        for key in reversed(self.keys):
+            key.release()
 
     @staticmethod
     def _get_key(text):

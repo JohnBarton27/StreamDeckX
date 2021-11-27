@@ -2,12 +2,16 @@ import string
 
 try:
     from pynput.keyboard import Key as pkey
+    from pynput.keyboard import Controller
 except ImportError:
     from unittest.mock import MagicMock
     pkey = MagicMock()  # Unit testing
+    Controller = MagicMock()
 
 
 class Key:
+
+    controller = Controller()
 
     def __init__(self, name: str, pykey: pkey):
         self.name = name
@@ -32,6 +36,12 @@ class Key:
         return {
             'value': self.name
         }
+
+    def press(self):
+        Key.controller.press(self.pkey)
+
+    def release(self):
+        Key.controller.release(self.pkey)
 
     @staticmethod
     def get_function_keys():

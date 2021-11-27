@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch, call
 
 from test_base import BaseStreamdeckXTest
 from action import ActionFactory, TextAction, MultiKeyPressAction
@@ -134,6 +134,24 @@ class TestMultiKeyPressAction(BaseStreamdeckXTest):
         action = MultiKeyPressAction('CTRL;S', btn, 0)
 
         self.assertEqual(hash('CTRL+S'), hash(action))
+
+    @patch('action.MultiKeyPressAction._get_key')
+    def test_execute(self, m_get_key):
+        btn = MagicMock()
+        ctrl_key = MagicMock()
+        s_key = MagicMock()
+
+        manager = MagicMock()
+        manager.attach_mock(ctrl_key, 'ctrl_key')
+        manager.attach_mock(s_key, 's_key')
+
+        m_get_key.side_effect = [ctrl_key, s_key]
+        action = MultiKeyPressAction('CTRL;S', btn, 0)
+
+        action.execute()
+
+        expected_calls = [call.ctrl_key.press(), call.s_key.press(), call.s_key.release(), call.ctrl_key.release()]
+        self.assertEqual(expected_calls, manager.mock_calls)
 
 
 if __name__ == '__main__':
