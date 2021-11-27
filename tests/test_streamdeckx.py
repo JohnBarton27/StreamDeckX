@@ -252,6 +252,31 @@ class TestStreamdeckX(BaseStreamdeckXTest):
         self.m_get_connected.assert_called()
         m_create_action.assert_called()
 
+    @patch('dao.action_dao.ActionDao.create')
+    def test_set_button_action_unsupported(self, m_create_action):
+        deck1 = MagicMock()
+        deck1.id = 'abc123'
+
+        button0 = Button(0, deck1)
+        button1 = Button(1, deck1)
+
+        deck1.buttons = [button0, button1]
+
+        self.m_get_connected.return_value = [deck1]
+
+        with self.assertRaises(Exception):
+            self.app.post('/setButtonAction', data={
+                'deckId': 'abc123',
+                'button': '1',
+                'action_text': 'CTRL;ALT;DEL',
+                'type': 'NOT_A_REAL_TYPE'
+            })
+
+        self.assertEqual(0, len(button1.actions))
+
+        self.m_get_connected.assert_called()
+        m_create_action.assert_not_called()
+
     def test_delete_button_action_no_deck(self):
         self.m_get_connected.return_value = []
 
