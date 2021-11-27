@@ -2,7 +2,18 @@ import unittest
 from unittest.mock import MagicMock
 
 from test_base import BaseStreamdeckXTest
-from action import TextAction, MultiKeyPressAction
+from action import ActionFactory, TextAction, MultiKeyPressAction
+
+
+class TestActionFactory(BaseStreamdeckXTest):
+
+    def test_get_by_type_text(self):
+        text = ActionFactory.get_by_type('TEXT')
+        self.assertEqual(TextAction, text)
+
+    def test_get_by_type_multikey(self):
+        multikey = ActionFactory.get_by_type('MULTIKEY')
+        self.assertEqual(MultiKeyPressAction, multikey)
 
 
 class TestTextAction(BaseStreamdeckXTest):
@@ -56,7 +67,7 @@ class TestTextAction(BaseStreamdeckXTest):
         self.assertEqual(hash(action), hash('username'))
 
 
-class TestMultiKeyPressAction(unittest.TestCase):
+class TestMultiKeyPressAction(BaseStreamdeckXTest):
 
     def test_init(self):
         btn = MagicMock()
