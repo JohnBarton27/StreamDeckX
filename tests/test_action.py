@@ -1,10 +1,11 @@
 import unittest
 from unittest.mock import MagicMock
 
+from test_base import BaseStreamdeckXTest
 from action import TextAction, MultiKeyPressAction
 
 
-class TestTextAction(unittest.TestCase):
+class TestTextAction(BaseStreamdeckXTest):
 
     def test_init(self):
         """TextAction.__init__"""

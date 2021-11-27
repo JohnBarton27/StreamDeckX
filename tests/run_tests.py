@@ -4,6 +4,7 @@ import unittest
 import xmlrunner
 
 # Set PYTHONPATH
+sys.path.insert(0, str(pathlib.Path(__file__).parent.absolute().parent.absolute().joinpath('tests')))
 sys.path.insert(0, str(pathlib.Path(__file__).parent.absolute().parent.absolute().joinpath('streamdeckx')))
 
 test_dir = pathlib.Path(__file__).parent.absolute()

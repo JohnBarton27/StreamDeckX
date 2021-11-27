@@ -1,10 +1,11 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
+from test_base import BaseStreamdeckXTest
 from button_image import ButtonImage, ImageLine
 
 
-class TestButtonImage(unittest.TestCase):
+class TestButtonImage(BaseStreamdeckXTest):
 
     def setUp(self) -> None:
         get_text_dimensions_patch = patch('button_image.ButtonImage.get_text_dimensions')

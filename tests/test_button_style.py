@@ -1,10 +1,11 @@
 import unittest
 from unittest.mock import patch
 
+from test_base import BaseStreamdeckXTest
 from button_style import ButtonStyle
 
 
-class TestButtonStyle(unittest.TestCase):
+class TestButtonStyle(BaseStreamdeckXTest):
 
     def test_init(self):
         """ButtonStyle.__init__"""

@@ -1,12 +1,13 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
+from test_base import BaseStreamdeckXTest
 import streamdeckx
 from button import Button
 from deck import NoSuchDeckException
 
 
-class TestStreamdeckX(unittest.TestCase):
+class TestStreamdeckX(BaseStreamdeckXTest):
 
     def setUp(self) -> None:
         get_conn_patch = patch('deck.Deck.get_connected')

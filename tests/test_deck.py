@@ -1,10 +1,11 @@
 import unittest
 from unittest.mock import call, patch, MagicMock, PropertyMock
 
+from test_base import BaseStreamdeckXTest
 from deck import Deck, MiniDeck, OriginalDeck, XLDeck
 
 
-class TestDeck(unittest.TestCase):
+class TestDeck(BaseStreamdeckXTest):
 
     def setUp(self):
         patch_render_button = patch('button.Button.update_key_image')

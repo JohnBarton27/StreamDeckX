@@ -1,11 +1,12 @@
 import unittest
 from unittest.mock import MagicMock, patch, PropertyMock
 
+from test_base import BaseStreamdeckXTest
 from button import Button
 from deck import OriginalDeck
 
 
-class TestButton(unittest.TestCase):
+class TestButton(BaseStreamdeckXTest):
 
     def setUp(self) -> None:
         self.deck1 = OriginalDeck('deck123')
