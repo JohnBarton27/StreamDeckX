@@ -1,5 +1,10 @@
 import string
-from pynput.keyboard import Key as pkey
+
+try:
+    from pynput.keyboard import Key as pkey
+except ImportError:
+    from unittest.mock import MagicMock
+    pkey = MagicMock()  # Unit testing
 
 
 class Key:
