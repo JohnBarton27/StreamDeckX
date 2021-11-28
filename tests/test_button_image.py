@@ -74,6 +74,7 @@ class TestButtonImage(BaseStreamdeckXTest):
         style = MagicMock()
         style.background_image = ''
         style.rgb_background_color = '#008080'
+        style.label = 'A label'
         deck = MagicMock()
         interface = MagicMock()
         deck.deck_interface = interface
@@ -96,6 +97,39 @@ class TestButtonImage(BaseStreamdeckXTest):
         m_image_open.assert_not_called()
         m_image_draw.assert_called_with(m_image)
         m_draw_text.assert_called_with(m_image_draw.return_value)
+
+    @patch('button_image.ButtonImage.draw_text')
+    @patch('PIL.Image.new')
+    @patch('PIL.Image.open')
+    @patch('PIL.ImageDraw.Draw')
+    @patch('StreamDeck.ImageHelpers.PILHelper.create_scaled_image')
+    def test_image_without_text(self, m_scaled_image, m_image_draw, m_image_open, m_image_new, m_draw_text):
+        style = MagicMock()
+        style.background_image = ''
+        style.rgb_background_color = '#008080'
+        style.label = ''
+        deck = MagicMock()
+        interface = MagicMock()
+        deck.deck_interface = interface
+
+        m_icon = MagicMock()
+        m_image_new.return_value = m_icon
+
+        m_image = MagicMock()
+        m_image.size = (100, 50)
+        m_scaled_image.return_value = m_image
+
+        image = ButtonImage(style, deck)
+
+        result = image.image
+        self.assertEquals(m_image, result)
+        self.assertEquals(100, image._image_size)
+
+        m_scaled_image.assert_called_with(interface, m_icon, margins=[0, 0, 0, 0])
+        m_image_new.assert_called_with('RGB', (100, 100), '#008080')
+        m_image_open.assert_not_called()
+        m_image_draw.assert_not_called()
+        m_draw_text.assert_not_called()
 
     def test_get_max_width_single(self):
         font = MagicMock()

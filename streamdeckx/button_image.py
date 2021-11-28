@@ -23,7 +23,9 @@ class ButtonImage:
 
         image = PILHelper.create_scaled_image(self.deck.deck_interface, background, margins=[0, 0, 0, 0])
         self._image_size = image.size[0]
-        self.draw_text(ImageDraw.Draw(image))
+
+        if self.style.label:
+            self.draw_text(ImageDraw.Draw(image))
 
         return image
 
