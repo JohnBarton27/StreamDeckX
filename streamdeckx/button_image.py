@@ -14,13 +14,14 @@ class ButtonImage:
 
     @property
     def image(self):
+        background = Image.new('RGB', (100, 100), self.style.rgb_background_color)
         if self.style.background_image:
-            icon = Image.open(io.BytesIO(base64.b64decode(self.style.background_image)))
-        else:
-            icon = Image.open(self.style.icon_path) if self.style.icon_path else \
-            Image.new('RGB', (100, 100), self.style.rgb_background_color)
+            background_image = Image.open(io.BytesIO(base64.b64decode(self.style.background_image))).convert('RGBA')
+            background_image.load()
+            background_image_scaled = background_image.resize((100, 100))
+            background.paste(background_image_scaled, mask=background_image_scaled.split()[3])
 
-        image = PILHelper.create_scaled_image(self.deck.deck_interface, icon, margins=[0, 0, 0, 0])
+        image = PILHelper.create_scaled_image(self.deck.deck_interface, background, margins=[0, 0, 0, 0])
         self._image_size = image.size[0]
         self.draw_text(ImageDraw.Draw(image))
 
