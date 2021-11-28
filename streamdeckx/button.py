@@ -89,7 +89,7 @@ class Button:
 
         Button.button_dao.update(self)
 
-    def set_background_image(self, background_image: bytes):
+    def set_background_image(self, background_image: str):
         self.style.background_image = background_image
         self.update_key_image()
 

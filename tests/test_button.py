@@ -95,6 +95,18 @@ class TestButton(BaseStreamdeckXTest):
         m_update_key_image.assert_called()
         m_btn_update.assert_called()
 
+    @patch('button.Button.button_dao.update')
+    @patch('button.Button.update_key_image')
+    def test_set_background_image(self, m_update_key_image, m_btn_update):
+        button = Button(12, self.deck1)
+
+        button.set_background_image('123ZZZ')
+
+        self.assertEqual('123ZZZ', button.style.background_image)
+
+        m_update_key_image.assert_called()
+        m_btn_update.assert_called_with(button)
+
     def test_add_action(self):
         button = Button(12, self.deck1)
 
