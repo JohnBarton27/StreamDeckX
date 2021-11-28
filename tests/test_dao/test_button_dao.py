@@ -151,19 +151,19 @@ class TestButtonDao(unittest.TestCase):
         button = Button(12, deck, btn_id=57)
 
         style = MagicMock()
-        style.icon = 'my_icon.png'
         style.font = 'Arial'
         style.font_size = 24
         style.label = 'Press Me!'
         style.background_color = '#000000'
         style.text_color = '#ffffff'
+        style.background_image = '123ZZZ'
 
         button.style = style
 
         bd = ButtonDao()
         bd.update(button)
 
-        self.m_cursor.execute.assert_called_with('UPDATE button SET icon = ?, font = ?, font_size = ?, label = ?, background_color = ?, text_color = ? WHERE id = ?;', ('my_icon.png', 'Arial', 24, 'Press Me!', '#000000', '#ffffff', 57))
+        self.m_cursor.execute.assert_called_with('UPDATE button SET font = ?, font_size = ?, label = ?, background_color = ?, text_color = ?, background_image = ? WHERE id = ?;', ('Arial', 24, 'Press Me!', '#000000', '#ffffff', '123ZZZ', 57))
         self.m_log_debug.assert_called()
 
     def test_update_missing_id(self):
@@ -181,12 +181,12 @@ class TestButtonDao(unittest.TestCase):
             'position': 12,
             'id': 57,
             'deck_id': 'abc123',
-            'icon': 'my_icon.jpeg',
             'font': 'Roboto.ttf',
             'font_size': 24,
             'label': 'Press Me!',
             'background_color': '#000000',
-            'text_color': '#ffffff'
+            'text_color': '#ffffff',
+            'background_image': '123ZZZ'
         }
 
         deck = MagicMock()
@@ -197,12 +197,12 @@ class TestButtonDao(unittest.TestCase):
         self.assertEqual(12, button.position)
         self.assertEqual(57, button.id)
         self.assertEqual(deck, button.deck)
-        self.assertEqual('my_icon.jpeg', button.style.icon)
         self.assertEqual('Roboto.ttf', button.style.font)
         self.assertEqual(24, button.style.font_size)
         self.assertEqual('Press Me!', button.style.label)
         self.assertEqual('#000000', button.style.background_color)
         self.assertEqual('#ffffff', button.style.text_color)
+        self.assertEqual('123ZZZ', button.style.background_image)
 
         self.m_get_deck_by_id.assert_called_with('abc123', include_buttons=False)
 
@@ -211,12 +211,12 @@ class TestButtonDao(unittest.TestCase):
             'position': 12,
             'id': 57,
             'deck_id': 'abc123',
-            'icon': 'my_icon.jpeg',
             'font': 'Roboto.ttf',
             'font_size': 24,
             'label': 'Press Me!',
             'background_color': '#000000',
-            'text_color': '#ffffff'
+            'text_color': '#ffffff',
+            'background_image': '123ZZZ'
         }
 
         deck = MagicMock()
@@ -226,12 +226,12 @@ class TestButtonDao(unittest.TestCase):
         self.assertEqual(12, button.position)
         self.assertEqual(57, button.id)
         self.assertEqual(deck, button.deck)
-        self.assertEqual('my_icon.jpeg', button.style.icon)
         self.assertEqual('Roboto.ttf', button.style.font)
         self.assertEqual(24, button.style.font_size)
         self.assertEqual('Press Me!', button.style.label)
         self.assertEqual('#000000', button.style.background_color)
         self.assertEqual('#ffffff', button.style.text_color)
+        self.assertEqual('123ZZZ', button.style.background_image)
 
         self.m_get_deck_by_id.assert_not_called()
 
@@ -240,12 +240,12 @@ class TestButtonDao(unittest.TestCase):
             'position': 12,
             'id': 57,
             'deck_id': 'abc123',
-            'icon': None,
             'font': None,
             'font_size': 16,
             'label': None,
             'background_color': '#000000',
-            'text_color': '#ffffff'
+            'text_color': '#ffffff',
+            'background_image': None
         }
 
         deck = MagicMock()

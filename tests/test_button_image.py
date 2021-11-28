@@ -28,15 +28,25 @@ class TestButtonImage(BaseStreamdeckXTest):
     @patch('PIL.Image.open')
     @patch('PIL.ImageDraw.Draw')
     @patch('StreamDeck.ImageHelpers.PILHelper.create_scaled_image')
-    def test_image_with_icon(self, m_scaled_image, m_image_draw, m_image_open, m_image_new, m_draw_text):
+    @patch('io.BytesIO')
+    @patch('base64.b64decode')
+    def test_image_with_background_image(self, m_base64_decode, m_bytes_io, m_scaled_image, m_image_draw, m_image_open, m_image_new, m_draw_text):
         style = MagicMock()
-        style.icon_path = 'image.png'
+        style.background_image = '123ZZZ'
+        style.rgb_background_color = '#008080'
+
         deck = MagicMock()
         interface = MagicMock()
         deck.deck_interface = interface
 
-        m_icon = MagicMock()
-        m_image_open.return_value = m_icon
+        decoded_base64 = MagicMock()
+        m_base64_decode.return_value = decoded_base64
+
+        byte_stream = MagicMock()
+        m_bytes_io.return_value = byte_stream
+
+        m_background_image = MagicMock()
+        m_image_open.return_value = m_background_image
 
         m_image = MagicMock()
         m_image.size = (100, 50)
@@ -48,9 +58,10 @@ class TestButtonImage(BaseStreamdeckXTest):
         self.assertEquals(m_image, result)
         self.assertEquals(100, image._image_size)
 
-        m_scaled_image.assert_called_with(interface, m_icon, margins=[0, 0, 0, 0])
-        m_image_open.assert_called_with('image.png')
-        m_image_new.assert_not_called()
+        m_scaled_image.assert_called()
+        m_image_open.assert_called_with(byte_stream)
+        m_image_new.assert_called_with('RGB', (100, 100), '#008080')
+        m_background_image.convert.assert_called_with('RGBA')
         m_image_draw.assert_called_with(m_image)
         m_draw_text.assert_called_with(m_image_draw.return_value)
 
@@ -59,9 +70,9 @@ class TestButtonImage(BaseStreamdeckXTest):
     @patch('PIL.Image.open')
     @patch('PIL.ImageDraw.Draw')
     @patch('StreamDeck.ImageHelpers.PILHelper.create_scaled_image')
-    def test_image_without_icon(self, m_scaled_image, m_image_draw, m_image_open, m_image_new, m_draw_text):
+    def test_image_without_background_image(self, m_scaled_image, m_image_draw, m_image_open, m_image_new, m_draw_text):
         style = MagicMock()
-        style.icon_path = ''
+        style.background_image = ''
         style.rgb_background_color = '#008080'
         deck = MagicMock()
         interface = MagicMock()
