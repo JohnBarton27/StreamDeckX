@@ -1,5 +1,6 @@
+import io
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, mock_open
 
 from action import MultiKeyPressAction, TextAction
 from test_base import BaseStreamdeckXTest
@@ -155,7 +156,7 @@ class TestStreamdeckX(BaseStreamdeckXTest):
         self.m_get_connected.assert_called()
 
     @patch('button.Button.set_text')
-    def test_set_button_config(self, m_btn_set_text):
+    def test_set_button_config_no_background_image(self, m_btn_set_text):
         deck1 = MagicMock()
         deck1.id = 'abc123'
 
@@ -184,6 +185,50 @@ class TestStreamdeckX(BaseStreamdeckXTest):
         button1.set_text.assert_called_with('Hello')
         button1.set_colors.assert_called_with('#000000', '#008080')
         button1.set_font_size.assert_called_with(24)
+
+    @patch('os.remove')
+    @patch('base64.b64encode')
+    @patch('builtins.open', new_callable=mock_open, read_data='1')
+    @patch('werkzeug.datastructures.FileStorage.save')
+    @patch('os.mkdir')
+    @patch('os.path.exists')
+    def test_set_button_config_with_background_image(self, m_path_exists, m_mkdir, m_fs_save, m_open, m_b64_encode, m_os_rm):
+        deck1 = MagicMock()
+        deck1.id = 'abc123'
+
+        button0 = MagicMock()
+        button1 = MagicMock()
+        button_image = MagicMock()
+        button_image.image_bytes = b'an image!'
+        button1.button_image = button_image
+
+        deck1.buttons = [button0, button1]
+
+        m_path_exists.return_value = False
+
+        self.m_get_connected.return_value = [deck1]
+
+        data = {
+            'deckId': 'abc123',
+            'button': '1',
+            'buttonText': 'Hello',
+            'backgroundColor': '#008080',
+            'textColor': '#000000',
+            'fontSize': '24'
+        }
+        data['backgroundImage'] = (io.BytesIO(b"abcdef"), 'test.jpg')
+
+        response = self.app.post('/setButtonConfig', data=data, content_type='multipart/form-data')
+
+        m_path_exists.assert_called_with('temp_images')
+        m_mkdir.assert_called_with('temp_images')
+
+        m_fs_save.assert_called_with('temp_images/test.jpg')
+        m_open.assert_called_with('temp_images/test.jpg', 'rb')
+        m_b64_encode.assert_called()
+        m_os_rm.assert_called()
+
+        self.assertEqual(b'an image!', response.data)
 
     def test_set_button_action_no_deck(self):
         self.m_get_connected.return_value = []

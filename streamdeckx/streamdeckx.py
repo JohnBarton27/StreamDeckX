@@ -89,6 +89,7 @@ def set_button_config():
     if len(request.files) > 0:
         # Handle Background Image Uploads
         background_image = request.files['backgroundImage']
+        print(type(background_image))
         if background_image.filename != '':
             if not os.path.exists('temp_images'):
                 os.mkdir('temp_images')
@@ -98,6 +99,9 @@ def set_button_config():
             with open(f"temp_images/{background_image.filename}", "rb") as image_file:
                 img_string = base64.b64encode(image_file.read())
                 button.set_background_image(img_string)
+
+            # Delete temporary file
+            os.remove(f"temp_images/{background_image.filename}")
 
     button.set_text(button_text)
     button.set_colors(text_color, background_color)
