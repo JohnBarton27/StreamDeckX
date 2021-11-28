@@ -38,6 +38,21 @@ function updateConfigFields(data) {
     buttonTextColorField = $("#buttonTextColor");
     buttonFontSizeField = $("#buttonFontSize");
     buttonImageField = $("#buttonImage");
+
+    buttonImageField.change(function() {
+        let imageUploadDiv = $('#buttonImageUpload');
+        let imgFile = buttonImageField.prop('files')[0];
+
+        let previewImage = $("<img height='72' width='72''>");
+        imageUploadDiv.append(previewImage);
+
+        let reader = new FileReader();
+        reader.readAsDataURL(imgFile);
+        reader.onload = function () {
+            previewImage.attr('src', reader.result);
+        };
+
+    })
 }
 
 function openConfig(position) {
@@ -233,7 +248,7 @@ function submit() {
     let backgroundColor = buttonBackgroundColorField.val();
     let textColor = buttonTextColorField.val();
     let fontSize = buttonFontSizeField.val();
-    let backgroundImg = document.getElementById('buttonImage').files[0];
+    let backgroundImg = buttonImageField.prop('files')[0];
 
     let fd = new FormData();
     fd.append('deckId', currDeckId);
