@@ -40,10 +40,15 @@ function updateConfigFields(data) {
     buttonImageField = $("#buttonImage");
 
     buttonImageField.change(function() {
+        // Check if image already displayed
+        if ($("#displayButtonImage").length > 0) {
+            $("#displayButtonImage").remove();
+        }
+
         let imageUploadDiv = $('#buttonImageUpload');
         let imgFile = buttonImageField.prop('files')[0];
 
-        let previewImage = $("<img height='72' width='72''>");
+        let previewImage = $("<img height='72' width='72''>").attr('id', 'displayButtonImage');
         imageUploadDiv.append(previewImage);
 
         let reader = new FileReader();
