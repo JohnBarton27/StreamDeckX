@@ -1,3 +1,4 @@
+import base64
 import io
 
 from PIL import Image, ImageDraw, ImageFont
@@ -13,7 +14,10 @@ class ButtonImage:
 
     @property
     def image(self):
-        icon = Image.open(self.style.icon_path) if self.style.icon_path else \
+        if self.style.background_image:
+            icon = Image.open(io.BytesIO(base64.b64decode(self.style.background_image)))
+        else:
+            icon = Image.open(self.style.icon_path) if self.style.icon_path else \
             Image.new('RGB', (100, 100), self.style.rgb_background_color)
 
         image = PILHelper.create_scaled_image(self.deck.deck_interface, icon, margins=[0, 0, 0, 0])
