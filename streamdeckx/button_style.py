@@ -52,6 +52,10 @@ class ButtonStyle:
         return os.path.join(ButtonStyle.ASSETS_PATH, self.font)
 
     @property
+    def background_image_decoded(self):
+        return self.background_image.decode("utf-8")
+
+    @property
     def rgb_background_color(self):
         return ButtonStyle._hex_to_rgb(self.background_color)
 

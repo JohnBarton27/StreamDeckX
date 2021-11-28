@@ -18,6 +18,9 @@
 <div class="config-item">
     <label for="buttonImage">Image:</label>
     <input id="buttonImage" type="file" accept="image/*">
+    {% if button.style.background_image %}
+        <img id="displayButtonImage" height="72" width="72" src="data:image/PNG;base64, {{ button.style.background_image_decoded  }}" style="display: block;">
+    {% endif %}
 </div>
 <div class="config-item">
     <label for="buttonFontSize">Font Size:</label>
