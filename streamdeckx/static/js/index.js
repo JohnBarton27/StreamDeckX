@@ -14,6 +14,7 @@ let multiKeyActionValueElem = null;
 let multiKeySelect = null;
 let selectedKeysElem = null;
 let multiKeySelectedKeys = [];
+let delayActionValueElem = null;
 let currActionType = null;
 
 $(document).ready(function () {
@@ -107,6 +108,9 @@ function openAddActionModal(position) {
             case "multikey":
                 showMultiKeyActionFields();
                 break;
+            case 'delay':
+                showDelayActionFields();
+                break;
             default:
                 showDefaultActionFields();
         }
@@ -125,6 +129,8 @@ function openAddActionModal(position) {
             action_text = textActionValueElem.val();
         } else if (currActionType === 'MULTIKEY') {
             action_text = multiKeySelectedKeys.join(';');
+        } else if (currActionType === 'DELAY') {
+            action_text = delayActionValueElem.val().toString();
         }
 
         // Submit creation of action
@@ -244,6 +250,16 @@ async function showMultiKeyActionFields() {
     multiKeyActionValueElem = $("#multiKeyValue");
     currActionType = 'MULTIKEY'
 
+}
+
+function showDelayActionFields() {
+    actionFieldsArea.html(`
+        <label for="delayValue">Delay (in seconds): </label>
+        <input type="number" id="delayValue" style="margin-top: 5px;"/>
+    `);
+
+    delayActionValueElem = $("#delayValue");
+    currActionType = 'DELAY';
 }
 
 function showDefaultActionFields() {
