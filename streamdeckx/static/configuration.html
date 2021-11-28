@@ -6,7 +6,7 @@
             <span id="delete-{{ action.id }}" class="close"
                   onclick="deleteAction({{ button.position }}, {{ action.id }})">&times;</span>
             <p style="margin: 0; font-size: 0.8rem; font-style: italic; text-decoration: underline;">{{ action.__class__.__name__ }}</p>
-            <p style="margin: 0;">{{ action.parameter }}</p>
+            <p style="margin: 0;">{{ action.display_value }}</p>
         </div>
     {% endfor %}
 {% endif %}

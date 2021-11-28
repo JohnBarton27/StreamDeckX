@@ -70,6 +70,11 @@ class TestTextAction(BaseStreamdeckXTest):
         action = TextAction('username', btn, 1)
         self.assertEqual(hash(action), hash('username'))
 
+    def test_display_value(self):
+        btn = MagicMock()
+        action = TextAction('username', btn, 1)
+        self.assertEqual('username', action.display_value)
+
 
 class TestMultiKeyPressAction(BaseStreamdeckXTest):
 
@@ -139,6 +144,11 @@ class TestMultiKeyPressAction(BaseStreamdeckXTest):
 
         self.assertEqual(hash('CTRL+S'), hash(action))
 
+    def test_display_value(self):
+        btn = MagicMock()
+        action = MultiKeyPressAction('CTRL;ALT;DEL', btn, 1)
+        self.assertEqual('CTRL + ALT + DEL', action.display_value)
+
     @patch('action.MultiKeyPressAction._get_key')
     def test_execute(self, m_get_key):
         btn = MagicMock()
@@ -172,6 +182,11 @@ class TestDelayAction(BaseStreamdeckXTest):
 
         self.assertEqual(5, action.delay_time)
         self.assertEqual(btn, action.button)
+
+    def test_display_value(self):
+        btn = MagicMock()
+        action = DelayAction('10', btn, 1)
+        self.assertEqual('10 seconds', action.display_value)
 
 
 if __name__ == '__main__':

@@ -19,6 +19,11 @@ class Action(ABC):
     def action_type(self):
         pass
 
+    @property
+    @abstractmethod
+    def display_value(self):
+        pass
+
     @abstractmethod
     def execute(self):
         pass
@@ -63,6 +68,10 @@ class TextAction(Action):
 
     def __hash__(self):
         return hash(self.text)
+
+    @property
+    def display_value(self):
+        return self.text
 
     def execute(self):
         logging.info(f'Printing: {self.text}')
@@ -116,6 +125,10 @@ class MultiKeyPressAction(Action):
 
         return keys
 
+    @property
+    def display_value(self):
+        return ' + '.join(self.key_presses)
+
     def execute(self):
         logging.info(f'Pressing: {"+".join(self.key_presses)}')
 
@@ -133,14 +146,18 @@ class MultiKeyPressAction(Action):
 
 
 class DelayAction(Action):
-    
+
+    @property
+    def action_type(self):
+        return 'DELAY'
+
     def __init__(self, parameter: str, button, order: int, action_id: int = None):
         super().__init__(parameter, button, order, action_id=action_id)
         self.delay_time = int(parameter)
 
     @property
-    def action_type(self):
-        return 'DELAY'
+    def display_value(self):
+        return f'{self.delay_time} seconds'
 
     def execute(self):
         time.sleep(self.delay_time)
