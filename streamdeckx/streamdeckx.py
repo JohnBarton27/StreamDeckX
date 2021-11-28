@@ -80,21 +80,24 @@ def set_button_config():
     background_color = request.form['backgroundColor']
     text_color = request.form['textColor']
     font_size = int(request.form['fontSize'])
-    background_image = request.files['backgroundImage']
+
     logging.info(f'Setting {button_position} on {deck_id} to {button_text}')
 
     deck = _get_deck_by_id(deck_id)
     button = deck.buttons[button_position]
 
-    if background_image.filename != '':
-        if not os.path.exists('temp_images'):
-            os.mkdir('temp_images')
+    if len(request.files) > 0:
+        # Handle Background Image Uploads
+        background_image = request.files['backgroundImage']
+        if background_image.filename != '':
+            if not os.path.exists('temp_images'):
+                os.mkdir('temp_images')
 
-        background_image.save(f'temp_images/{background_image.filename}')
+            background_image.save(f'temp_images/{background_image.filename}')
 
-        with open(f"temp_images/{background_image.filename}", "rb") as image_file:
-            img_string = base64.b64encode(image_file.read())
-            button.set_background_image(img_string)
+            with open(f"temp_images/{background_image.filename}", "rb") as image_file:
+                img_string = base64.b64encode(image_file.read())
+                button.set_background_image(img_string)
 
     button.set_text(button_text)
     button.set_colors(text_color, background_color)
