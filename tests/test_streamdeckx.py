@@ -223,8 +223,8 @@ class TestStreamdeckX(BaseStreamdeckXTest):
         m_path_exists.assert_called_with('temp_images')
         m_mkdir.assert_called_with('temp_images')
 
-        m_fs_save.assert_called_with('temp_images/test.jpg')
-        m_open.assert_called_with('temp_images/test.jpg', 'rb')
+        m_fs_save.assert_called_with('temp_images/temp_image.jpg')
+        m_open.assert_called_with('temp_images/temp_image.jpg', 'rb')
         m_b64_encode.assert_called()
         m_os_rm.assert_called()
 
