@@ -15,11 +15,15 @@
     <label for="buttonText">Text:</label>
     <input id="buttonText" type="text" value="{{ button.style.label }}">
 </div>
-<div id="buttonImageUpload" class="config-item">
-    <label for="buttonImage">Image:</label>
-    <input id="buttonImage" type="file" accept="image/*">
+<div id="buttonImageUpload" class="config-item {{ 'image-upload' if button.style.background_image else '' }}">
+    <label>Image:</label>
     {% if button.style.background_image %}
-        <img id="displayButtonImage" height="72" width="72" src="data:image/PNG;base64, {{ button.style.background_image_decoded  }}" style="display: block;">
+        <label for="buttonImageUpload">
+            <img id="displayButtonImage" height="72" width="72" src="data:image/PNG;base64, {{ button.style.background_image_decoded  }}" style="display: block;">
+        </label>
+        <input id="buttonImage" type="file" accept="image/*">
+    {% else %}
+        <input id="buttonImage" type="file" accept="image/*">
     {% endif %}
 </div>
 <div class="config-item">

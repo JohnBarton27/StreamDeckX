@@ -45,11 +45,17 @@ function updateConfigFields(data) {
             $("#displayButtonImage").remove();
         }
 
+        if (!$('#buttonImageUpload').hasClass('image-upload')) {
+            $('#buttonImageUpload').addClass('image-upload')
+        }
+
         let imageUploadDiv = $('#buttonImageUpload');
         let imgFile = buttonImageField.prop('files')[0];
 
+        let previewImageDiv = $('<div style="width: 50%;"></div>')
         let previewImage = $("<img height='72' width='72''>").attr('id', 'displayButtonImage');
-        imageUploadDiv.append(previewImage);
+        previewImageDiv.append(previewImage);
+        imageUploadDiv.append(previewImageDiv);
 
         let reader = new FileReader();
         reader.readAsDataURL(imgFile);
