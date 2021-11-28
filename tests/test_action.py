@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock, patch, call
 
 from test_base import BaseStreamdeckXTest
-from action import ActionFactory, TextAction, MultiKeyPressAction
+from action import ActionFactory, TextAction, MultiKeyPressAction, DelayAction
 
 
 class TestActionFactory(BaseStreamdeckXTest):
@@ -14,6 +14,10 @@ class TestActionFactory(BaseStreamdeckXTest):
     def test_get_by_type_multikey(self):
         multikey = ActionFactory.get_by_type('MULTIKEY')
         self.assertEqual(MultiKeyPressAction, multikey)
+
+    def test_get_by_type_delay(self):
+        delay = ActionFactory.get_by_type('DELAY')
+        self.assertEqual(DelayAction, delay)
 
 
 class TestTextAction(BaseStreamdeckXTest):
@@ -152,6 +156,22 @@ class TestMultiKeyPressAction(BaseStreamdeckXTest):
 
         expected_calls = [call.ctrl_key.press(), call.s_key.press(), call.s_key.release(), call.ctrl_key.release()]
         self.assertEqual(expected_calls, manager.mock_calls)
+
+
+class TestDelayAction(BaseStreamdeckXTest):
+
+    def test_action_type(self):
+        btn = MagicMock()
+        action = DelayAction('5', btn, 0)
+
+        self.assertEqual('DELAY', action.action_type)
+
+    def test_init(self):
+        btn = MagicMock()
+        action = DelayAction('5', btn, 0)
+
+        self.assertEqual(5, action.delay_time)
+        self.assertEqual(btn, action.button)
 
 
 if __name__ == '__main__':

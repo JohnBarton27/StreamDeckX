@@ -1,6 +1,7 @@
 import logging
 from abc import ABC, abstractmethod
 import functools
+import time
 
 from input.key import Key
 
@@ -32,6 +33,9 @@ class ActionFactory:
 
         if action_type == 'MULTIKEY':
             return MultiKeyPressAction
+
+        if action_type == 'DELAY':
+            return DelayAction
 
 
 class TextAction(Action):
@@ -126,6 +130,20 @@ class MultiKeyPressAction(Action):
         for key in MultiKeyPressAction.all_keys:
             if key.name == text:
                 return key
+
+
+class DelayAction(Action):
+    
+    def __init__(self, parameter: str, button, order: int, action_id: int = None):
+        super().__init__(parameter, button, order, action_id=action_id)
+        self.delay_time = int(parameter)
+
+    @property
+    def action_type(self):
+        return 'DELAY'
+
+    def execute(self):
+        time.sleep(self.delay_time)
 
 
 class ActionMissingIdError(Exception):
