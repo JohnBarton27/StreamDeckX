@@ -98,8 +98,8 @@ class ButtonDao(Dao):
 
         with conn:
             cursor = conn.cursor()
-            cursor.execute('UPDATE button SET icon = ?, font = ?, font_size = ?, label = ?, background_color = ?, text_color = ? WHERE id = ?;',
-                           (button.style.icon, button.style.font, button.style.font_size, button.style.label, button.style.background_color, button.style.text_color, button.id))
+            cursor.execute('UPDATE button SET icon = ?, font = ?, font_size = ?, label = ?, background_color = ?, text_color = ?, background_image = ? WHERE id = ?;',
+                           (button.style.icon, button.style.font, button.style.font_size, button.style.label, button.style.background_color, button.style.text_color, button.style.background_image, button.id))
             logging.debug(f'Updating button ({button.id}): icon = {button.style.icon} | font = {button.style.font} | font_size = {button.style.font_size} | label = {button.style.label} | background_color = {button.style.background_color} | text_color = {button.style.text_color}')
             conn.commit()
 
@@ -126,6 +126,7 @@ class ButtonDao(Dao):
         label = result['label']
         background_color = result['background_color']
         text_color = result['text_color']
+        background_image = result['background_image']
 
         if not deck:
             from dao.deck_dao import DeckDao
@@ -133,7 +134,7 @@ class ButtonDao(Dao):
             deck = deck_dao.get_by_id(deck_id, include_buttons=False)
 
         if any([icon, font, label]):
-            bs = ButtonStyle('style', icon, font, font_size=font_size, label=label, background_color=background_color, text_color=text_color)
+            bs = ButtonStyle('style', icon, font, font_size=font_size, label=label, background_color=background_color, text_color=text_color, background_image=background_image)
         else:
             bs = None
 

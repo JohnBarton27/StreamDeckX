@@ -89,6 +89,12 @@ class Button:
 
         Button.button_dao.update(self)
 
+    def set_background_image(self, background_image: bytes):
+        self.style.background_image = background_image
+        self.update_key_image()
+
+        Button.button_dao.update(self)
+
     def add_action(self, action):
         """Add an action to this Button"""
         self.actions.append(action)

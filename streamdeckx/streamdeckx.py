@@ -1,3 +1,4 @@
+import base64
 import logging
 import os
 import sqlite3 as sl
@@ -79,12 +80,22 @@ def set_button_config():
     background_color = request.form['backgroundColor']
     text_color = request.form['textColor']
     font_size = int(request.form['fontSize'])
-
+    background_image = request.files['backgroundImage']
     logging.info(f'Setting {button_position} on {deck_id} to {button_text}')
 
     deck = _get_deck_by_id(deck_id)
-
     button = deck.buttons[button_position]
+
+    if background_image.filename != '':
+        if not os.path.exists('temp_images'):
+            os.mkdir('temp_images')
+
+        background_image.save(f'temp_images/{background_image.filename}')
+
+        with open(f"temp_images/{background_image.filename}", "rb") as image_file:
+            img_string = base64.b64encode(image_file.read())
+            button.set_background_image(img_string)
+
     button.set_text(button_text)
     button.set_colors(text_color, background_color)
     button.set_font_size(font_size)
@@ -187,7 +198,8 @@ def connect_to_database():
                     font_size INTEGER DEFAULT 16,
                     label TEXT,
                     background_color TEXT DEFAULT '#000000',
-                    text_color TEXT DEFAULT '#ffffff'
+                    text_color TEXT DEFAULT '#ffffff',
+                    background_image TEXT
                 );
             """)
 

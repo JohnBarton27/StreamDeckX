@@ -233,7 +233,7 @@ function submit() {
     let backgroundColor = buttonBackgroundColorField.val();
     let textColor = buttonTextColorField.val();
     let fontSize = buttonFontSizeField.val();
-    let backgroundImg = buttonImageField.prop('files')[0];
+    let backgroundImg = document.getElementById('buttonImage').files[0];
 
     let fd = new FormData();
     fd.append('deckId', currDeckId);
@@ -244,14 +244,12 @@ function submit() {
     fd.append('fontSize', fontSize);
     fd.append('backgroundImage', backgroundImg);
 
-    $.ajax({
-        url: '/setButtonConfig',
-        data: fd,
-        processData: false,
-        contentType: false,
-        type: 'POST',
-        success: function(data){
-            $('#' + currButton + '-img').attr('src', 'data:image/PNG;base64, ' + data);
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "/setButtonConfig");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            $('#' + currButton + '-img').attr('src', 'data:image/PNG;base64, ' + xhr.responseText);
         }
-    });
+    }
+    xhr.send(fd);
 }

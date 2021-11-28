@@ -6,7 +6,7 @@ class ButtonStyle:
 
     ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
 
-    def __init__(self, name: str, icon: str = '', font: str = 'Roboto-Regular.ttf', label: str = '', font_size: int = 16, background_color: str ='#000000', text_color: str = '#ffffff'):
+    def __init__(self, name: str, icon: str = '', font: str = 'Roboto-Regular.ttf', label: str = '', font_size: int = 16, background_color: str ='#000000', text_color: str = '#ffffff', background_image: bytes = None):
         self.name = name
         self.icon = icon
         self.font = font
@@ -14,6 +14,7 @@ class ButtonStyle:
         self.label = label
         self.background_color = background_color
         self.text_color = text_color
+        self.background_image = background_image
 
     def __str__(self):
         return f'{self.name} - {self.label} ({self.icon}, {self.font})'
