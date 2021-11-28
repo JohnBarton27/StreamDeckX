@@ -52,7 +52,7 @@ function updateConfigFields(data) {
         let imageUploadDiv = $('#buttonImageUpload');
         let imgFile = buttonImageField.prop('files')[0];
 
-        let previewImageDiv = $('<div style="width: 50%;"></div>')
+        let previewImageDiv = $('<label for="buttonImage" style="cursor:pointer;"></label>')
         let previewImage = $("<img height='72' width='72''>").attr('id', 'displayButtonImage');
         previewImageDiv.append(previewImage);
         imageUploadDiv.append(previewImageDiv);

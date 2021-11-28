@@ -18,7 +18,7 @@
 <div id="buttonImageUpload" class="config-item {{ 'image-upload' if button.style.background_image else '' }}">
     <label>Image:</label>
     {% if button.style.background_image %}
-        <label for="buttonImageUpload">
+        <label for="buttonImage" style="cursor:pointer;">
             <img id="displayButtonImage" height="72" width="72" src="data:image/PNG;base64, {{ button.style.background_image_decoded  }}" style="display: block;">
         </label>
         <input id="buttonImage" type="file" accept="image/*">
