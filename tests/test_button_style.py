@@ -77,17 +77,6 @@ class TestButtonStyle(BaseStreamdeckXTest):
         self.assertEqual(hash(bs), hash('My Styleicon.pngArial.ttfPress Me!'))
 
     @patch('os.path.join')
-    def test_icon_path(self, m_join):
-        """ButtonStyle.icon_path"""
-        bs = ButtonStyle('My Style', 'icon.png', 'Arial.ttf', 'Press Me!')
-
-        m_join.return_value = 'path/to/icon.png'
-        icon_path = bs.icon_path
-
-        m_join.assert_called_with(ButtonStyle.ASSETS_PATH, 'icon.png')
-        self.assertEqual(icon_path, 'path/to/icon.png')
-
-    @patch('os.path.join')
     def test_font_path(self, m_join):
         """ButtonStyle.font_path"""
         bs = ButtonStyle('My Style', 'icon.png', 'Arial.ttf', 'Press Me!')

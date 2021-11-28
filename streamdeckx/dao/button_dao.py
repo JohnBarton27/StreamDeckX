@@ -98,9 +98,9 @@ class ButtonDao(Dao):
 
         with conn:
             cursor = conn.cursor()
-            cursor.execute('UPDATE button SET icon = ?, font = ?, font_size = ?, label = ?, background_color = ?, text_color = ?, background_image = ? WHERE id = ?;',
-                           (button.style.icon, button.style.font, button.style.font_size, button.style.label, button.style.background_color, button.style.text_color, button.style.background_image, button.id))
-            logging.debug(f'Updating button ({button.id}): icon = {button.style.icon} | font = {button.style.font} | font_size = {button.style.font_size} | label = {button.style.label} | background_color = {button.style.background_color} | text_color = {button.style.text_color}')
+            cursor.execute('UPDATE button SET font = ?, font_size = ?, label = ?, background_color = ?, text_color = ?, background_image = ? WHERE id = ?;',
+                           (button.style.font, button.style.font_size, button.style.label, button.style.background_color, button.style.text_color, button.style.background_image, button.id))
+            logging.debug(f'Updating button ({button.id}): font = {button.style.font} | font_size = {button.style.font_size} | label = {button.style.label} | background_color = {button.style.background_color} | text_color = {button.style.text_color}')
             conn.commit()
 
     @staticmethod
@@ -120,7 +120,6 @@ class ButtonDao(Dao):
         position = result['position']
         btn_id = result['id']
         deck_id = result['deck_id']
-        icon = result['icon']
         font = result['font']
         font_size = result['font_size']
         label = result['label']
@@ -133,8 +132,8 @@ class ButtonDao(Dao):
             deck_dao = DeckDao()
             deck = deck_dao.get_by_id(deck_id, include_buttons=False)
 
-        if any([icon, font, label]):
-            bs = ButtonStyle('style', icon, font, font_size=font_size, label=label, background_color=background_color, text_color=text_color, background_image=background_image)
+        if any([font, label, background_image]):
+            bs = ButtonStyle('style', font, font_size=font_size, label=label, background_color=background_color, text_color=text_color, background_image=background_image)
         else:
             bs = None
 

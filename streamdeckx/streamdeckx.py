@@ -196,7 +196,6 @@ def connect_to_database():
                     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                     deck_id TEXT NOT NULL REFERENCES deck(id) ON DELETE CASCADE,
                     position INTEGER NOT NULL,
-                    icon TEXT,
                     font TEXT,
                     font_size INTEGER DEFAULT 16,
                     label TEXT,

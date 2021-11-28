@@ -6,9 +6,8 @@ class ButtonStyle:
 
     ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
 
-    def __init__(self, name: str, icon: str = '', font: str = 'Roboto-Regular.ttf', label: str = '', font_size: int = 16, background_color: str ='#000000', text_color: str = '#ffffff', background_image: bytes = None):
+    def __init__(self, name: str, font: str = 'Roboto-Regular.ttf', label: str = '', font_size: int = 16, background_color: str ='#000000', text_color: str = '#ffffff', background_image: bytes = None):
         self.name = name
-        self.icon = icon
         self.font = font
         self.font_size = font_size
         self.label = label
@@ -17,7 +16,7 @@ class ButtonStyle:
         self.background_image = background_image
 
     def __str__(self):
-        return f'{self.name} - {self.label} ({self.icon}, {self.font})'
+        return f'{self.name} - {self.label} ({self.font})'
 
     def __repr__(self):
         return self.name
@@ -32,7 +31,7 @@ class ButtonStyle:
             return False
 
         # Icon
-        if not self.icon == other.icon:
+        if not self.background_image == other.background_image:
             return False
 
         # Font
@@ -43,14 +42,7 @@ class ButtonStyle:
         return self.label == other.label
 
     def __hash__(self):
-        return hash(f'{self.name}{self.icon}{self.font}{self.label}')
-
-    @functools.cached_property
-    def icon_path(self):
-        if not self.icon:
-            return None
-
-        return os.path.join(ButtonStyle.ASSETS_PATH, self.icon)
+        return hash(f'{self.name}{self.background_image}{self.font}{self.label}')
 
     @functools.cached_property
     def font_path(self):
