@@ -5,6 +5,7 @@ let config = null;
 let currButton = null;
 let actionFieldsArea = null;
 let buttonTextField = null;
+let buttonImageField = null;
 let buttonBackgroundColorField = null;
 let buttonTextColorField = null;
 let buttonFontSizeField = null;
@@ -36,6 +37,7 @@ function updateConfigFields(data) {
     buttonBackgroundColorField = $("#buttonBackgroundColor");
     buttonTextColorField = $("#buttonTextColor");
     buttonFontSizeField = $("#buttonFontSize");
+    buttonImageField = $("#buttonImage");
 }
 
 function openConfig(position) {
@@ -231,10 +233,25 @@ function submit() {
     let backgroundColor = buttonBackgroundColorField.val();
     let textColor = buttonTextColorField.val();
     let fontSize = buttonFontSizeField.val();
+    let backgroundImg = buttonImageField.prop('files')[0];
 
-    $.post('/setButtonConfig', {'deckId': currDeckId, 'button': currButton, 'buttonText': buttonText, 'backgroundColor': backgroundColor, 'textColor': textColor, 'fontSize': fontSize}, 'json').done(
-        function(data) {
+    let fd = new FormData();
+    fd.append('deckId', currDeckId);
+    fd.append('button', currButton);
+    fd.append('buttonText', buttonText);
+    fd.append('backgroundColor', backgroundColor);
+    fd.append('textColor', textColor);
+    fd.append('fontSize', fontSize);
+    fd.append('backgroundImage', backgroundImg);
+
+    $.ajax({
+        url: '/setButtonConfig',
+        data: fd,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function(data){
             $('#' + currButton + '-img').attr('src', 'data:image/PNG;base64, ' + data);
         }
-    );
+    });
 }
