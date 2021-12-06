@@ -45,30 +45,37 @@ class Key:
 
     @staticmethod
     def get_function_keys():
-        return [Key('F1', pkey.f1),
-                Key('F2', pkey.f2),
-                Key('F3', pkey.f3),
-                Key('F4', pkey.f4),
-                Key('F5', pkey.f5),
-                Key('F6', pkey.f6),
-                Key('F7', pkey.f7),
-                Key('F8', pkey.f8),
-                Key('F9', pkey.f9),
-                Key('F10', pkey.f10),
-                Key('F11', pkey.f11),
-                Key('F12', pkey.f12),
-                Key('F13', pkey.f13),
-                Key('F14', pkey.f14),
-                Key('F15', pkey.f15),
-                Key('F16', pkey.f16),
-                Key('F17', pkey.f17),
-                Key('F18', pkey.f18),
-                Key('F19', pkey.f19),
-                Key('F20', pkey.f20),
-                Key('F21', pkey.f21),
-                Key('F22', pkey.f22),
-                Key('F23', pkey.f23),
-                Key('F24', pkey.f24)]
+        function_keys = [Key('F1', pkey.f1),
+                         Key('F2', pkey.f2),
+                         Key('F3', pkey.f3),
+                         Key('F4', pkey.f4),
+                         Key('F5', pkey.f5),
+                         Key('F6', pkey.f6),
+                         Key('F7', pkey.f7),
+                         Key('F8', pkey.f8),
+                         Key('F9', pkey.f9),
+                         Key('F10', pkey.f10),
+                         Key('F11', pkey.f11),
+                         Key('F12', pkey.f12),
+                         Key('F13', pkey.f13),
+                         Key('F14', pkey.f14),
+                         Key('F15', pkey.f15),
+                         Key('F16', pkey.f16),
+                         Key('F17', pkey.f17),
+                         Key('F18', pkey.f18),
+                         Key('F19', pkey.f19),
+                         Key('F20', pkey.f20)]
+
+        try:
+            function_keys.append(Key('F21', pkey.f21))
+            function_keys.append(Key('F22', pkey.f22))
+            function_keys.append(Key('F23', pkey.f23))
+            function_keys.append(Key('F24', pkey.f24))
+        except AttributeError:
+            # Unable to add extra function keys - happens in certain operating systems
+            pass
+
+        return function_keys
 
     @staticmethod
     def get_alpha_keys():
@@ -103,7 +110,9 @@ class Key:
                 Key('MENU', pkey.menu),
                 Key('NUM LOCK', pkey.num_lock),
                 Key('PRINT SCREEN', pkey.print_screen),
-                Key('SCROLL LOCK', pkey.scroll_lock)]
+                Key('SCROLL LOCK', pkey.scroll_lock),
+                Key('/', '/'),
+                Key('\\', '\\')]
 
     @staticmethod
     def get_all_keys():
