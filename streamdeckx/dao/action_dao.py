@@ -130,7 +130,7 @@ class ActionDao(Dao):
         Returns:
             Action: Action object represented by the SQL result
         """
-        from action.action import ActionFactory
+        from action.action_factory import ActionFactory
         action_id = result['id']
         action_type = result['type']
         button_id = result['button_id']
