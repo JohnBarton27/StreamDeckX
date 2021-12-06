@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from action import TextAction, ActionMissingIdError
+from action.action import TextAction, ActionMissingIdError
 from dao.action_dao import ActionDao
 
 

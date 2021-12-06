@@ -1,8 +1,9 @@
 import unittest
 from unittest.mock import MagicMock, patch, call
 
-from action import ActionFactory, TextAction, MultiKeyPressAction, DelayAction, ApplicationAction
 from test_base import BaseStreamdeckXTest
+
+from action.action import ActionFactory, TextAction, MultiKeyPressAction, DelayAction, ApplicationAction
 
 
 class TestActionFactory(BaseStreamdeckXTest):
@@ -149,7 +150,7 @@ class TestMultiKeyPressAction(BaseStreamdeckXTest):
         action = MultiKeyPressAction('CTRL;ALT;DEL', btn, 1)
         self.assertEqual('CTRL + ALT + DEL', action.display_value)
 
-    @patch('action.MultiKeyPressAction._get_key')
+    @patch('action.action.MultiKeyPressAction._get_key')
     def test_execute(self, m_get_key):
         btn = MagicMock()
         ctrl_key = MagicMock()

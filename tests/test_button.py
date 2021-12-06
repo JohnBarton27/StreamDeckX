@@ -1,9 +1,9 @@
 import unittest
 from unittest.mock import MagicMock, patch, PropertyMock
 
-from test_base import BaseStreamdeckXTest
 from button import Button
 from deck import OriginalDeck
+from test_base import BaseStreamdeckXTest
 
 
 class TestButton(BaseStreamdeckXTest):
@@ -11,7 +11,7 @@ class TestButton(BaseStreamdeckXTest):
     def setUp(self) -> None:
         self.deck1 = OriginalDeck('deck123')
 
-        patch_action_execute = patch('action.Action.execute')
+        patch_action_execute = patch('action.action.Action.execute')
         self.m_action_exec = patch_action_execute.start()
         self.addCleanup(patch_action_execute.stop)
 

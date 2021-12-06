@@ -1,7 +1,7 @@
 import logging
 import sqlite3 as sl
 
-from action import ActionMissingIdError
+from action.action import ActionMissingIdError
 from dao.dao import Dao
 
 
@@ -130,7 +130,7 @@ class ActionDao(Dao):
         Returns:
             Action: Action object represented by the SQL result
         """
-        from action import ActionFactory
+        from action.action import ActionFactory
         action_id = result['id']
         action_type = result['type']
         button_id = result['button_id']
