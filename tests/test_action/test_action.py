@@ -3,7 +3,8 @@ from unittest.mock import MagicMock, patch, call
 
 from test_base import BaseStreamdeckXTest
 
-from action.action import TextAction, MultiKeyPressAction, DelayAction, ApplicationAction
+from action.action import MultiKeyPressAction, DelayAction, ApplicationAction
+from action.text_action import TextAction
 
 
 class TestTextAction(BaseStreamdeckXTest):
