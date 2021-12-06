@@ -1,7 +1,8 @@
-import logging
-from abc import ABC, abstractmethod
 import functools
+import logging
+import subprocess
 import time
+from abc import ABC, abstractmethod
 
 from input.key import Key
 
@@ -161,6 +162,24 @@ class DelayAction(Action):
 
     def execute(self):
         time.sleep(self.delay_time)
+
+
+class ApplicationAction(Action):
+
+    @property
+    def action_type(self):
+        return 'APPLICATION'
+
+    def __init__(self, parameter: str, button, order: int, action_id: int = None):
+        super().__init__(parameter, button, order, action_id=action_id)
+        self.application = parameter
+
+    @property
+    def display_value(self):
+        return f'Open {self.application}'
+
+    def execute(self):
+        subprocess.call(self.application)
 
 
 class ActionMissingIdError(Exception):
