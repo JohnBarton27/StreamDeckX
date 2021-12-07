@@ -3,7 +3,8 @@ import unittest
 from unittest.mock import patch, MagicMock, mock_open
 
 import streamdeckx
-from action.action import MultiKeyPressAction, DelayAction
+from action.action import DelayAction
+from action.multi_key_press_action import MultiKeyPressAction
 from action.text_action import TextAction
 from button import Button
 from deck import NoSuchDeckException
