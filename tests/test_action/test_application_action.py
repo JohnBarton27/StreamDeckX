@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 
 from test_base import BaseStreamdeckXTest
 
-from action.action import ApplicationAction
+from action.application_action import ApplicationAction
 
 
 class TestApplicationAction(BaseStreamdeckXTest):
