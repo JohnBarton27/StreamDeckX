@@ -2,8 +2,8 @@ import unittest
 
 from test_base import BaseStreamdeckXTest
 
-from action.action import DelayAction
 from action.action_factory import ActionFactory
+from action.delay_action import DelayAction
 from action.multi_key_press_action import MultiKeyPressAction
 from action.text_action import TextAction
 

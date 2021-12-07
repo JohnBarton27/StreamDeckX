@@ -3,28 +3,7 @@ from unittest.mock import MagicMock, patch
 
 from test_base import BaseStreamdeckXTest
 
-from action.action import DelayAction, ApplicationAction
-
-
-class TestDelayAction(BaseStreamdeckXTest):
-
-    def test_action_type(self):
-        btn = MagicMock()
-        action = DelayAction('5', btn, 0)
-
-        self.assertEqual('DELAY', action.action_type)
-
-    def test_init(self):
-        btn = MagicMock()
-        action = DelayAction('5', btn, 0)
-
-        self.assertEqual(5, action.delay_time)
-        self.assertEqual(btn, action.button)
-
-    def test_display_value(self):
-        btn = MagicMock()
-        action = DelayAction('10', btn, 1)
-        self.assertEqual('10 seconds', action.display_value)
+from action.action import ApplicationAction
 
 
 class TestApplicationAction(BaseStreamdeckXTest):
