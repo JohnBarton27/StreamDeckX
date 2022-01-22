@@ -247,4 +247,5 @@ if __name__ == '__main__':
 
     for conn_deck in connected_decks:
         conn_deck.open()
+        conn_deck.deck_interface.set_brightness(100)
         conn_deck.set_callbacks()
