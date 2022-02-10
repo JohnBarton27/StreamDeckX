@@ -13,6 +13,7 @@ let textActionValueElem = null;
 let multiKeyActionValueElem = null;
 let multiKeySelect = null;
 let selectedKeysElem = null;
+let applicationActionValueElem = null;
 let multiKeySelectedKeys = [];
 let delayActionValueElem = null;
 let currActionType = null;
@@ -108,6 +109,9 @@ function openAddActionModal(position) {
             case "multikey":
                 showMultiKeyActionFields();
                 break;
+            case 'application':
+                showApplicationActionFields();
+                break;
             case 'delay':
                 showDelayActionFields();
                 break;
@@ -129,6 +133,8 @@ function openAddActionModal(position) {
             action_text = textActionValueElem.val();
         } else if (currActionType === 'MULTIKEY') {
             action_text = multiKeySelectedKeys.join(';');
+        } else if (currActionType === 'APPLICATION') {
+            action_text = applicationActionValueElem.val();
         } else if (currActionType === 'DELAY') {
             action_text = delayActionValueElem.val().toString();
         }
@@ -250,6 +256,16 @@ async function showMultiKeyActionFields() {
     multiKeyActionValueElem = $("#multiKeyValue");
     currActionType = 'MULTIKEY'
 
+}
+
+function showApplicationActionFields() {
+    actionFieldsArea.html(`
+        <label for="applicationPathValue">Application Path: </label>
+        <input type="text" id="applicationPathValue" style="margin-top: 5px;"/>
+    `);
+
+    applicationActionValueElem = $("#applicationPathValue");
+    currActionType = 'APPLICATION';
 }
 
 function showDelayActionFields() {

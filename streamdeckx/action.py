@@ -1,4 +1,5 @@
 import logging
+import os
 from abc import ABC, abstractmethod
 import functools
 import time
@@ -41,6 +42,9 @@ class ActionFactory:
 
         if action_type == 'DELAY':
             return DelayAction
+
+        if action_type == 'APPLICATION':
+            return ApplicationAction
 
 
 class TextAction(Action):
@@ -161,6 +165,47 @@ class DelayAction(Action):
 
     def execute(self):
         time.sleep(self.delay_time)
+
+
+class ApplicationAction(Action):
+    """Class for an action that launches an application"""
+
+    @property
+    def action_type(self):
+        return 'APPLICATION'
+
+    def __init__(self, parameter: str, button, order: int, action_id: int = None):
+        super().__init__(parameter, button, order, action_id=action_id)
+        self.application_path = parameter
+
+    def __repr__(self):
+        return self.application_path
+
+    def __str__(self):
+        return self.application_path
+
+    def __eq__(self, other):
+        if self.__class__ != other.__class__:
+            return False
+
+        return self.application_path == other.application_path
+
+    def __hash__(self):
+        return hash(self.application_path)
+
+    @property
+    def display_value(self):
+        return self.application_name
+
+    @property
+    def application_name(self):
+        return self.application_path.split(os.sep)[-1]
+
+    def execute(self):
+        logging.info(f'Opening: {self.application_path}')
+        import subprocess
+
+        subprocess.Popen(self.application_path)
 
 
 class ActionMissingIdError(Exception):

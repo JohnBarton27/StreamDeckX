@@ -114,7 +114,7 @@ def set_button_config():
 
 @app.route('/setButtonAction', methods=['POST'])
 def set_button_action():
-    from action import TextAction, MultiKeyPressAction, DelayAction
+    from action import TextAction, MultiKeyPressAction, ApplicationAction, DelayAction
 
     from dao.action_dao import ActionDao
 
@@ -131,6 +131,8 @@ def set_button_action():
         action = TextAction(action, button, 0)
     elif action_type == 'MULTIKEY':
         action = MultiKeyPressAction(action, button, 0)
+    elif action_type == 'APPLICATION':
+        action = ApplicationAction(action, button, 0)
     elif action_type == 'DELAY':
         action = DelayAction(action, button, 0)
     else:
