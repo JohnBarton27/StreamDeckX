@@ -205,7 +205,7 @@ class ApplicationAction(Action):
         logging.info(f'Opening: {self.application_path}')
         import subprocess
 
-        subprocess.Popen(self.application_path)
+        subprocess.Popen(self.application_path, start_new_session=True)
 
 
 class ActionMissingIdError(Exception):
