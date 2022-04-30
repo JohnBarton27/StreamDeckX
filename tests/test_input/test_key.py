@@ -52,7 +52,7 @@ class TestKey(unittest.TestCase):
     def test_get_function_keys(self):
         function_keys = Key.get_function_keys()
         
-        self.assertEqual(24, len(function_keys))
+        self.assertTrue(len(function_keys) == 24 or len(function_keys) == 20)
         self.assertEqual('F3', function_keys[2].name)
 
     def test_get_alpha_keys(self):
