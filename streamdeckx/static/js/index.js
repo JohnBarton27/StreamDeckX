@@ -150,6 +150,9 @@ function openAddActionModal(position) {
                 // Close Modal
                 closeActionModalButton.click()
 
+                // Reset MultiKeySelectedKeys
+                multiKeySelectedKeys = []
+
                 // Refresh Config HTML
                 $.get('/configHtml', {'deckId': currDeckId, 'button': position}, function (data) {
                     updateConfigFields(data)
@@ -232,6 +235,9 @@ async function updateMultiKeySelect() {
 }
 
 async function showMultiKeyActionFields() {
+    // Reset MultiKeySelectedKeys
+    multiKeySelectedKeys = []
+
     actionFieldsArea.html(`
         <label for="multiKeyValue">Keys: </label>
         <span id="selectedKeys"></span>
