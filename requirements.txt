@@ -1,4 +1,4 @@
-flask==2.0.1
+flask
 hid==1.0.4
 imgkit==1.2.2
 pillow==8.3.1
