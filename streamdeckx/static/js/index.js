@@ -33,6 +33,17 @@ $(document).ready(function () {
     });
 });
 
+function rescan() {
+    $.ajax({
+        url: '/rescan',
+        type: 'PUT',
+        success: function(result) {
+            document.querySelector('html').innerHTML = result;
+            console.log('done');
+        }
+    });
+}
+
 function updateConfigFields(data) {
     config.html(data);
     buttonTextField = $("#buttonText");

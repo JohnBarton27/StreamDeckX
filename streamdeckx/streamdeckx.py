@@ -44,7 +44,15 @@ def index():
         return render_template('index.html', connected_decks=decks, curr_deck_html=curr_deck.html)
 
     # No decks found
-    return render_template('index.html', connected_decks=[], curr_deck_html='<p>No Stream Decks connected!</p>')
+    return render_template('index.html', connected_decks=[], curr_deck_html='')
+
+
+@app.route('/rescan', methods=['PUT'])
+def rescan():
+    from deck import Deck
+    Deck.scan()
+
+    return index()
 
 
 @app.route('/deckHtml')

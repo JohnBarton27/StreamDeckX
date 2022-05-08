@@ -8,16 +8,19 @@
 <h1>STREAM DECK X</h1>
 <hr style="margin-bottom: 10px;">
 <span id="connected-streamdecks">
-    {% if connected_decks %}
     <div>
-        <label>Selected Stream Deck:</label>
-        <select id="conn-sd-select">
-            {%for deck in connected_decks%}
-            <option value="{{deck.id}}">{{deck.name}}</option>
-            {%endfor%}
-        </select>
+        {% if connected_decks %}
+            <label>Selected Stream Deck:</label>
+            <select id="conn-sd-select">
+                {%for deck in connected_decks%}
+                <option value="{{deck.id}}">{{deck.name}}</option>
+                {%endfor%}
+            </select>
+        {% else %}
+            <p style="display:inline">No Stream Decks connected!</p>
+        {% endif %}
+        <button onclick="rescan()" style="display:inline; width: 80px;">Rescan</button>
     </div>
-    {% endif %}
     <div class="main-area">
         <span id="curr-deck" style="display:inline-block;">
             {{curr_deck_html | safe}}
