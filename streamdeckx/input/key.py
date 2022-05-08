@@ -87,6 +87,11 @@ class Key:
 
     @staticmethod
     def get_special_keys():
+        """
+        The keys are the supported "special" keys from Pynput. Full list: https://pynput.readthedocs.io/en/latest/keyboard.html#pynput.keyboard.Key
+
+        :return: List of Keys
+        """
         return [Key('ALT', pkey.alt),
                 Key('BACKSPACE', pkey.backspace),
                 Key('CAPS LOCK', pkey.caps_lock),
@@ -111,6 +116,12 @@ class Key:
                 Key('NUM LOCK', pkey.num_lock),
                 Key('PRINT SCREEN', pkey.print_screen),
                 Key('SCROLL LOCK', pkey.scroll_lock),
+                Key('VOLUME UP', pkey.media_volume_up),
+                Key('VOLUME DOWN', pkey.media_volume_down),
+                Key('MUTE', pkey.media_volume_mute),
+                Key('PLAY/PAUSE', pkey.media_play_pause),
+                Key('NEXT', pkey.media_next),
+                Key('PREVIOUS', pkey.media_previous),
                 Key('/', '/'),
                 Key('\\', '\\')]
 
