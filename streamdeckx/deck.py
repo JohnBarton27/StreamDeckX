@@ -184,6 +184,15 @@ class Deck(ABC):
 
         return deck_objs
 
+    @staticmethod
+    def scan():
+        connected_decks = Deck.get_connected(update_images=True)
+
+        for conn_deck in connected_decks:
+            conn_deck.open()
+            conn_deck.deck_interface.set_brightness(100)
+            conn_deck.set_callbacks()
+
     @property
     def html(self):
         html = ''

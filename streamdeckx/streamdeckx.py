@@ -243,11 +243,13 @@ if __name__ == '__main__':
 
     threading.Thread(target=lambda: app.run(port=5050, debug=False, use_reloader=False), name='FlaskThread').start()
 
+    import time
     from deck import Deck
 
-    connected_decks = Deck.get_connected(update_images=True)
+    while True:
+        logging.debug('Checking for connected decks...')
 
-    for conn_deck in connected_decks:
-        conn_deck.open()
-        conn_deck.deck_interface.set_brightness(100)
-        conn_deck.set_callbacks()
+        Deck.scan()
+
+        time.sleep(5)
+
