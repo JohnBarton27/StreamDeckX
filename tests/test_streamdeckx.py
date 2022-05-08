@@ -99,7 +99,7 @@ class TestStreamdeckX(BaseStreamdeckXTest):
         self.assertEqual(b'INDEX HTML', response.data)
 
         self.m_get_connected.assert_called()
-        self.m_render_template.assert_called_with('index.html', connected_decks=[], curr_deck_html='<p>No Stream Decks connected!</p>')
+        self.m_render_template.assert_called_with('index.html', connected_decks=[], curr_deck_html='')
 
     def test_get_config_html_no_deck(self):
         deck1 = MagicMock()
