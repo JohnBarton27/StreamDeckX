@@ -39,7 +39,6 @@ function rescan() {
         type: 'PUT',
         success: function(result) {
             document.querySelector('html').innerHTML = result;
-            console.log('done');
         }
     });
 }
