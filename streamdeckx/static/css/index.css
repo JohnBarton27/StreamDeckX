@@ -16,13 +16,23 @@ h1 {
 }
 
 button {
-    background-color: transparent;
-    color: #FAFDED;
+    background-color: #8D99AE;
+    color: #2B2D42;
     border-radius: 5px;
     padding: 5px;
     width: 100%;
-    border-color: #FAFDED;
+    border: none;
     margin: 10px 0;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #CFD4DD;
+}
+
+button:active {
+    background-color: #556177;
 }
 
 hr {
