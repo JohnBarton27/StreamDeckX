@@ -19,6 +19,10 @@ let delayActionValueElem = null;
 let currActionType = null;
 
 $(document).ready(function () {
+    setup();
+});
+
+function setup() {
     connSdSelect = $("#conn-sd-select");
     currDeck = $("#curr-deck");
     config = $("#config");
@@ -31,7 +35,7 @@ $(document).ready(function () {
             currDeck.html(data);
         });
     });
-});
+}
 
 function rescan() {
     $.ajax({
@@ -39,6 +43,7 @@ function rescan() {
         type: 'PUT',
         success: function(result) {
             document.querySelector('html').innerHTML = result;
+            setup();
         }
     });
 }
