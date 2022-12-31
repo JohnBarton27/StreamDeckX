@@ -174,6 +174,20 @@ def delete_button_action():
     return render_template('configuration.html', button=button)
 
 
+@app.route('/testButton', methods=['POST'])
+def test_button_action():
+    deck_id = request.form['deckId']
+    button_position = int(request.form['button'])
+
+    deck = _get_deck_by_id(deck_id)
+
+    button = deck.buttons[button_position]
+
+    button.execute_actions()
+
+    return "Hello!"
+
+
 # API
 @app.route('/api/v1/keys', methods=['GET'])
 def get_all_keys():
@@ -249,7 +263,7 @@ if __name__ == '__main__':
 
     import threading
 
-    threading.Thread(target=lambda: app.run(port=5050, debug=False, use_reloader=False), name='FlaskThread').start()
+    threading.Thread(target=lambda: app.run(host="0.0.0.0", port=5050, debug=False, use_reloader=False), name='FlaskThread').start()
 
     import time
     from deck import Deck

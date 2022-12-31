@@ -307,6 +307,18 @@ function showDefaultActionFields() {
     currActionType = null;
 }
 
+function test_action() {
+    let xhr = new XMLHttpRequest();
+    $.post('/testButton', {
+        'deckId': currDeckId,
+        'button': currButton
+    }, 'json').done(
+        function (data) {
+            console.log("Testing button action!")
+        }
+    );
+}
+
 function submit() {
     let buttonText = buttonTextField.val()
     let backgroundColor = buttonBackgroundColorField.val();
