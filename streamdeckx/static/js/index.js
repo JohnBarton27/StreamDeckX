@@ -17,6 +17,7 @@ let applicationActionValueElem = null;
 let multiKeySelectedKeys = [];
 let delayActionValueElem = null;
 let currActionType = null;
+let emulatorMode = false;
 
 $(document).ready(function () {
     setup();
@@ -84,26 +85,31 @@ function updateConfigFields(data) {
 }
 
 function openConfig(position) {
-    let buttonElem = $("#" + position);
+    if (emulatorMode) {
+        $.post('/testButton', {'deckId': currDeckId, 'button': position})
+    } else {
 
-    if (buttonElem.hasClass('clicked')) {
-        // If we are un-clicking
-        buttonElem.removeClass('clicked');
-        config.html('');
-        return;
+        let buttonElem = $("#" + position);
+
+        if (buttonElem.hasClass('clicked')) {
+            // If we are un-clicking
+            buttonElem.removeClass('clicked');
+            config.html('');
+            return;
+        }
+
+        // Remove from all other elements
+        $('.clicked').each(function (i, elem) {
+            $(elem).removeClass('clicked');
+        });
+
+        currButton = position;
+        buttonElem.addClass('clicked');
+
+        $.get('/configHtml', {'deckId': currDeckId, 'button': position}, function (data) {
+            updateConfigFields(data);
+        });
     }
-
-    // Remove from all other elements
-    $('.clicked').each(function (i, elem) {
-        $(elem).removeClass('clicked');
-    });
-
-    currButton = position;
-    buttonElem.addClass('clicked');
-
-    $.get('/configHtml', {'deckId': currDeckId, 'button': position}, function (data) {
-        updateConfigFields(data);
-    });
 }
 
 function openAddActionModal(position) {
@@ -317,6 +323,27 @@ function test_action() {
             console.log("Testing button action!")
         }
     );
+}
+
+function emulatorToggle() {
+    emulatorMode = !emulatorMode;
+
+    if (emulatorMode) {
+        // Set button to Emulator Mode
+        $("#emulatorToggle").text('Emulator Mode')
+
+        // Clear off any configs/clicked buttons
+        $("#config").html('');
+
+        // Remove from all other elements
+        $('.clicked').each(function (i, elem) {
+            $(elem).removeClass('clicked');
+        });
+
+    } else {
+        // Set button to Edit Mode
+        $("#emulatorToggle").text('Edit Mode')
+    }
 }
 
 function submit() {
