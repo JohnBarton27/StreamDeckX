@@ -188,6 +188,11 @@ def test_button_action():
     return "SUCCESS"
 
 
+@app.route('/newVirtualSDForm', methods=['GET'])
+def get_new_virtual_sd_form():
+    return render_template('new_virtual_deck.html')
+
+
 # API
 @app.route('/api/v1/keys', methods=['GET'])
 def get_all_keys():
@@ -204,10 +209,13 @@ def get_all_keys():
 def create_virtual_stream_deck():
     from deck import VirtualDeck
 
-    existing_virtual_decks = Deck.get_virtual_decks()
-    new_name = f'VIRTUAL_DECK{len(existing_virtual_decks) + 1}'
+    deck_name = request.form['name']
+    num_cols = int(request.form['cols'])
+    num_rows = int(request.form['rows'])
 
-    virtual_deck = VirtualDeck(new_name)
+    existing_virtual_decks = Deck.get_virtual_decks()
+
+    virtual_deck = VirtualDeck(deck_name, rows=num_rows, cols=num_cols)
     Deck.deck_dao.create(virtual_deck)
 
     return "SUCCESS"

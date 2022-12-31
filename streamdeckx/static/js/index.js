@@ -347,7 +347,17 @@ function emulatorToggle() {
 }
 
 function createVirtualSD() {
-    $.post('/api/v1/newVirtualStreamDeck')
+    $.get('/newVirtualSDForm', function(data) {
+        $("#config").html(data)
+    })
+}
+
+function addVirtualStreamDeck() {
+    $.post('/api/v1/newVirtualStreamDeck', {
+        'name': $("#virtualName").val(),
+        'cols': $("#cols").val(),
+        'rows': $("#rows").val()
+    })
 }
 
 function submit() {

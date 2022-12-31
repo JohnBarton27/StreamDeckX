@@ -78,7 +78,9 @@ class DeckDao(Dao):
             deck = OriginalDeck(deck_id)
 
         if deck_type == DeckTypes.VIRTUAL:
-            deck = VirtualDeck(deck_id)
+            rows = first_row['num_rows']
+            cols = first_row['num_cols']
+            deck = VirtualDeck(deck_id, rows=rows, cols=cols)
 
         # TODO add handling for mini
 
