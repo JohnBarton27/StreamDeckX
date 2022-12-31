@@ -21,7 +21,12 @@ class ButtonImage:
             background_image_scaled = background_image.resize((100, 100))
             background.paste(background_image_scaled, mask=background_image_scaled.split()[3])
 
-        image = PILHelper.create_scaled_image(self.deck.deck_interface, background, margins=[0, 0, 0, 0])
+        if self.deck.__class__.__name__ == 'VirtualDeck':
+            # VirtualDeck has no deck_interface
+            image = Image.new(mode="RGB", size=(72, 72))
+        else:
+            # All 'real' decks have a deck_interface
+            image = PILHelper.create_scaled_image(self.deck.deck_interface, background, margins=[0, 0, 0, 0])
         self._image_size = image.size[0]
 
         if self.style.label:
@@ -45,7 +50,11 @@ class ButtonImage:
         return base64.b64encode(img_byte_arr.getvalue())
 
     def render_key_image(self):
-        return PILHelper.to_native_format(self.deck.deck_interface, self.image)
+        if self.deck.__class__.__name__ == 'VirtualDeck':
+            # VirtualDeck has no deck_interface
+            return self.image
+        else:
+            return PILHelper.to_native_format(self.deck.deck_interface, self.image)
 
     def draw_text(self, draw):
         font = ImageFont.truetype(self.style.font_path, self.style.font_size)

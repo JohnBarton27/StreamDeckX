@@ -93,7 +93,7 @@ def set_button_config():
 
     deck = _get_deck_by_id(deck_id)
     button = deck.buttons[button_position]
-
+    
     if len(request.files) > 0:
         # Handle Background Image Uploads
         background_image = request.files['backgroundImage']
@@ -185,7 +185,7 @@ def test_button_action():
 
     button.execute_actions()
 
-    return "Hello!"
+    return "SUCCESS"
 
 
 # API
@@ -198,6 +198,16 @@ def get_all_keys():
         json['groups'].append(key_group.json())
 
     return json
+
+
+@app.route('/api/v1/newVirtualStreamDeck', methods=['POST'])
+def create_virtual_stream_deck():
+    from deck import VirtualDeck
+
+    virtual_deck = VirtualDeck('VIRTUAL_DECK1')
+    Deck.deck_dao.create(virtual_deck)
+
+    return "SUCCESS"
 
 
 def connect_to_database():
@@ -217,7 +227,9 @@ def connect_to_database():
                 CREATE TABLE deck (
                     id TEXT NOT NULL PRIMARY KEY,
                     name TEXT,
-                    type TEXT
+                    type TEXT,
+                    num_cols INTEGER,
+                    num_rows INTEGER
                 );                
             """)
 

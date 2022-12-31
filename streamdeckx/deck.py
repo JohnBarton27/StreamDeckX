@@ -33,7 +33,7 @@ class Deck(ABC):
 
         if not self.buttons:
             # Populate with the correct number of (empty) buttons
-            for i in range(0, self.__class__.get_num_buttons()):
+            for i in range(0, self.get_num_buttons()):
                 self.add_button(i)
 
         Deck.instantiated_decks.append(self)
@@ -108,9 +108,8 @@ class Deck(ABC):
         if need_to_open:
             self.close()
 
-    @classmethod
-    def get_num_buttons(cls):
-        return cls.cols * cls.rows
+    def get_num_buttons(self):
+        return self.__class__.cols * self.__class__.rows
 
     @staticmethod
     def _strip_id(full_id):
@@ -134,9 +133,21 @@ class Deck(ABC):
                 return mapping['serial_number']
 
     @staticmethod
+    def get_virtual_decks():
+        # Fetch all virtual decks from the database
+        virtual_decks = Deck.deck_dao.get_by_type(DeckTypes.VIRTUAL)
+
+        if not virtual_decks:
+            return []
+
+        return virtual_decks
+
+    @staticmethod
     def get_connected(update_images: bool = False):
         decks = DeviceManager().enumerate()
         deck_objs = []
+
+        deck_objs += Deck.get_virtual_decks()
 
         for deck in decks:
             deck_id = deck.id()
@@ -189,6 +200,9 @@ class Deck(ABC):
         connected_decks = Deck.get_connected(update_images=True)
 
         for conn_deck in connected_decks:
+            if isinstance(conn_deck, VirtualDeck):
+                continue
+
             conn_deck.open()
             conn_deck.deck_interface.set_brightness(100)
             conn_deck.set_callbacks()
@@ -231,6 +245,30 @@ class MiniDeck(Deck):
 
     def __init__(self, deck_id: str, buttons: list = None, session_id: str = None):
         super().__init__(deck_id, name=str(self.__class__.type.value), buttons=buttons, session_id=session_id)
+
+
+class VirtualDeck(Deck):
+    type = DeckTypes.VIRTUAL
+
+    def __init__(self, deck_id: str, cols: int = 5, rows: int = 5, buttons: list = None, session_id: str = None):
+        self.cols = cols
+        self.rows = rows
+        super().__init__(deck_id, name=str(self.__class__.type.value), buttons=buttons, session_id=session_id)
+
+    def get_num_buttons(self):
+        return self.cols * self.rows
+
+    @property
+    def html(self):
+        html = ''
+        position = 0
+        for row in range(0, self.rows):
+            html += '<br/>'
+            for column in range(0, self.cols):
+                html += self.buttons[position].html
+                position += 1
+
+        return html
 
 
 class NoSuchDeckException(Exception):

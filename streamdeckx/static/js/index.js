@@ -346,6 +346,10 @@ function emulatorToggle() {
     }
 }
 
+function createVirtualSD() {
+    $.post('/api/v1/newVirtualStreamDeck')
+}
+
 function submit() {
     let buttonText = buttonTextField.val()
     let backgroundColor = buttonBackgroundColorField.val();

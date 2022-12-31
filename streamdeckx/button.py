@@ -58,7 +58,9 @@ class Button:
             text (str): Text to apply to this Button
         """
         self.style.label = text
-        self.update_key_image()
+
+        if self.deck.__class__.__name__ != 'VirtualDeck':
+            self.update_key_image()
 
         # Update in database
         Button.button_dao.update(self)
@@ -118,7 +120,8 @@ class Button:
         image = self.button_image.render_key_image()
 
         # Update requested key with the generated image.
-        self.deck.deck_interface.set_key_image(self.position, image)
+        if self.deck.__class__.__name__ != 'VirtualDeck':
+            self.deck.deck_interface.set_key_image(self.position, image)
 
 
 class ButtonMissingIdError(Exception):
