@@ -23,7 +23,7 @@ class ButtonImage:
 
         if self.deck.__class__.__name__ == 'VirtualDeck':
             # VirtualDeck has no deck_interface
-            image = Image.new(mode="RGB", size=(72, 72))
+            image = background
         else:
             # All 'real' decks have a deck_interface
             image = PILHelper.create_scaled_image(self.deck.deck_interface, background, margins=[0, 0, 0, 0])

@@ -75,6 +75,7 @@ class Button:
         """
         self.style.text_color = text_color
         self.style.background_color = background_color
+
         self.update_key_image()
 
         Button.button_dao.update(self)
@@ -116,11 +117,11 @@ class Button:
         }
 
     def update_key_image(self):
-        # Generate the custom key with the requested image and label.
-        image = self.button_image.render_key_image()
-
-        # Update requested key with the generated image.
         if self.deck.__class__.__name__ != 'VirtualDeck':
+            # Generate the custom key with the requested image and label.
+            image = self.button_image.render_key_image()
+
+            # Update requested key with the generated image.
             self.deck.deck_interface.set_key_image(self.position, image)
 
 
