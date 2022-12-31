@@ -93,7 +93,7 @@ def set_button_config():
 
     deck = _get_deck_by_id(deck_id)
     button = deck.buttons[button_position]
-    
+
     if len(request.files) > 0:
         # Handle Background Image Uploads
         background_image = request.files['backgroundImage']
@@ -204,7 +204,10 @@ def get_all_keys():
 def create_virtual_stream_deck():
     from deck import VirtualDeck
 
-    virtual_deck = VirtualDeck('VIRTUAL_DECK1')
+    existing_virtual_decks = Deck.get_virtual_decks()
+    new_name = f'VIRTUAL_DECK{len(existing_virtual_decks) + 1}'
+
+    virtual_deck = VirtualDeck(new_name)
     Deck.deck_dao.create(virtual_deck)
 
     return "SUCCESS"

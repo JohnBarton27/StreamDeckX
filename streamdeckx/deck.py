@@ -253,7 +253,7 @@ class VirtualDeck(Deck):
     def __init__(self, deck_id: str, cols: int = 5, rows: int = 5, buttons: list = None, session_id: str = None):
         self.cols = cols
         self.rows = rows
-        super().__init__(deck_id, name=str(self.__class__.type.value), buttons=buttons, session_id=session_id)
+        super().__init__(deck_id, name=deck_id, buttons=buttons, session_id=session_id)
 
     def get_num_buttons(self):
         return self.cols * self.rows
